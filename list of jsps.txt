@@ -1,6 +1,0 @@
-home page
-login page
-registration page
-user account page
-auction page (based on GET for the id of the auction)
-admin page

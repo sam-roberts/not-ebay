@@ -1,0 +1,84 @@
+body {
+	font-size: 12pt; 
+  font-family: Optima, "Trebuchet MS", "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+	margin-left: 50px; 
+	margin-right: 50px; 
+	background-color: #ffffff;
+}
+h1.heading {
+	color: #000099;
+	text-align: center;
+}
+@media screen {
+ h2.section {
+	text-indent: 10px; 
+	padding-bottom: 4px; 
+	padding-top: 4px; 
+	background-color: #98FB98;
+ }
+}
+@media print {
+ h2.section {
+	padding-bottom: 4px; 
+	padding-top: 4px; 
+ }
+}
+h3.subsection {
+	padding-bottom: 4px; 
+	padding-top: 4px; 
+}
+p.instructions {
+	color: black; 
+	text-align: justify;
+}
+table.instructions {
+	color: black; 
+	font-size: 12pt; 
+	text-align: justify;
+}
+ul.instructions {
+	color: black; 
+	text-align: justify;
+}
+ol.instructions {
+	color: black; 
+	text-align: justify;
+}
+li.instructions {
+	color: black; 
+	text-align: justify;
+	padding-top: 8px; 
+	padding-bottom: 8px; 
+}
+tt.type {
+	color: maroon; 
+	font-weight: bold; 
+	font-family: 'courier'; 
+	background-color: #ccffff;
+}
+pre.code {
+	font-weight: bold; 
+	margin-left: 10px; 
+	margin-right: 10px;
+	background-color: #ccccff;
+}
+div.update {
+	margin-left: 1px; 
+	margin-right: 1px; 
+	text-align: left;
+	background-color: #88ff88; 
+}
+div.highlight {
+	margin-left: 1px; 
+	margin-right: 1px; 
+	text-align: left;
+	background-color: #cccfff; 
+}
+a {
+	color: #0000cc;
+	text-decoration:none;
+}
+a[href]:hover {
+	color:#cc0000;
+	text-decoration:underline;
+}

@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0056)http://www.cse.unsw.edu.au/~cs9321/13s2/assignment2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>COMP9321 Assignment Description</title>
+
+<link rel="stylesheet" type="text/css" href="./COMP9321 Assignment Description_files/proj.css">
+<style type="text/css"><!-- li{padding-top:0ex} h2.section{background-color:##99cccc} --></style>
+<style type="text/css"></style></head>
+<body style="">
+
+
+<h1 class="heading">COMP9321 Semester 2, 2011 Assignment 2: Auction Application</h1>
+
+<h1 class="heading">Draft September 6, 2013</h1>
+
+<h2 class="section">Aims</h2>
+
+<p class="instructions">
+This project aims to give students hands-on experience in:
+</p><ul class="instructions">
+<li> designing and implementing a fully-functional Web application
+</li><li> using well-known application patterns such as MVC
+</li><li> Use JDBC and related technologies to maintain persistence of user data.
+</li></ul>
+
+<!--
+Please note that this project will also form the basis for Assignment 3.
+-->
+
+<h2 class="section">Background</h2>
+ 
+<p class="instructions">
+
+Auction sites such as eBay and like have revolutionised consumer to consumer business by allowing ordinary people to easily trade with each other. Your assignment is to design and implement a web application that allows users to offer items for auctions and participate in competitive bidding.</p>
+
+<h2 class="section">Requirements</h2>
+<p>
+The core requirements of this assignment are split across four modules
+</p>
+<ol>
+<li>User Registration</li>
+<li>Offering Items for Auction</li>
+<li>Bidding</li>
+<li>Admin Functionality</li>
+</ol>
+
+<h3 class="section">User Registration</h3>
+<ul>
+<li>A user visits a registration page and enters the following details: a username, a password, an email address.</li>
+
+<li>This page displays a form with the current values of: username, nickname, first name, last name, email, year of birth, full address and credit card number. (Use a dummy credit card number since you will not be interacting with real payment systems)</li>
+
+<li>On submitting this information, the system sends an email containing a confirmation URL to the supplied address.</li>
+
+<li>The user reads the email, goes to the confirmation URL; the system confirms the registration.</li>
+
+<li>Every detail other than the username can be changed at any time by the user.</li>
+</ul>
+
+<h3 class="section">Offering Items for Auction</h3>
+<ul>
+<li>User A logs into his/her account.</li>
+
+<li>User A can add an item with the following details:
+<ol>
+<li> Title (10 words max.)</li>
+<li> Category</li>
+<li> Picture</li>
+<li> Description (100 words max.)</li>
+<li> Postage details</li>
+<li> Reserve Price</li>
+<li> Bidding Start Price</li>
+<li> Bidding Increments.</li>
+<li> Time for the bidding to end (closing time) - optional.</li>
+</ol>
+
+</li><li> The user clicks a button to register the item and start the auction. </li>
+</ul>
+The reserve price is confidential and should be visible only to the user. The minimum closing time is 3 min and the maximum is 60 min. If this is not supplied, the system uses a default of 10 min from the time the item was registered. (Note: Obviously, the closing times are for demo convenience and not reflective of real-world auction sites)
+<p></p>
+
+<h3 class="section">Bidding</h3>
+<p>
+The bidding functionality works as follows:
+</p><ul>
+<li> User B logs into his/her account </li>
+<li> User B searches for a particular item </li>
+<li> The results of the search are displayed as a list. </li>
+<li> Clicking on an item in the list takes the user to the page for the item, showing Title, Picture, Description, Postage Details, the amount for the current winning bid and the bidding increment. </li>
+<li> The user then enters a new bid into a form input. The new bid should NOT be less than current bid plus increment. If this condition is violated, the user is informed of the error. </li>
+<li> If the user's bid is accepted, he/she is shown a success message and the page for the item with the current winning bid refreshed with his or her bidding amount. The user is also notified by email. </li>
+<li> When another user posts a winning bid, User B is also notified that he/she has lost the winning bid. </li>
+</ul>
+<p>
+When the closing time is crossed, depending on the winning bid, there are two possible actions:
+</p><ol>
+<li> If the winning bid amount is greater than or equal to the reserve price, both the user with the winning bid and the item owner are notified by email. If either is logged in, they get a message on their profile page as well. </li>
+
+<li> Else, the item owner is notified that the winning bid is lower than the reserve price. The item owner has to log in to his/her account, go to the item page, and either accept or reject the winning bid. In either case, the user with the winning bid is notified by email. </li>
+</ol>
+
+<h3 class="section">Admin Functionality.</h3>
+
+<p>
+The admin is a special account in the system which can only be accessed via a separate page (that is, not the usual user login page). The admin has the following functions:
+</p><ol>
+<li> Halt an ongoing auction </li>
+<li> Remove an item from auction </li>
+<li> Ban a user from the site. </li>
+</ol>
+<p>Also, your applications are expected to have high quality data for demo, input form validation, guarded views, and preventing form resubmission on pressing back button.</p><p>
+
+</p><h2 class="subsection">System Requirements</h2>
+
+<p>
+You should use a minimum of Java, JSP/Servlets, and JDBC. Apache Tomcat should be used as the Web application server. You can choose whatever database you would like to use. Also, you are allowed to use any package/library or framework. 
+</p>
+<p>
+Remember, you must be able to demonstrate your project on the CSE lab
+machines. If it <em>only</em> runs on your laptop during the demo, you will automatically lose 20% of the demo mark.</p>
+
+<p>In fact, you should treat your home computer as a development environment and the CSE lab machines as your final production/deployment environment.</p>
+
+<h2 class="subsection">Submission and Demo</h2>
+<p>
+Your assignment must be submitted by <b>end of week 9</b> Submission is through give. Before submitting, check that your code is ready for demo by deploying your code to your CSE account (any group member's would do) and testing it out. Prepare a demo scenario and demo data. Keep your submitted code safe.
+
+</p><h3 class="instructions">Submission Instructions</h3>
+<ol>
+<li> On one of your CSE accounts, prepare a directory structure like so: <br>
+group&lt;id&gt;/ <br>
+group&lt;id&gt;/src/ <br>
+group&lt;id&gt;/war/ <br>
+Where &lt;id&gt; is your group-id.So,for example, for group03 you will have a directory structure:
+<br>
+group03/ <br>
+group03/src/ <br>
+group03/war/ <br>
+</li>
+<li> Put your source files in src/  and your <b>final .war file</b> in war/ </li>
+<li> zip -r group&lt;id&gt;.zip group&lt;id&gt;/</li>
+<li> give cs9321 Assign2 group&lt;id&gt;.zip
+</li></ol>
+<p>
+Demo will be held during lab times in week 10. You have to use the lab machines for showing your demo. You should use the same .war file that you submitted for your demo. We'll check that using MD5/SHA1 to generate checksum of your submission and comparing your demo war file against that. If the checksum fails, your submission will be considered as late. 
+
+The demo schedule will be released later.
+
+<!--
+<st>More details of demo will be given later.</st>
+
+<h3 class="instructions">Demo Schedule</h3>
+ 
+Demo schedule:<br />
+<table border="1">
+<tr>
+	<th>Lab</th>
+    <th>Groups</th>
+</tr>
+<tr>
+    <td>mon10-pipe</td>
+    <td>23, 52, 6, 3, 13, 12, 41, 39</td>
+</tr>
+<tr>
+	<td>mon12-bugle</td>
+	<td>48, 27, 20, 19, 5, 42, 40, 38, 32</td>
+</tr>
+<tr>
+	<td>tue12-bugle</td>
+	<td>45, 51, 8, 17, 2, 1, 43, 11</td>
+</tr>
+<tr>
+	<td>tue14-banjo (drum)</td>
+	<td>44, 49, 24, 22, 21, 16, 15, 36, 35, 31</td>
+</tr>
+<tr>
+	<td>wed10-bugle</td>
+	<td>47, 29, 28, 26, 7, 18, 14, 37, 33</td>
+</tr>
+<tr>
+	<td>thu14-bugle</td>
+	<td>50, 53, 25, 9, 4, 46, 10, 34, 30</td>
+</tr>
+</table>
+-->
+Each demo will be around 10-15 mins long. 
+</p><h2 class="subsection">Marking</h2>
+This assignment is worth 25 marks and will be marked on a group basis. The marking guide for this assignment will be released in due course.
+
+<p> Also, <b>late submissions will lose 2 marks for the first day and 1 mark for each day afterwards.</b> 
+</p><p>
+
+</p><h2 class="subsection">Important</h2>
+<p> It is difficult for the tutors and the lecturer to provide help to each group. Please use the message board for resolving doubts.</p>
+<br>
+
+
+</body></html>
