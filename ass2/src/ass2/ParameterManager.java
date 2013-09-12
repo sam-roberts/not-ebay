@@ -27,12 +27,11 @@ public class ParameterManager {
 		for(String keys: map.keySet()) {
 			System.out.print("Control Servlet Parameter Key: [ " + keys + " ] Parameter Values: [");
 			int i = 0;
-			for (String values: map.get(keys)) {
+			for (String value: map.get(keys)) {
 				if (i > 0) {
-				System.out.print("(" + i + ") " + values);
+					System.out.print("(" + i + ") " + value);
 				} else {
-					System.out.print(" " + values);
-
+					System.out.print(" " + value);
 				}
 				i++;
 			}

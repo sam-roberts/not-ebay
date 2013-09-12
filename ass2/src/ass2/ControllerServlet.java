@@ -34,6 +34,7 @@ public class ControllerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
+		FormManager form = new FormManager();
 
 		//useful for debugging
 		pm.printAllValues();
@@ -45,8 +46,15 @@ public class ControllerServlet extends HttpServlet {
 			else if ("remove_auction".equals(action)) {}
 			else if ("ban_user".equals(action)) {}
 			else if ("logout".equals(action)) {}
-			else if ("login".equals(action)) {}
+			else if ("login".equals(action)) {
+				form.addForm("username", pm.getIndividualParam("username"));
+				form.addForm("password", pm.getIndividualParam("password"));
+			}
 			else if ("register".equals(action)) {}
+		}
+		
+		if (form.isMissingDetails()) {
+			System.out.println(form.getMessage());
 		}
 
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
