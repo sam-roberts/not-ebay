@@ -39,4 +39,15 @@ public class RegistrationController extends MasterFormBasedController {
 	public String getMessage() {
 		return formManager.getMessage();
 	}
+
+	public boolean isAccountAlreadyExists() {
+		// TODO Auto-generated method stub
+		boolean exists = false;
+		if (exists) {
+			message = "An account with that username already exists";
+		} else {
+			message = "Success!";
+		}
+		return exists;
+	}
 }

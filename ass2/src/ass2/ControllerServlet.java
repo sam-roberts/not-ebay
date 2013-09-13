@@ -22,6 +22,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_LOGIN = "/login.jsp";
 	private static final String JSP_HOME = "/index.jsp";
 	private static final String JSP_REGISTRATION = "/registration.jsp";
+	private static final String JSP_MESSAGE = "/message.jsp";
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -73,7 +74,7 @@ public class ControllerServlet extends HttpServlet {
 				} else {
 					// check to see if the account is valid
 					if (loginController.isValidAccount()) {
-						//create a session
+						//TODO create a session
 						
 						//take them home
 						forward = JSP_HOME;
@@ -87,6 +88,18 @@ public class ControllerServlet extends HttpServlet {
 				if (registrationController.isInvalidForm()) {
 					forward = JSP_REGISTRATION;
 					request.setAttribute("message", registrationController.getMessage());
+				} else {
+					if (registrationController.isAccountAlreadyExists()) {
+						forward = JSP_REGISTRATION;
+						request.setAttribute("message", registrationController.getMessage());
+					} else {
+						forward = JSP_MESSAGE;
+						request.setAttribute("message", "You have been registered, an email will be sent to you to confirm your account");
+						
+						//TODO Create the account in the database
+						
+						//TODO Email the user
+					}
 				}
 				
 			}
