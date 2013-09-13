@@ -21,7 +21,7 @@ public class FormManagerTester {
 		fm.addForm("username", "coolman");
 		assertFalse(fm.isMissingDetails());
 	}
-	
+	@Test
 	public void testIsMissingParameters() {
 		fm.addForm("action", "search");
 		fm.addForm("username", "");
@@ -29,5 +29,33 @@ public class FormManagerTester {
 
 		assertTrue(fm.isMissingDetails());
 	}
+	
+	@Test
+	public void testInvalidUsernameSpace() {
+		fm.addForm("username", "cool man", FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
+		assertTrue(fm.isMissingDetails());
+	}
+	
+	@Test
+	public void testInvalidUsernameGarbage() {
+		fm.addForm("username", "$^$*(oihjdojhjaej209", FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
+		assertTrue(fm.isMissingDetails());
+	}
+	@Test
+	public void testValidUsername1() {
+		fm.addForm("username", "auctioneer123", FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("username", "MaNiAC");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("username", "36454548");
+		assertFalse(fm.isMissingDetails());
+
+
+	}
+	
+	
+	
 
 }

@@ -2,6 +2,7 @@ package ass2;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name="ControllerServlet",urlPatterns={"/ControllerServlet","/","/home"})
 public class ControllerServlet extends HttpServlet {
+	
+	private static final String JSP_LOGIN = "/login.jsp";
+	
 	private static final long serialVersionUID = 1L;
 
 	public ControllerServlet() {
@@ -38,6 +42,9 @@ public class ControllerServlet extends HttpServlet {
 
 		//useful for debugging
 		pm.printAllValues();
+		
+		//default go home?
+		String forward = "/index.jsp";
 
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
@@ -47,17 +54,24 @@ public class ControllerServlet extends HttpServlet {
 			else if ("ban_user".equals(action)) {}
 			else if ("logout".equals(action)) {}
 			else if ("login".equals(action)) {
-				form.addForm("username", pm.getIndividualParam("username"));
+				form.addForm("username", pm.getIndividualParam("username"),FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
 				form.addForm("password", pm.getIndividualParam("password"));
+				if (form.isMissingDetails()) {
+					System.out.println(form.getMessage());
+					forward = JSP_LOGIN;
+					
+					request.setAttribute("message", form.getMessage());
+				}
+				
+				
 			}
 			else if ("register".equals(action)) {}
 		}
 		
-		if (form.isMissingDetails()) {
-			System.out.println(form.getMessage());
-		}
 
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
-	}
+		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
+		System.out.println("Forwarding to: " + forward);
+		requestDispatcher.forward(request, response);
+			}
 
 }
