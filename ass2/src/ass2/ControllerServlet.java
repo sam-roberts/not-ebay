@@ -1,6 +1,7 @@
 package ass2;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,8 +48,14 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//tests for jdbc
 		JDBCConnector jdbc = new JDBCConnector();
-		jdbc.addUser("a", "a", "a", "a", "a", "a", 9, "a", 9);
+		jdbc.addUser("a", "a", "a", "a", "a", "a", 9, "a", 9, false);
+		jdbc.addAuction("a", "a", "a", "a", "a", "a", 9, 5, 5, new Timestamp(0), false);
+		jdbc.addBidding("a", 1, 5,new Timestamp(0));
+		jdbc.addUser("b", "a", "a", "a", "a", "a", 9, "a", 9, false);
+		jdbc.addAuction("a", "b", "a", "a", "a", "a", 9, 5, 5, new Timestamp(0), false);
+		jdbc.addBidding("b", 2, 5,new Timestamp(0));
 		
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
 		FormManager form = new FormManager();

@@ -13,6 +13,7 @@ CREATE TABLE Username (
     year_of_birth   INTEGER,
     postal_address  GV,
     cc_number       INTEGER,
+    banned          BOOLEAN,
     primary key (username)
 );
 
@@ -27,15 +28,16 @@ CREATE TABLE Auction (
     reserve_price       FLOAT,
     start_price         FLOAT,
     bidding_increments  FLOAT,
-    end_of_auction      DATE,    --maybe datetime?
+    end_of_auction      TIMESTAMP,
+    halt                BOOLEAN,
     primary key (id)
 );
 
-CREATE TABLE Biddings (
+CREATE TABLE Bidding (
     id          serial,
     author      GV REFERENCES Username(username) NOT null,
     auction     INTEGER REFERENCES Auction(id) NOT Null,
     price       FLOAT,
-    bid_date    DATE,
+    bid_date    TIMESTAMP,
     primary key (id)
 );

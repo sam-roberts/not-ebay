@@ -4,35 +4,16 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Timestamp;
 
 public class JDBCConnector {
 
+	//Possibly store these in a file rather than in code
 	private final String postgreConn = "jdbc:postgresql://127.0.0.1:5432/ass2";
 	private final String user = "test";
 	private final String pass = "test";
 	
 	private Connection c;
-	
-	public void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber) {
-		try {
-			connect();
-			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			ps.setString(1, username);
-			ps.setString(2, password);
-			ps.setString(3, email);
-			ps.setString(4, nickname);
-			ps.setString(5, firstName);
-			ps.setString(6, lastName);
-			ps.setInt(7, yearOfBirth);
-			ps.setString(8, postalAddress);
-			ps.setInt(9, CCNumber);
-			ps.execute();
-		} catch (Exception e) {
-			System.out.println("Could not add user.");
-		}
-		close();
-	}
 	
 	private void connect() {
 		try {
@@ -43,7 +24,6 @@ public class JDBCConnector {
 		
 		try {
 			c = DriverManager.getConnection(postgreConn, user, pass);
-			System.out.println("Successfully connected.");
 		} catch (SQLException e) {
 			System.out.println("Error JDBC can't connect.");
 		}
@@ -57,4 +37,63 @@ public class JDBCConnector {
 			System.out.println("Cannot close connection.");
 		}
 	}
+	
+	public void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
+		try {
+			connect();
+			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ps.setString(3, email);
+			ps.setString(4, nickname);
+			ps.setString(5, firstName);
+			ps.setString(6, lastName);
+			ps.setInt(7, yearOfBirth);
+			ps.setString(8, postalAddress);
+			ps.setInt(9, CCNumber);
+			ps.setBoolean(10, banned);
+			ps.execute();
+		} catch (Exception e) {
+			System.out.println("Could not add user.");
+		}
+		close();
+	}
+	
+	public void addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
+		try {
+			connect();
+			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			ps.setString(1, title);
+			ps.setString(2, author);
+			ps.setString(3, category);
+			ps.setString(4, picture);
+			ps.setString(5, description);
+			ps.setString(6, postageDetails);
+			ps.setFloat(7, reservePrice);
+			ps.setFloat(8, startPrice);
+			ps.setFloat(9, biddingIncrements);
+			ps.setTimestamp(10, date);
+			ps.setBoolean(11, halt);
+			ps.execute();
+		} catch (Exception e) {
+			System.out.println("Could not add auction.");
+		}
+		close();
+	}
+	
+	public void addBidding(String author, int auctionID, float price, Timestamp bidDate) {
+		try {
+			connect();
+			PreparedStatement ps = c.prepareStatement("INSERT INTO Bidding VALUES (DEFAULT, (SELECT username FROM Username WHERE username=?), (SELECT id FROM Auction WHERE id=?), ?, ?)");
+			ps.setString(1, author);
+			ps.setInt(2, auctionID);
+			ps.setFloat(3, price);
+			ps.setTimestamp(4, bidDate);
+			ps.execute();
+		} catch (Exception e) {
+			System.out.println("Could not add bidding.");
+		}
+		close();
+	}
+	
 }
