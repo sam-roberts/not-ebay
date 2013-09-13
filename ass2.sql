@@ -3,7 +3,7 @@
 --generic value
 CREATE DOMAIN GV as varchar(100);
 
-CREATE TABLE User (
+CREATE TABLE Username (
     username        GV NOT null unique,
     password        GV NOT null,
     email_address   GV,
@@ -19,7 +19,7 @@ CREATE TABLE User (
 CREATE TABLE Auction (
     id                  serial,
     title               GV,
-    author              GV REFERENCES User(username) NOT null,
+    author              GV REFERENCES Username(username) NOT null,
     category            GV,
     picture             GV,
     description         GV,
@@ -33,7 +33,7 @@ CREATE TABLE Auction (
 
 CREATE TABLE Biddings (
     id          serial,
-    author      GV REFERENCES User(username) NOT null,
+    author      GV REFERENCES Username(username) NOT null,
     auction     INTEGER REFERENCES Auction(id) NOT Null,
     price       FLOAT,
     bid_date    DATE,

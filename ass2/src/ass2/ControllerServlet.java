@@ -47,6 +47,9 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		JDBCConnector jdbc = new JDBCConnector();
+		jdbc.addUser("a", "a", "a", "a", "a", "a", 9, "a", 9);
+		
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
 		FormManager form = new FormManager();
 
