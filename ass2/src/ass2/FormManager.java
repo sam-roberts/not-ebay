@@ -11,10 +11,13 @@ public class FormManager {
 	public static final int RESTRICT_NONE = 0;
 	public static final int RESTRICT_ALPHHANUMERIC_NOSPACE = 1;
 	public static final int RESTRICT_ALPHHANUMERIC_SPACE = 2;
+	public static final int RESTRICT_EMAIL = 3;
 
 
 	private static final String ERROR_MISSING = "field is empty";
 	private static final String ERROR_INVALID_ALPHANUMERIC = "field should contain only alphanumeric values";
+	private static final String ERROR_INVALID_EMAIL = "email address provided is invalid";
+
 
 	Map<String, Form> forms;
 
@@ -45,14 +48,16 @@ public class FormManager {
 				thisForm.setErrorMessage(ERROR_MISSING);
 
 			}
-			
+
 			//if its missing information, it doesn't matter if it doesn't look right.
 			if (thisForm.getInvalid() == false) {
 				if (thisForm.getRestrictionType() != RESTRICT_NONE) {
-					if (thisForm.getValue().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
+					if (thisForm.getValue().toLowerCase().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
+						thisForm.setInvalid(true);
 						if (thisForm.getRestrictionType() == RESTRICT_ALPHHANUMERIC_NOSPACE) {
-							thisForm.setInvalid(true);
 							thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
+						} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
+							thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
 						}
 					}
 				}
@@ -75,6 +80,8 @@ public class FormManager {
 		} else if (restrictionType == RESTRICT_ALPHHANUMERIC_SPACE) {
 			return "[a-zA-Z\\d ]+";
 
+		} else if (restrictionType == RESTRICT_EMAIL) {
+			return "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
 		}
 		return null;
 	}

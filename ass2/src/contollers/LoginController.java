@@ -17,7 +17,7 @@ public class LoginController extends MasterFormBasedController {
 	}
 
 	private void createForm() {
-		formManager.addForm("username", paramManager.getIndividualParam("username"),FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
+		formManager.addForm("username", paramManager.getIndividualParam("username"));
 		formManager.addForm("password", paramManager.getIndividualParam("password"));	
 	}
 	

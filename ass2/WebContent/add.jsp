@@ -13,11 +13,11 @@
 		<li>Category: <input type="text" name="category"></li>
 		<li>Picture: <input type="file" name="picture"></li>
 		<li>Description: <input type="text" name="description"></li>
-		<li>Postage Details: <input type="text" name="postage_details"></li>
-		<li>Reserve Price: <input type="text" name="reserve_price"></li>
-		<li>Bidding Start Price: <input type="text" name="bidding_start_price"></li>
-		<li>Bidding Increments: <input type="text" name="bidding_increments"></li>
-		<li>End of Auction (optional): <input type="text" name="end_of_auction"></li>
+		<li>Postage Details: <input type="text" name="postageDetails"></li>
+		<li>Reserve Price: <input type="text" name="reservePrice"></li>
+		<li>Bidding Start Price: <input type="text" name="biddingStartPrice"></li>
+		<li>Bidding Increments: <input type="text" name="biddingIncrements"></li>
+		<li>End of Auction (optional): <input type="text" name="endOfAuction"></li>
 		<li><input type="submit" value="submit"></li>
 	</ul>
 </form>

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import contollers.LoginController;
+import contollers.RegistrationController;
 
 
 /**
@@ -20,10 +21,12 @@ public class ControllerServlet extends HttpServlet {
 	
 	private static final String JSP_LOGIN = "/login.jsp";
 	private static final String JSP_HOME = "/index.jsp";
+	private static final String JSP_REGISTRATION = "/registration.jsp";
 	
 	private static final long serialVersionUID = 1L;
 	
 	private LoginController loginController;
+	private RegistrationController registrationController;
 	
 
 	public ControllerServlet() {
@@ -79,7 +82,14 @@ public class ControllerServlet extends HttpServlet {
 					}
 				}
 			}
-			else if ("register".equals(action)) {}
+			else if ("register".equals(action)) {
+				registrationController = new RegistrationController(pm);
+				if (registrationController.isInvalidForm()) {
+					forward = JSP_REGISTRATION;
+					request.setAttribute("message", registrationController.getMessage());
+				}
+				
+			}
 		}
 		
 

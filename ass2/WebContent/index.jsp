@@ -11,7 +11,7 @@
 <form action="controller" method="GET">
 	<input type="hidden" name="action" value="search"/>
 	<ul>
-		<li>Search: <input type="text" name="search_text"></li>
+		<li>Search: <input type="text" name="searchText"></li>
 		<li><input type="submit" value="submit"></li>
 	</ul>
 </form>

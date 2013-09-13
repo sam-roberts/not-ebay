@@ -55,6 +55,30 @@ public class FormManagerTester {
 
 	}
 	
+	@Test
+	public void testInvalidEmail() {
+		fm.addForm("email", "blah", FormManager.RESTRICT_EMAIL);
+		assertTrue(fm.isMissingDetails());
+		
+		fm.setForm("email", "e e09tjea90tj@blahoei0.com");
+		assertTrue(fm.isMissingDetails());
+		
+	}
+	
+	@Test
+	public void testValidEmail() {
+		fm.addForm("email", "c00lguy@gmail.com", FormManager.RESTRICT_EMAIL);
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("email", "z1234567@student.unsw.edu.au");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("email", "myaddress+stopspam@gmail.com");
+		assertFalse(fm.isMissingDetails());
+		
+	}
+	
+	
 	
 	
 
