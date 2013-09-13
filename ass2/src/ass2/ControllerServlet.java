@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import contollers.LoginController;
+
 
 /**
  * Servlet implementation class ControllerServlet
@@ -17,8 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 public class ControllerServlet extends HttpServlet {
 	
 	private static final String JSP_LOGIN = "/login.jsp";
+	private static final String JSP_HOME = "/index.jsp";
 	
 	private static final long serialVersionUID = 1L;
+	
+	private LoginController loginController;
+	
 
 	public ControllerServlet() {
 
@@ -44,7 +50,7 @@ public class ControllerServlet extends HttpServlet {
 		pm.printAllValues();
 		
 		//default go home?
-		String forward = "/index.jsp";
+		String forward = JSP_HOME;
 
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
@@ -54,16 +60,24 @@ public class ControllerServlet extends HttpServlet {
 			else if ("ban_user".equals(action)) {}
 			else if ("logout".equals(action)) {}
 			else if ("login".equals(action)) {
-				form.addForm("username", pm.getIndividualParam("username"),FormManager.RESTRICT_ALPHHANUMERIC_NOSPACE);
-				form.addForm("password", pm.getIndividualParam("password"));
-				if (form.isMissingDetails()) {
-					System.out.println(form.getMessage());
+				loginController = new LoginController(pm);
+				
+				//check just to see if everything is entered okay
+				if (loginController.isInvalidForm()) {
+					//stay on the same page because its invalid
 					forward = JSP_LOGIN;
-					
-					request.setAttribute("message", form.getMessage());
+					request.setAttribute("message", loginController.getMessage());
+				} else {
+					// check to see if the account is valid
+					if (loginController.isValidAccount()) {
+						//create a session
+						
+						//take them home
+						forward = JSP_HOME;
+					} else {
+						request.setAttribute("message", loginController.getMessage());
+					}
 				}
-				
-				
 			}
 			else if ("register".equals(action)) {}
 		}
