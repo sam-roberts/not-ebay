@@ -45,6 +45,7 @@ public class JDBCConnector {
 		try {
 			connect();
 			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ps.setString(3, email);
@@ -57,7 +58,7 @@ public class JDBCConnector {
 			ps.setBoolean(10, banned);
 			ps.execute();
 		} catch (SQLException e) {
-			System.out.println("Could not add user.");
+			System.out.println("Could not add user.\n" + e.getMessage());
 		}
 		close();
 	}

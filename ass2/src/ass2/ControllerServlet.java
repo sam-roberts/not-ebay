@@ -48,16 +48,7 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//tests for jdbc
-		JDBCConnector jdbc = new JDBCConnector();
-		jdbc.addUser("a", "a", "a", "a", "a", "a", 9, "a", 9, false);
-		jdbc.addAuction("a", "a", "a", "a", "a", "a", 9, 5, 5, new Timestamp(0), false);
-		jdbc.addBidding("a", 1, 5,new Timestamp(0));
-		jdbc.addUser("b", "a", "a", "a", "a", "a", 9, "a", 9, false);
-		jdbc.addAuction("a", "b", "a", "a", "a", "a", 9, 5, 5, new Timestamp(0), false);
-		jdbc.addBidding("b", 2, 5,new Timestamp(0));
-		System.out.println(jdbc.userExists("a"));
-		jdbc.getUserBean("a");
+
 		
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
 		FormManager form = new FormManager();
