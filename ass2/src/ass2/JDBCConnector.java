@@ -3,8 +3,11 @@ package ass2;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import beans.UserBean;
 
 public class JDBCConnector {
 
@@ -53,10 +56,50 @@ public class JDBCConnector {
 			ps.setInt(9, CCNumber);
 			ps.setBoolean(10, banned);
 			ps.execute();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println("Could not add user.");
 		}
 		close();
+	}
+	
+	public boolean userExists(String username) {
+		try {
+			connect();
+			PreparedStatement ps = c.prepareStatement("SELECT * FROM username WHERE username=?");
+			ps.setString(1, username);
+			ps.execute();
+			ResultSet rs = ps.executeQuery();
+			return (rs.next()) ? true : false;
+		} catch (SQLException e) {
+			System.out.println("Could not check user.");
+		}
+		close();
+		return false;
+	}
+	
+	public UserBean getUserBean(String username) {
+		try {
+			connect();
+			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address FROM username WHERE username=?");
+			ps.setString(1, username);
+			ps.execute();
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return new UserBean(
+						rs.getString("username"),
+						rs.getString("email_address"),
+						rs.getString("nickname"),
+						rs.getString("first_name"),
+						rs.getString("last_name"),
+						rs.getInt("year_of_birth"),
+						rs.getString("postal_address")
+				);
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not get userbean.");
+		}
+		close();
+		return null;
 	}
 	
 	public void addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
@@ -75,7 +118,7 @@ public class JDBCConnector {
 			ps.setTimestamp(10, date);
 			ps.setBoolean(11, halt);
 			ps.execute();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println("Could not add auction.");
 		}
 		close();
@@ -90,7 +133,7 @@ public class JDBCConnector {
 			ps.setFloat(3, price);
 			ps.setTimestamp(4, bidDate);
 			ps.execute();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			System.out.println("Could not add bidding.");
 		}
 		close();
