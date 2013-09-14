@@ -65,11 +65,12 @@ public class JDBCConnector {
 	public boolean userExists(String username) {
 		try {
 			connect();
-			PreparedStatement ps = c.prepareStatement("SELECT * FROM username WHERE username=?");
+			PreparedStatement ps = c.prepareStatement("SELECT COUNT(username) AS total FROM username WHERE username=?");
 			ps.setString(1, username);
-			ps.execute();
 			ResultSet rs = ps.executeQuery();
-			return (rs.next()) ? true : false;
+			while (rs.next()) {
+				return (rs.getInt("total") > 0) ? true : false;
+			}
 		} catch (SQLException e) {
 			System.out.println("Could not check user.");
 		}
@@ -82,7 +83,6 @@ public class JDBCConnector {
 			connect();
 			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address FROM username WHERE username=?");
 			ps.setString(1, username);
-			ps.execute();
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				return new UserBean(
