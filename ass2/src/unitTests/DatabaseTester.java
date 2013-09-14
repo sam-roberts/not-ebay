@@ -39,11 +39,11 @@ public class DatabaseTester {
 		jdbc.addUser("user1", "coolpassword", "a", "a", "a", "a", 9, "a", 9, false);
 		jdbc.addUser("example", "example", "a", "a", "a", "a", 1901, "address", 1, false);
 		
-		assertTrue(jdbc.userExists("user1"));
-		assertTrue(jdbc.userExists("example"));
+		assertTrue(jdbc.isUserExists("user1"));
+		assertTrue(jdbc.isUserExists("example"));
 		
-		assertFalse(jdbc.userExists("user2"));
-		assertFalse(jdbc.userExists("notreal09account"));
+		assertFalse(jdbc.isUserExists("user2"));
+		assertFalse(jdbc.isUserExists("notreal09account"));
 		
 	}
 }

@@ -12,11 +12,14 @@ public class FormManager {
 	public static final int RESTRICT_ALPHHANUMERIC_NOSPACE = 1;
 	public static final int RESTRICT_ALPHHANUMERIC_SPACE = 2;
 	public static final int RESTRICT_EMAIL = 3;
+	
+	public static final int RESTRICT_NUMERIC_ONLY = 4;
 
 
 	private static final String ERROR_MISSING = "field is empty";
 	private static final String ERROR_INVALID_ALPHANUMERIC = "field should contain only alphanumeric values";
 	private static final String ERROR_INVALID_EMAIL = "email address provided is invalid";
+	private static final String ERROR_NUMERIC_ONLY = "field must contain numbers only";
 
 
 	Map<String, Form> forms;
@@ -58,6 +61,8 @@ public class FormManager {
 							thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
 						} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
 							thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
+						} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
+							thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
 						}
 					}
 				}
@@ -82,6 +87,8 @@ public class FormManager {
 
 		} else if (restrictionType == RESTRICT_EMAIL) {
 			return "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
+		} else if (restrictionType == RESTRICT_NUMERIC_ONLY) {
+			return "\\d+";
 		}
 		return null;
 	}
@@ -105,4 +112,6 @@ public class FormManager {
 			forms.get(key).setInvalid(false);
 		}
 	}
+
+
 }

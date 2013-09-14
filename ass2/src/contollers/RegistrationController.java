@@ -22,9 +22,9 @@ public class RegistrationController extends MasterFormBasedController {
 		formManager.addForm("nickname", paramManager.getIndividualParam("nickname"));
 		formManager.addForm("firstName", paramManager.getIndividualParam("firstName"));
 		formManager.addForm("lastName", paramManager.getIndividualParam("lastName"));
-		formManager.addForm("yearOfBirth", paramManager.getIndividualParam("yearOfBirth"));
+		formManager.addForm("yearOfBirth", paramManager.getIndividualParam("yearOfBirth"), FormManager.RESTRICT_NUMERIC_ONLY);
 		formManager.addForm("address", paramManager.getIndividualParam("address"));
-		formManager.addForm("ccNumber", paramManager.getIndividualParam("ccNumber"));
+		formManager.addForm("ccNumber", paramManager.getIndividualParam("ccNumber"), FormManager.RESTRICT_NUMERIC_ONLY);
 
 		
 
@@ -41,8 +41,8 @@ public class RegistrationController extends MasterFormBasedController {
 		return formManager.getMessage();
 	}
 
-	public boolean isAccountAlreadyExists(String username) {
-		boolean exists = JDBCConnector.userExists(username);
+	public boolean isAccountAlreadyExists() {
+		boolean exists = JDBCConnector.isUserExists(paramManager.getIndividualParam("username"));
 		if (exists) {
 			message = "An account with that username already exists";
 		} else {
@@ -52,7 +52,16 @@ public class RegistrationController extends MasterFormBasedController {
 	}
 	
 	//fix so JDBC returns val if something goes wrong.
-	public void registerUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
-		JDBCConnector.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, banned);
+	public void registerUser() {
+		String username = paramManager.getIndividualParam("username");
+		String password = paramManager.getIndividualParam("password"); 
+		String email = paramManager.getIndividualParam("email");
+		String nickname= paramManager.getIndividualParam("nickname"); 
+		String firstName = paramManager.getIndividualParam("firstName"); 
+		String lastName = paramManager.getIndividualParam("lastName");
+		int yearOfBirth = Integer.parseInt(paramManager.getIndividualParam("yearOfBirth")); 
+		String postalAddress= paramManager.getIndividualParam("address");
+		int CCNumber = Integer.parseInt(paramManager.getIndividualParam("ccNumber"));
+		JDBCConnector.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, false);
 	}
 }

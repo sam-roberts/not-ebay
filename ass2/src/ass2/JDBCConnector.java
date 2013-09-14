@@ -65,7 +65,7 @@ public class JDBCConnector {
 		close(c);
 	}
 	
-	public static boolean userExists(String username) {
+	public static boolean isUserExists(String username) {
 		Connection c = null;
 		try {
 			c = connect();
@@ -82,7 +82,7 @@ public class JDBCConnector {
 		return false;
 	}
 	
-	public static boolean login(String username, String password) {
+	public static boolean hasLogin(String username, String password) {
 		Connection c = null;
 		try {
 			c = connect();

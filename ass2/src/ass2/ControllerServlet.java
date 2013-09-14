@@ -20,17 +20,17 @@ import contollers.RegistrationController;
  */
 @WebServlet(name="ControllerServlet",urlPatterns={"/ControllerServlet","/","/home"})
 public class ControllerServlet extends HttpServlet {
-	
+
 	private static final String JSP_LOGIN = "/login.jsp";
 	private static final String JSP_HOME = "/index.jsp";
 	private static final String JSP_REGISTRATION = "/registration.jsp";
 	private static final String JSP_MESSAGE = "/message.jsp";
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	//private LoginController loginController;
 	//private RegistrationController registrationController;
-	
+
 
 	public ControllerServlet() {
 
@@ -50,13 +50,13 @@ public class ControllerServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		
+
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
 		FormManager form = new FormManager();
 
 		//useful for debugging
 		pm.printAllValues();
-		
+
 		//default go home?
 		String forward = JSP_HOME;
 
@@ -73,10 +73,12 @@ public class ControllerServlet extends HttpServlet {
 			else if ("login".equals(action)) {
 				LoginController loginController = new LoginController(pm);
 				if (loginController.isInvalidForm()) {
+					//entered the wrong information, keep them on the same page
 					forward = JSP_LOGIN;
-					request.setAttribute("message", loginController.getMessage());
+					request.setAttribute("message", loginController.getFormMessage());
 				} else {
-					UserBean ub = loginController.requestLogin(request.getParameter("username"), request.getParameter("password"));
+					//check to see if its a valid account					
+					UserBean ub = loginController.requestLogin();
 					if (ub != null) {
 						request.getSession().setAttribute("account", ub);
 						forward = JSP_HOME;
@@ -92,40 +94,30 @@ public class ControllerServlet extends HttpServlet {
 					forward = JSP_REGISTRATION;
 					request.setAttribute("message", registrationController.getMessage());
 				} else {
-					if (registrationController.isAccountAlreadyExists(request.getParameter("username"))) {
+					if (registrationController.isAccountAlreadyExists()) {
 						forward = JSP_REGISTRATION;
 						request.setAttribute("message", registrationController.getMessage());
 					} else {
 						forward = JSP_MESSAGE;
 						request.setAttribute("message", "You have been registered, an email will be sent to you to confirm your account");
-						
+
 						//TODO make sure to securily parse strings
-						
-						registrationController.registerUser(
-								request.getParameter("username"), 
-								request.getParameter("password"), 
-								request.getParameter("email"), 
-								request.getParameter("nickname"), 
-								request.getParameter("firstName"), 
-								request.getParameter("lastName"), 
-								Integer.parseInt(request.getParameter("yearOfBirth")), 
-								request.getParameter("address"), 
-								Integer.parseInt(request.getParameter("ccNumber")),
-								false);
-						
+
+						registrationController.registerUser();
+
 						//TODO Create the account in the database
-						
+
 						//TODO Email the user
 					}
 				}
-				
+
 			}
 		}
-		
+
 
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
 		requestDispatcher.forward(request, response);
-			}
+	}
 
 }
