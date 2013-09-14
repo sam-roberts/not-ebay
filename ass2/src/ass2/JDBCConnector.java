@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 
 import beans.UserBean;
@@ -136,6 +137,19 @@ public class JDBCConnector {
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Could not add bidding.");
+		}
+		close();
+	}
+	
+	public void clearDB() {
+		try {
+			connect();
+			Statement s = c.createStatement();
+			s.execute("DELETE FROM Bidding WHERE 1=1");
+			s.execute("DELETE FROM Auction WHERE 1=1");
+			s.execute("DELETE FROM Username WHERE 1=1");
+		} catch (SQLException e) {
+			System.out.println("Could not clear DB (does not revert changes).");
 		}
 		close();
 	}
