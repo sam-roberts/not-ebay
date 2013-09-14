@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import beans.UserBean;
 import contollers.LoginController;
 import contollers.RegistrationController;
 
@@ -27,8 +28,8 @@ public class ControllerServlet extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private LoginController loginController;
-	private RegistrationController registrationController;
+	//private LoginController loginController;
+	//private RegistrationController registrationController;
 	
 
 	public ControllerServlet() {
@@ -65,39 +66,52 @@ public class ControllerServlet extends HttpServlet {
 			else if ("halt_auction".equals(action)) {}
 			else if ("remove_auction".equals(action)) {}
 			else if ("ban_user".equals(action)) {}
-			else if ("logout".equals(action)) {}
+			else if ("logout".equals(action)) {
+				request.getSession().removeAttribute("account");
+				forward = JSP_HOME;
+			}
 			else if ("login".equals(action)) {
-				loginController = new LoginController(pm);
-				
-				//check just to see if everything is entered okay
+				LoginController loginController = new LoginController(pm);
 				if (loginController.isInvalidForm()) {
-					//stay on the same page because its invalid
 					forward = JSP_LOGIN;
 					request.setAttribute("message", loginController.getMessage());
 				} else {
-					// check to see if the account is valid
-					if (loginController.isValidAccount()) {
-						//TODO create a session
-						
-						//take them home
+					UserBean ub = loginController.requestLogin(request.getParameter("username"), request.getParameter("password"));
+					if (ub != null) {
+						request.getSession().setAttribute("account", ub);
 						forward = JSP_HOME;
 					} else {
 						request.setAttribute("message", loginController.getMessage());
+						forward = JSP_LOGIN;
 					}
 				}
 			}
 			else if ("register".equals(action)) {
-				registrationController = new RegistrationController(pm);
+				RegistrationController registrationController = new RegistrationController(pm);
 				if (registrationController.isInvalidForm()) {
 					forward = JSP_REGISTRATION;
 					request.setAttribute("message", registrationController.getMessage());
 				} else {
-					if (registrationController.isAccountAlreadyExists()) {
+					if (registrationController.isAccountAlreadyExists(request.getParameter("username"))) {
 						forward = JSP_REGISTRATION;
 						request.setAttribute("message", registrationController.getMessage());
 					} else {
 						forward = JSP_MESSAGE;
 						request.setAttribute("message", "You have been registered, an email will be sent to you to confirm your account");
+						
+						//TODO make sure to securily parse strings
+						
+						registrationController.registerUser(
+								request.getParameter("username"), 
+								request.getParameter("password"), 
+								request.getParameter("email"), 
+								request.getParameter("nickname"), 
+								request.getParameter("firstName"), 
+								request.getParameter("lastName"), 
+								Integer.parseInt(request.getParameter("yearOfBirth")), 
+								request.getParameter("address"), 
+								Integer.parseInt(request.getParameter("ccNumber")),
+								false);
 						
 						//TODO Create the account in the database
 						

@@ -4,14 +4,14 @@ import ass2.ParameterManager;
 
 public class MasterFormBasedController {
 	
-	ParameterManager paramManager;
+	public ParameterManager paramManager;
 	
-	String message;
+	public String message;
 	
-	MasterFormBasedController (ParameterManager params) {
+	public MasterFormBasedController (ParameterManager params) {
 		this.paramManager = params;
 		message = null;
-
+		
 	}
 
 }

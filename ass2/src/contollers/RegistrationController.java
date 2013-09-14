@@ -1,6 +1,7 @@
 package contollers;
 
 import ass2.FormManager;
+import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
 public class RegistrationController extends MasterFormBasedController {
@@ -40,14 +41,18 @@ public class RegistrationController extends MasterFormBasedController {
 		return formManager.getMessage();
 	}
 
-	public boolean isAccountAlreadyExists() {
-		// TODO Auto-generated method stub
-		boolean exists = false;
+	public boolean isAccountAlreadyExists(String username) {
+		boolean exists = JDBCConnector.userExists(username);
 		if (exists) {
 			message = "An account with that username already exists";
 		} else {
 			message = "Success!";
 		}
 		return exists;
+	}
+	
+	//fix so JDBC returns val if something goes wrong.
+	public void registerUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
+		JDBCConnector.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, banned);
 	}
 }

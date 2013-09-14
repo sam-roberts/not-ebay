@@ -1,6 +1,8 @@
 package contollers;
 
+import beans.UserBean;
 import ass2.FormManager;
+import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
 public class LoginController extends MasterFormBasedController {
@@ -29,15 +31,14 @@ public class LoginController extends MasterFormBasedController {
 		return formManager.getMessage();
 	}
 
-	public boolean isValidAccount() {
-		// TODO Auto-generated method stub
-		Boolean valid = true;
-		if (valid) {
-			message = "Invalid Username/Password";
-		} else {
+	public UserBean requestLogin(String username, String password) {
+		if (JDBCConnector.login(username, password)) {
 			message = "Success!";
+			return JDBCConnector.getUserBean(username);
+		} else {
+			message = "Invalid Username/Password";
 		}
-		return valid;
+		return null;
 	}
 
 }

@@ -13,13 +13,11 @@ import beans.UserBean;
 public class JDBCConnector {
 
 	//Possibly store these in a file rather than in code
-	private final String postgreConn = "jdbc:postgresql://127.0.0.1:5432/ass2";
-	private final String user = "test";
-	private final String pass = "test";
+	private static final String postgreConn = "jdbc:postgresql://127.0.0.1:5432/ass2";
+	private static final String user = "test";
+	private static final String pass = "test";
 	
-	private Connection c;
-	
-	private void connect() {
+	private static Connection connect() {
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
@@ -27,13 +25,15 @@ public class JDBCConnector {
 		}
 		
 		try {
-			c = DriverManager.getConnection(postgreConn, user, pass);
+			return DriverManager.getConnection(postgreConn, user, pass);
 		} catch (SQLException e) {
 			System.out.println("Error JDBC can't connect.");
 		}
+		
+		return null;
 	}
 	
-	private void close() {
+	private static void close(Connection c) {
 		try {
 			if (!c.isClosed())
 				c.close();
@@ -42,9 +42,10 @@ public class JDBCConnector {
 		}
 	}
 	
-	public void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
+	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 			ps.setString(1, username);
@@ -61,12 +62,13 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not add user.\n" + e.getMessage());
 		}
-		close();
+		close(c);
 	}
 	
-	public boolean userExists(String username) {
+	public static boolean userExists(String username) {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("SELECT COUNT(username) AS total FROM username WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
@@ -76,13 +78,32 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not check user.");
 		}
-		close();
+		close(c);
 		return false;
 	}
 	
-	public UserBean getUserBean(String username) {
+	public static boolean login(String username, String password) {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT COUNT(username) AS total FROM username WHERE username=? AND password=?");
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return (rs.getInt("total") > 0) ? true : false;
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not check user.");
+		}
+		close(c);
+		return false;
+	}
+	
+	public static UserBean getUserBean(String username) {
+		Connection c = null;
+		try {
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address FROM username WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
@@ -100,13 +121,14 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not get userbean.");
 		}
-		close();
+		close(c);
 		return null;
 	}
 	
-	public void addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
+	public static void addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			ps.setString(1, title);
 			ps.setString(2, author);
@@ -123,12 +145,13 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not add auction.");
 		}
-		close();
+		close(c);
 	}
 	
-	public void addBidding(String author, int auctionID, float price, Timestamp bidDate) {
+	public static void addBidding(String author, int auctionID, float price, Timestamp bidDate) {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("INSERT INTO Bidding VALUES (DEFAULT, (SELECT username FROM Username WHERE username=?), (SELECT id FROM Auction WHERE id=?), ?, ?)");
 			ps.setString(1, author);
 			ps.setInt(2, auctionID);
@@ -138,12 +161,13 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not add bidding.");
 		}
-		close();
+		close(c);
 	}
 	
-	public void clearDB() {
+	public static void clearDB() {
+		Connection c = null;
 		try {
-			connect();
+			c = connect();
 			Statement s = c.createStatement();
 			s.execute("DELETE FROM Bidding WHERE 1=1");
 			s.execute("DELETE FROM Auction WHERE 1=1");
@@ -151,7 +175,7 @@ public class JDBCConnector {
 		} catch (SQLException e) {
 			System.out.println("Could not clear DB (does not revert changes).");
 		}
-		close();
+		close(c);
 	}
 	
 }
