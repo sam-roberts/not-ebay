@@ -8,6 +8,8 @@
 <title>Home</title>
 </head>
 <body>
+
+<jsp:include page="/header.jsp"/>
 <!-- SEARCH FORM -->
 <form action="controller" method="GET">
 	<input type="hidden" name="action" value="search"/>
