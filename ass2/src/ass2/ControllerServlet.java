@@ -70,7 +70,7 @@ public class ControllerServlet extends HttpServlet {
 					forward = JSP_ADD_AUCTION;
 					request.setAttribute("message", ac.getFormMessage());
 				} else {
-					//add the auction??
+					
 				}
 			}
 			else if ("halt_auction".equals(action)) {}

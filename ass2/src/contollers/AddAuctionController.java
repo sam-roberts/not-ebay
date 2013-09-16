@@ -6,17 +6,12 @@ import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
 public class AddAuctionController extends MasterFormBasedController{
-	FormManager formManager;
 
 	public AddAuctionController(ParameterManager params) {
 		super(params);
-		// TODO Auto-generated constructor stub
-		formManager = new FormManager();
-		
-		createForm();
 	}
 
-	private void createForm() {
+	protected void createForm() {
 		/*
 		<li>Title: <input type="text" name="title"></li>
 		<li>Category: <input type="password" name="category"></li>
@@ -39,30 +34,10 @@ public class AddAuctionController extends MasterFormBasedController{
 		formManager.addForm("biddingIncrements", paramManager.getIndividualParam("biddingIncrements"), FormManager.RESTRICT_NUMERIC_ONLY);
 		// it's optional so i think don't add it
 		//formManager.addForm("endOfAuction", paramManager.getIndividualParam("endOfAuction"));
-
-
+	}
+	
+	public void addAuction() {
 
 	}
 	
-	public boolean isInvalidForm() {
-		return formManager.isMissingDetails();
-	}
-	
-	public String getFormMessage() {
-		return formManager.getMessage();
-	}
-
-	public UserBean requestLogin() {
-		if (JDBCConnector.hasLogin(paramManager.getIndividualParam("username"), paramManager.getIndividualParam("password"))) {
-			message = "Success!";
-			return JDBCConnector.getUserBean(paramManager.getIndividualParam("username"));
-		} else {
-			message = "Invalid Username/Password!";
-		}
-		return null;
-	}
-	
-	public String getMessage() {
-		return message;
-	}
 }
