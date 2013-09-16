@@ -19,7 +19,7 @@ import contollers.RegistrationController;
 /**
  * Servlet implementation class ControllerServlet
  */
-@WebServlet(name="ControllerServlet",urlPatterns={"/ControllerServlet","/","/home"})
+//@WebServlet(name="ControllerServlet",urlPatterns={"/ControllerServlet","/","/home"})
 public class ControllerServlet extends HttpServlet {
 
 	private static final String JSP_LOGIN = "/login.jsp";
@@ -43,11 +43,11 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
+		//response.setContentType("text/html");
 		String action = request.getParameter("action");
 		if ("search".equals(action)) {}
 
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		//request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
