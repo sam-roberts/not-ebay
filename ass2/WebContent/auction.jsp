@@ -7,8 +7,19 @@
 <title>Auction</title>
 </head>
 <body>
-<!-- We can worry about what to put here later -->
-
-<!--  -->
+	<form action="controller?action=addAuction" method="POST">
+		<ul>
+			<li>Title: <input type="text" name="title"></li>
+			<li>Category: <input type="password" name="category"></li>
+			<li>Picture: <input type="file" name="picture"></li>
+			<li>Description: <textArea name="description" rows=6></textArea></li>
+			<li>Postage Details: <input type="text" name="postageDetails"></li>
+			<li>Reserve Price: <input type="text" name="reservePrice"></li>
+			<li>Bidding Start Price: <input type="text" name="biddingStart"></li>
+			<li>Bidding Increments: <input type="text" name="biddingIncrements"></li>
+			<li>End of Auction: <input type="text" name="endOfAuction"></li>
+			<li><input type="submit" value="submit"></li>
+		</ul>
+	</form>
 </body>
 </html>

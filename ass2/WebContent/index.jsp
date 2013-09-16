@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,29 +9,32 @@
 </head>
 <body>
 
-<jsp:include page="/header.jsp"/>
-<!-- SEARCH FORM -->
-<form action="controller" method="GET">
-	<input type="hidden" name="action" value="search"/>
-	<ul>
-		<li>Search: <input type="text" name="searchText"></li>
-		<li><input type="submit" value="submit"></li>
-	</ul>
-</form>
+	<jsp:include page="/header.jsp" />
+	<!-- SEARCH FORM -->
+	<form action="controller" method="GET">
+		<input type="hidden" name="action" value="search" />
+		<ul>
+			<li>Search: <input type="text" name="searchText"></li>
+			<li><input type="submit" value="submit"></li>
+		</ul>
+	</form>
 
-<!-- LOGIN/REGISTER FORM(S) -->
-<!-- HERE MAKE SURE WE REMOVE THIS IF THE USER IS LOGGED IN -->
-<!-- REPLACE WITH "Hello, nickname (signout button) -->
-<c:choose>
-	<c:when test="${empty account}">
-		<a href="login.jsp">Login</a>
-		<a href="registration.jsp">Registration</a>
-	</c:when>
-	<c:otherwise>
-		<form action="controller?action=logout" method="POST">
-			<input type="submit" value="logout">
-		</form>
-	</c:otherwise>
-</c:choose>
+	<!-- LOGIN/REGISTER FORM(S) -->
+	<!-- HERE MAKE SURE WE REMOVE THIS IF THE USER IS LOGGED IN -->
+	<!-- REPLACE WITH "Hello, nickname (signout button) -->
+	<c:choose>
+		<c:when test="${empty account}">
+			<a href="login.jsp">Login</a>
+			<a href="registration.jsp">Registration</a>
+		</c:when>
+		<c:otherwise>
+			<form action="controller?action=logout" method="POST">
+				<input type="submit" value="logout">
+			</form>
+
+		</c:otherwise>
+	</c:choose>
+	<a href="auction.jsp">Add Auction</a>
+
 </body>
 </html>

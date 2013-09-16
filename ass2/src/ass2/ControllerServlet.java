@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.UserBean;
+import contollers.AddAuctionController;
 import contollers.LoginController;
 import contollers.RegistrationController;
 
@@ -25,6 +26,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_HOME = "/index.jsp";
 	private static final String JSP_REGISTRATION = "/registration.jsp";
 	private static final String JSP_MESSAGE = "/message.jsp";
+	private static final String JSP_ADD_AUCTION = "/auction.jsp";
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +64,15 @@ public class ControllerServlet extends HttpServlet {
 
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
-			if ("add_auction".equals(action)) {}
+			if ("addAuction".equals(action)) {
+				AddAuctionController ac = new AddAuctionController(pm);
+				if (ac.isInvalidForm()) {
+					forward = JSP_ADD_AUCTION;
+					request.setAttribute("message", ac.getFormMessage());
+				} else {
+					//add the auction??
+				}
+			}
 			else if ("halt_auction".equals(action)) {}
 			else if ("remove_auction".equals(action)) {}
 			else if ("ban_user".equals(action)) {}
