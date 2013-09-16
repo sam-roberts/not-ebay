@@ -7,6 +7,8 @@
 <title>User Account</title>
 </head>
 <body>
+	<jsp:include page="/header.jsp" />
+
 <!-- Most of the stuff will be coded in using scriplets -->
 </body>
 </html>

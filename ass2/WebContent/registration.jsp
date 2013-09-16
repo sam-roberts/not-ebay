@@ -10,6 +10,7 @@
 <title>Registration</title>
 </head>
 <body>
+	<jsp:include page="/header.jsp" />
 
 	${message}
 

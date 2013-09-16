@@ -7,6 +7,8 @@
 <title>Add Auction</title>
 </head>
 <body>
+	<jsp:include page="/header.jsp" />
+
 <form action="controller?action=add_auction" method="POST">
 	<ul>
 		<li>Title: <input type="text" name="title"></li>

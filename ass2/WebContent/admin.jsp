@@ -7,6 +7,8 @@
 <title>Admin Page</title>
 </head>
 <body>
+	<jsp:include page="/header.jsp" />
+
 <form action="controller?action=halt_auction" method="POST">
 	<ul>
 		<li>Auction ID: 
