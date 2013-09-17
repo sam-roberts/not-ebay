@@ -1,7 +1,7 @@
 --tables
 
 --generic value
-CREATE DOMAIN GV as varchar(100);
+CREATE DOMAIN GV as varchar(500);
 
 CREATE TABLE Username (
     username        GV NOT null unique,
