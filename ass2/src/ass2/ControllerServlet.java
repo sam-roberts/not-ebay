@@ -102,7 +102,7 @@ public class ControllerServlet extends HttpServlet {
 				RegistrationController registrationController = new RegistrationController(pm);
 				if (registrationController.isInvalidForm()) {
 					forward = JSP_REGISTRATION;
-					request.setAttribute("message", registrationController.getMessage());
+					request.setAttribute("message", registrationController.getFormMessage());
 				} else {
 					if (registrationController.isAccountAlreadyExists()) {
 						forward = JSP_REGISTRATION;
