@@ -9,7 +9,7 @@
 <body>
 	<jsp:include page="/header.jsp" />
 
-	<form action="controller?action=addAuction" method="POST">
+	<form action="controller?action=addAuction" method="POST" enctype ="multipart/form-data">
 		<ul>
 			<li>Title: <input type="text" name="title"></li>
 			<li>Category: <input type="password" name="category"></li>

@@ -54,7 +54,6 @@ public class ControllerServlet extends HttpServlet {
 
 
 		ParameterManager pm = new ParameterManager(request.getParameterMap());
-		FormManager form = new FormManager();
 
 		//useful for debugging
 		pm.printAllValues();
@@ -65,13 +64,14 @@ public class ControllerServlet extends HttpServlet {
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
 			if ("addAuction".equals(action)) {
-				AddAuctionController ac = new AddAuctionController(pm);
-				if (ac.isInvalidForm()) {
+				AddAuctionController ac = new AddAuctionController(pm, request);
+				
+				/*if (ac.isInvalidForm()) {
 					forward = JSP_ADD_AUCTION;
 					request.setAttribute("message", ac.getFormMessage());
 				} else {
 					
-				}
+				}*/
 			}
 			else if ("halt_auction".equals(action)) {}
 			else if ("remove_auction".equals(action)) {}
