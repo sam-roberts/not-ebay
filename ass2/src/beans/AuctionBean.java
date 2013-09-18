@@ -86,7 +86,7 @@ public class AuctionBean {
 	
 	//TODO: STYLIZE THIS
 	public String display() {
-		return id + "<br>" + title + "<img src='" + picture + "'>";
+		return "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><img src='" + picture + "'>";
 	}
 
 }

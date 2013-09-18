@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 
 import beans.AuctionBean;
 import beans.AuctionListBean;
+import beans.BidBean;
+import beans.BidListBean;
 import beans.UserBean;
 
 public class JDBCConnector {
@@ -190,7 +192,7 @@ public class JDBCConnector {
 			}
 			return alb;
 		} catch (SQLException e) {
-			System.out.println("Could not add auction.");
+			System.out.println("Could not get auctions.");
 		}
 		close(c);
 		return null;
@@ -210,6 +212,30 @@ public class JDBCConnector {
 			System.out.println("Could not add bidding.");
 		}
 		close(c);
+	}
+	
+	public static BidListBean getBiddings(int id) {
+		Connection c = null;
+
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT * FROM Bidding WHERE auction=(SELECT id FROM Auction WHERE id=?) ORDER BY price DESC");
+			ps.setInt(id, 1);
+			ResultSet rs = ps.executeQuery();
+			BidListBean blb = new BidListBean();
+			while (rs.next()) {	
+				blb.addBid(new BidBean(
+						rs.getString("author"),
+						rs.getFloat("price"))
+				);
+			}
+			//close(c);
+			return blb;
+		} catch (SQLException e) {
+			System.out.println("Could not get biddings.");
+		}
+		close(c);
+		return null;
 	}
 	
 	public static void clearDB() {

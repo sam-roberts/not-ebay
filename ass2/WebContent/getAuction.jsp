@@ -15,7 +15,19 @@
 			No auction found.	
 		</c:when>
 		<c:otherwise>
-			${auction.display()}	
+			${auction.display()}
+			<c:if test="${not empty bid}">
+				${bid.display()}
+			</c:if>
+			<c:if test="${not empty param.id && not empty account}">
+				<form action="controller?action=bid" method="POST">
+				<input type="hidden" name="id" value="${ param.id }">
+					<ul>
+						<li>Bid: <input type="text" name="bid"></li>
+						<li><input type="submit" value="submit"></li>
+					</ul>
+				</form>
+			</c:if>	
 		</c:otherwise>
 	</c:choose>
 	

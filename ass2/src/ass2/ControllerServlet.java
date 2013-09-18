@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import sun.org.mozilla.javascript.internal.Context;
 import beans.UserBean;
 import contollers.AddAuctionController;
+import contollers.BidController;
 import contollers.GetAuctionController;
 import contollers.LoginController;
 import contollers.RegistrationController;
@@ -35,6 +36,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_MESSAGE = "/message.jsp";
 	private static final String JSP_ADD_AUCTION = "/auction.jsp";
 	private static final String JSP_GET = "/getAuction.jsp";
+	private static final String JSP_CONTROLLER = "/controller";
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,9 +60,13 @@ public class ControllerServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		if ("auction".equals(action)) {
 			GetAuctionController gac = new GetAuctionController(pm);
-			//TODO ???
-			//extend this to a list of auctions
 			request.setAttribute("auction", gac.getAuction());
+			
+			//TODO this makes 2 calls to the database - fix to one using join
+			if (request.getParameter("id") != null) {
+				BidController bd = new BidController(pm);
+				request.setAttribute("bid", bd.getBids());
+			}
 			forward = JSP_GET;
 		}
 		request.getRequestDispatcher(forward).forward(request, response);
@@ -145,10 +151,23 @@ public class ControllerServlet extends HttpServlet {
 						//TODO Email the user
 					}
 				}
-
+			}
+			else if ("bid".equals(action)) {
+				BidController bd = new BidController(pm);
+				UserBean ub = null;
+				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+					bd.addBid(ub.getUsername());
+				}
+				//repeat get request
+				//TODO FIX ALL BELOW COPY-PASTED CODE
+				GetAuctionController gac = new GetAuctionController(pm);
+				request.setAttribute("auction", gac.getAuction());
+				forward = JSP_GET;
+				if (request.getParameter("id") != null) {
+					request.setAttribute("bid", bd.getBids());
+				}
 			}
 		}
-
 
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);

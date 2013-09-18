@@ -14,6 +14,10 @@ public class AuctionListBean {
 		auctions.add(a);
 	}
 	
+	public int getNumAuctions() {
+		return auctions.size();
+	}
+	
 	//TODO stylize
 	public String display() {
 		String strConcat = "";
