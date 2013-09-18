@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 
 import beans.AuctionBean;
+import beans.AuctionListBean;
 import beans.UserBean;
 
 public class JDBCConnector {
@@ -150,16 +151,29 @@ public class JDBCConnector {
 		close(c);
 	}
 	
-	public static AuctionBean getAuction(int id) {
+	public static AuctionListBean getAuction(int id, String author, String title) {
 		Connection c = null;
+		
+		String query = "SELECT * FROM Auction WHERE 1=1 ";
+		if (id > 0) query += "AND id=? ";
+		if (author != null) query += "AND author LIKE ? ";
+		if (title != null) query += "AND title LIKE ? ";
+
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT * FROM Auction WHERE id=?");
-			ps.setInt(1, id);
+			PreparedStatement ps = c.prepareStatement(query);
+			
+			//TODO fix this so it looks better
+			int incre = 1;
+			if (id > 0) ps.setInt(incre++, id);
+			if (author != null) ps.setString(incre++, "%" + author + "%");
+			if (title != null) ps.setString(incre++, "%" + title + "%");
+
 			ResultSet rs = ps.executeQuery();
+			AuctionListBean alb = new AuctionListBean();
 			while (rs.next()) {
-				close(c);
-				return new AuctionBean(
+				close(c);	
+				alb.addAuction(new AuctionBean(
 						rs.getInt("id"),
 						rs.getString("title"),
 						rs.getString("author"),
@@ -171,9 +185,10 @@ public class JDBCConnector {
 						rs.getFloat("start_price"),
 						rs.getFloat("bidding_increments"),
 						rs.getTimestamp("end_of_auction"),
-						rs.getBoolean("halt")
+						rs.getBoolean("halt"))
 				);
 			}
+			return alb;
 		} catch (SQLException e) {
 			System.out.println("Could not add auction.");
 		}

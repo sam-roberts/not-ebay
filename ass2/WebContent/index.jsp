@@ -12,9 +12,9 @@
 	<jsp:include page="/header.jsp" />
 	<!-- SEARCH FORM -->
 	<form action="controller" method="GET">
-		<input type="hidden" name="action" value="search" />
+		<input type="hidden" name="action" value="auction" />
 		<ul>
-			<li>Search: <input type="text" name="searchText"></li>
+			<li>Search: <input type="text" name="title"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>
 	</form>

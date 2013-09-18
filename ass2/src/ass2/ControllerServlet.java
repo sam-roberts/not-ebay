@@ -56,9 +56,7 @@ public class ControllerServlet extends HttpServlet {
 		String forward = JSP_HOME;
 		
 		String action = request.getParameter("action");
-		if ("search".equals(action)) {}
-		//TODO make sure the add other search options for example by id
-		else if ("auction".equals(action) && request.getParameter("id") != null) {
+		if ("auction".equals(action)) {
 			GetAuctionController gac = new GetAuctionController(pm);
 			//TODO ???
 			//extend this to a list of auctions
