@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import sun.org.mozilla.javascript.internal.Context;
 import beans.UserBean;
 import contollers.AddAuctionController;
+import contollers.GetAuctionController;
 import contollers.LoginController;
 import contollers.RegistrationController;
 
@@ -33,6 +34,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_REGISTRATION = "/registration.jsp";
 	private static final String JSP_MESSAGE = "/message.jsp";
 	private static final String JSP_ADD_AUCTION = "/auction.jsp";
+	private static final String JSP_GET = "/getAuction.jsp";
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,11 +51,21 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.setContentType("text/html");
+		ParameterManager pm = new ParameterManager(request.getParameterMap());		
+		response.setContentType("text/html");
+		String forward = JSP_HOME;
+		
 		String action = request.getParameter("action");
 		if ("search".equals(action)) {}
-
-		//request.getRequestDispatcher("/index.jsp").forward(request, response);
+		//TODO make sure the add other search options for example by id
+		else if ("auction".equals(action) && request.getParameter("id") != null) {
+			GetAuctionController gac = new GetAuctionController(pm);
+			//TODO ???
+			//extend this to a list of auctions
+			request.setAttribute("auction", gac.getAuction());
+			forward = JSP_GET;
+		}
+		request.getRequestDispatcher(forward).forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -85,7 +97,7 @@ public class ControllerServlet extends HttpServlet {
 				UserBean ub;
 				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
 					//TODO get username? or nickname
-					ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/") + "auction_images/", ub.getUsername(), ts);
+					ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername(), ts);
 				}
 			}
 			else if ("halt_auction".equals(action)) {}

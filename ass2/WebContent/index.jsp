@@ -19,9 +19,6 @@
 		</ul>
 	</form>
 
-	<!-- LOGIN/REGISTER FORM(S) -->
-	<!-- HERE MAKE SURE WE REMOVE THIS IF THE USER IS LOGGED IN -->
-	<!-- REPLACE WITH "Hello, nickname (signout button) -->
 	<c:choose>
 		<c:when test="${empty account}">
 			<a href="login.jsp">Login</a>
@@ -31,10 +28,9 @@
 			<form action="controller?action=logout" method="POST">
 				<input type="submit" value="logout">
 			</form>
-
+			<a href="auction.jsp">Add Auction</a>
 		</c:otherwise>
 	</c:choose>
-	<a href="auction.jsp">Add Auction</a>
-
+	
 </body>
 </html>

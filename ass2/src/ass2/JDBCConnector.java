@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
+import beans.AuctionBean;
 import beans.UserBean;
 
 public class JDBCConnector {
@@ -108,6 +109,7 @@ public class JDBCConnector {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
+				close(c);
 				return new UserBean(
 						rs.getString("username"),
 						rs.getString("email_address"),
@@ -146,6 +148,37 @@ public class JDBCConnector {
 			System.out.println("Could not add auction.");
 		}
 		close(c);
+	}
+	
+	public static AuctionBean getAuction(int id) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT * FROM Auction WHERE id=?");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				close(c);
+				return new AuctionBean(
+						rs.getInt("id"),
+						rs.getString("title"),
+						rs.getString("author"),
+						rs.getString("category"),
+						rs.getString("picture"),
+						rs.getString("description"),
+						rs.getString("postage_details"),
+						rs.getFloat("reserve_price"),
+						rs.getFloat("start_price"),
+						rs.getFloat("bidding_increments"),
+						rs.getTimestamp("end_of_auction"),
+						rs.getBoolean("halt")
+				);
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not add auction.");
+		}
+		close(c);
+		return null;
 	}
 	
 	public static void addBidding(String author, int auctionID, float price, Timestamp bidDate) {

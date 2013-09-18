@@ -34,7 +34,6 @@ public class AddAuctionController extends MasterFormBasedController {
 	
 	public AddAuctionController(ParameterManager params) {
 		super(params);
-		paramManager.getIndividualParam("title");
 	}
 
 	protected void createForm() {
@@ -63,11 +62,11 @@ public class AddAuctionController extends MasterFormBasedController {
 		//formManager.addForm("endOfAuction", paramManager.getIndividualParam("endOfAuction"));
 	}
 
-	public void addAuction(Part file, String location, String author, Timestamp endOfAuction) {
+	public void addAuction(Part file, String diskLocation, String location, String author, Timestamp endOfAuction) {
 		String filename = getFilename(file);
 		try {
 			InputStream is = file.getInputStream();
-			OutputStream os = new FileOutputStream(location + filename);
+			OutputStream os = new FileOutputStream(diskLocation + location + filename);
 			
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int bytes;
@@ -83,7 +82,7 @@ public class AddAuctionController extends MasterFormBasedController {
 			return ;
 		}
 		
-		JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + file, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), endOfAuction, false);
+		JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + filename, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), endOfAuction, false);
 	}
 	
 	//credit from stackoverflow - http://stackoverflow.com/questions/2422468/how-to-upload-files-to-server-using-jsp-servlet
