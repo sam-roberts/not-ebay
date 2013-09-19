@@ -86,7 +86,7 @@ public class AuctionBean {
 	
 	//TODO: STYLIZE THIS
 	public String display() {
-		return "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><img src='" + picture + "'>";
+		return "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><br>Start Price: " + startPrice + "<br>Bidding Increments: " + biddingIncrements + "<br>End of auction: " + endOfAuction.toString() + "<br>";
 	}
 
 }

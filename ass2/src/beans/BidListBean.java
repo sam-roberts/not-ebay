@@ -13,6 +13,10 @@ public class BidListBean {
 	public void addBid(BidBean b) {
 		bids.add(b);
 	}
+	
+	public LinkedList<BidBean> getBids() {
+		return bids;
+	}
 
 	//TODO stylize
 	public String display() {

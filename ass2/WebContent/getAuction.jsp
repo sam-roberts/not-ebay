@@ -12,7 +12,7 @@
 
 	<c:choose>
 		<c:when test="${empty auction}">
-			No auction found.	
+			No auctions found.
 		</c:when>
 		<c:otherwise>
 			${auction.display()}

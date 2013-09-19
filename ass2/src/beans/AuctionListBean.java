@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class AuctionListBean {
 
-	LinkedList<AuctionBean> auctions;
+	private LinkedList<AuctionBean> auctions;
 	
 	public AuctionListBean() {
 		auctions = new LinkedList<AuctionBean>();
@@ -14,6 +14,10 @@ public class AuctionListBean {
 		auctions.add(a);
 	}
 	
+	public LinkedList<AuctionBean> getAuctions() {
+		return auctions;
+	}
+	
 	public int getNumAuctions() {
 		return auctions.size();
 	}
@@ -21,8 +25,12 @@ public class AuctionListBean {
 	//TODO stylize
 	public String display() {
 		String strConcat = "";
-		for (AuctionBean ab : auctions)
-			strConcat += ab.display();
+		if (auctions.isEmpty()) {
+			strConcat = "No auctions found.";
+		} else {
+			for (AuctionBean ab : auctions)
+				strConcat += ab.display();
+		}
 		return strConcat;
 	}
 }

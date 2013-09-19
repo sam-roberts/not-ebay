@@ -156,10 +156,13 @@ public class JDBCConnector {
 	public static AuctionListBean getAuction(int id, String author, String title) {
 		Connection c = null;
 		
+		if (author != null)author = author.toLowerCase();
+		if (title != null) title = title.toLowerCase();
+		
 		String query = "SELECT * FROM Auction WHERE 1=1 ";
 		if (id > 0) query += "AND id=? ";
-		if (author != null) query += "AND author LIKE ? ";
-		if (title != null) query += "AND title LIKE ? ";
+		if (author != null) query += "AND LOWER(author) LIKE ? ";
+		if (title != null) query += "AND LOWER(title) LIKE ? ";
 
 		try {
 			c = connect();
@@ -198,6 +201,19 @@ public class JDBCConnector {
 		return null;
 	}
 	
+	public static void deleteAuction(int id) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("DELETE FROM auction WHERE id=?");
+			ps.setInt(1, id);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not delete auction.");
+		}
+		close(c);
+	}
+	
 	public static void addBidding(String author, int auctionID, float price, Timestamp bidDate) {
 		Connection c = null;
 		try {
@@ -220,7 +236,7 @@ public class JDBCConnector {
 		try {
 			c = connect();
 			PreparedStatement ps = c.prepareStatement("SELECT * FROM Bidding WHERE auction=(SELECT id FROM Auction WHERE id=?) ORDER BY price DESC");
-			ps.setInt(id, 1);
+			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			BidListBean blb = new BidListBean();
 			while (rs.next()) {	
@@ -229,7 +245,7 @@ public class JDBCConnector {
 						rs.getFloat("price"))
 				);
 			}
-			//close(c);
+			close(c);
 			return blb;
 		} catch (SQLException e) {
 			System.out.println("Could not get biddings.");

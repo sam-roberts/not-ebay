@@ -24,4 +24,8 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getAuction(id, author, title);
 	}
 	
+	public void finishAuction() {
+		
+	}
+	
 }
