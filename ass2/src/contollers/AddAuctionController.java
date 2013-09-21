@@ -107,7 +107,7 @@ public class AddAuctionController extends MasterFormBasedController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.MINUTE, Integer.parseInt(paramManager.getIndividualParam("auctionEnd")));
-		ts = new Timestamp(date.getTime());
+		ts = new Timestamp(cal.getTime().getTime());
 		return ts;
 	}
 	//credit from stackoverflow - http://stackoverflow.com/questions/2422468/how-to-upload-files-to-server-using-jsp-servlet
