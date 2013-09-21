@@ -2,5 +2,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<a href="index.jsp"><img src="${pageContext.request.contextPath}/images/logo.png" /></a>
+<a href="index.jsp"><img
+	src="${pageContext.request.contextPath}/images/logo.png" /></a>
+
+<c:if test="${not empty account}">
+		<br />
+					Welcome, You are logged in. Current Auctions <a href="account.jsp">Change Details</a>
+		
+	</c:if>
 <hr>

@@ -37,11 +37,15 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_ADD_AUCTION = "/auction.jsp";
 	private static final String JSP_GET = "/getAuction.jsp";
 	private static final String JSP_CONTROLLER = "/controller";
+	private static final String JSP_ACCOUNT = "/account.jsp";
 
 	private static final long serialVersionUID = 1L;
 
 	//private LoginController loginController;
 	//private RegistrationController registrationController;
+
+
+	ParameterManager pm;
 
 
 	public ControllerServlet() {
@@ -56,12 +60,12 @@ public class ControllerServlet extends HttpServlet {
 		ParameterManager pm = new ParameterManager(request.getParameterMap());		
 		response.setContentType("text/html");
 		String forward = JSP_HOME;
-		
+
 		String action = request.getParameter("action");
 		if ("auction".equals(action)) {
 			GetAuctionController gac = new GetAuctionController(pm);
 			request.setAttribute("auction", gac.getAuction());
-			
+
 			//TODO this makes 2 calls to the database - fix to one using join
 			if (request.getParameter("id") != null) {
 				BidController bd = new BidController(pm);
@@ -73,7 +77,7 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ParameterManager pm = new ParameterManager(request.getParameterMap());
+		pm = new ParameterManager(request.getParameterMap());
 
 		//useful for debugging
 		pm.printAllValues();
@@ -84,25 +88,8 @@ public class ControllerServlet extends HttpServlet {
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
 			if ("addAuction".equals(action)) {
-				AddAuctionController ac = new AddAuctionController(pm);
-				
-				//get timestamp
-				//TODO tell user to format like this
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-				Timestamp ts;
-				try {
-					ts = new Timestamp(sdf.parse(request.getParameter("endOfAuction")).getTime());
-				} catch (ParseException e) {
-					//TODO fix so below doesn't execute if fail, not just return
-					System.out.println("timestamp conversion failed");
-					return ;
-				}
-				
-				UserBean ub;
-				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
-					//TODO get username? or nickname
-					ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername(), ts);
-				}
+
+				forward = doAddAuction(request);
 			}
 			else if ("halt_auction".equals(action)) {}
 			else if ("remove_auction".equals(action)) {}
@@ -112,66 +99,109 @@ public class ControllerServlet extends HttpServlet {
 				forward = JSP_HOME;
 			}
 			else if ("login".equals(action)) {
-				LoginController loginController = new LoginController(pm);
-				if (loginController.isInvalidForm()) {
-					//entered the wrong information, keep them on the same page
-					forward = JSP_LOGIN;
-					request.setAttribute("message", loginController.getFormMessage());
-				} else {
-					//check to see if its a valid account					
-					UserBean ub = loginController.requestLogin();
-					if (ub != null) {
-						request.getSession().setAttribute("account", ub);
-						forward = JSP_HOME;
-					} else {
-						request.setAttribute("message", loginController.getMessage());
-						forward = JSP_LOGIN;
-					}
-				}
+				forward = doLogin(request);
 			}
 			else if ("register".equals(action)) {
-				RegistrationController registrationController = new RegistrationController(pm);
-				if (registrationController.isInvalidForm()) {
-					forward = JSP_REGISTRATION;
-					request.setAttribute("message", registrationController.getFormMessage());
-				} else {
-					if (registrationController.isAccountAlreadyExists()) {
-						forward = JSP_REGISTRATION;
-						request.setAttribute("message", registrationController.getMessage());
-					} else {
-						forward = JSP_MESSAGE;
-						request.setAttribute("message", "You have been registered, an email will be sent to you to confirm your account");
-
-						//TODO make sure to securily parse strings
-
-						registrationController.registerUser();
-
-						//TODO Create the account in the database
-
-						//TODO Email the user
-					}
-				}
+				forward = doRegister(request);
 			}
 			else if ("bid".equals(action)) {
-				BidController bd = new BidController(pm);
-				UserBean ub = null;
-				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
-					bd.addBid(ub.getUsername());
-				}
-				//repeat get request
-				//TODO FIX ALL BELOW COPY-PASTED CODE
-				GetAuctionController gac = new GetAuctionController(pm);
-				request.setAttribute("auction", gac.getAuction());
-				forward = JSP_GET;
-				if (request.getParameter("id") != null) {
-					request.setAttribute("bid", bd.getBids());
-				}
+				forward = doBid(request);
 			}
 		}
 
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
 		requestDispatcher.forward(request, response);
+	}
+
+	private String doAddAuction(HttpServletRequest request) throws IOException,
+	ServletException {
+		String forward = JSP_ADD_AUCTION;
+		AddAuctionController ac = new AddAuctionController(pm);
+
+		if (ac.isInvalidForm()) {
+			request.setAttribute("message", ac.getFormMessage());
+		} else {
+			UserBean ub;
+			// if we are logged in
+			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+				//TODO get username? or nickname
+
+				forward=JSP_ACCOUNT;
+				request.getSession().setAttribute("userInfo", ub);
+				ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
+				request.setAttribute("message", "Added new auction");
+
+			} else {
+				request.setAttribute("message", "What are you doing here? You need to be logged in to create an auction");
+			}
+		}
+		return forward;
+	}
+
+	private String doBid(HttpServletRequest request) {
+		String forward;
+		BidController bd = new BidController(pm);
+		UserBean ub = null;
+		if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+			bd.addBid(ub.getUsername());
+		}
+		//repeat get request
+		//TODO FIX ALL BELOW COPY-PASTED CODE
+		GetAuctionController gac = new GetAuctionController(pm);
+		request.setAttribute("auction", gac.getAuction());
+		forward = JSP_GET;
+		if (request.getParameter("id") != null) {
+			request.setAttribute("bid", bd.getBids());
+		}
+		return forward;
+	}
+
+	private String doLogin(HttpServletRequest request) {
+		String forward;
+		LoginController loginController = new LoginController(pm);
+		if (loginController.isInvalidForm()) {
+			//entered the wrong information, keep them on the same page
+			forward = JSP_LOGIN;
+			request.setAttribute("message", loginController.getFormMessage());
+		} else {
+			//check to see if its a valid account					
+			UserBean ub = loginController.requestLogin();
+			if (ub != null) {
+				request.getSession().setAttribute("account", ub);
+				forward = JSP_HOME;
+			} else {
+				request.setAttribute("message", loginController.getMessage());
+				forward = JSP_LOGIN;
+			}
+		}
+		return forward;
+	}
+
+	private String doRegister(HttpServletRequest request) {
+		String forward;
+		RegistrationController registrationController = new RegistrationController(pm);
+		if (registrationController.isInvalidForm()) {
+			forward = JSP_REGISTRATION;
+			request.setAttribute("message", registrationController.getFormMessage());
+		} else {
+			if (registrationController.isAccountAlreadyExists()) {
+				forward = JSP_REGISTRATION;
+				request.setAttribute("message", registrationController.getMessage());
+			} else {
+				forward = JSP_MESSAGE;
+				request.setAttribute("message", "You have been registered, an email will be sent to you to confirm your account");
+
+				//TODO make sure to securily parse strings
+
+				registrationController.registerUser();
+
+				//TODO Create the account in the database
+
+				//TODO Email the user
+			}
+		}
+		return forward;
 	}
 
 }

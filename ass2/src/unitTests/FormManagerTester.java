@@ -78,6 +78,36 @@ public class FormManagerTester {
 		
 	}
 	
+	@Test
+	public void testValidFloat() {
+		fm.addForm("blah", "1", FormManager.RESTRICT_FLOAT_ONLY);
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("blah", "1.00");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("blah", "0.00");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("blah", "100.50");
+		assertFalse(fm.isMissingDetails());
+
+		
+	}
+	
+	@Test
+	public void testInvalidFloat() {
+		fm.addForm("blah", "-1", FormManager.RESTRICT_FLOAT_ONLY);
+		assertTrue(fm.isMissingDetails());
+		
+		fm.setForm("blah", "1a.0a0");
+		assertTrue(fm.isMissingDetails());
+		
+		fm.setForm("blah", "100.5.0");
+		assertTrue(fm.isMissingDetails());
+
+		
+	}
 	
 	
 	

@@ -6,6 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,8 +36,20 @@ public class AddAuctionController extends MasterFormBasedController {
 	private final static int MAX_SIZE = 50000;
 	private final static int BUFFER_SIZE = 8192;
 	
+	Timestamp ts;
+	
+	private int minutesUntilAuctionEnd = 0;
 	public AddAuctionController(ParameterManager params) {
 		super(params);
+		createForm();
+
+
+		//get timestamp
+		//TODO tell user to format like this
+
+
+
+
 	}
 
 	protected void createForm() {
@@ -48,32 +64,33 @@ public class AddAuctionController extends MasterFormBasedController {
 		<li>Bidding Increments: <input type="text" name="biddingIncrements"></li>
 		<li>End of Auction: <input type="text" name="endOfAuction"></li>
 		<li><input type="submit" value="submit"></li>
-		*/
+		 */
 
 		formManager.addForm("title", paramManager.getIndividualParam("title"));
 		formManager.addForm("category", paramManager.getIndividualParam("category"));
 		//formManager.addForm("picture", paramManager.getIndividualParam("picture"));
 		formManager.addForm("description", paramManager.getIndividualParam("description"));
 		formManager.addForm("postageDetails", paramManager.getIndividualParam("postageDetails"));
-		formManager.addForm("reservePrice", paramManager.getIndividualParam("reservePrice"),FormManager.RESTRICT_NUMERIC_ONLY);
-		formManager.addForm("biddingStart", paramManager.getIndividualParam("biddingStart"), FormManager.RESTRICT_NUMERIC_ONLY);
-		formManager.addForm("biddingIncrements", paramManager.getIndividualParam("biddingIncrements"), FormManager.RESTRICT_NUMERIC_ONLY);
+		formManager.addForm("reservePrice", paramManager.getIndividualParam("reservePrice"),FormManager.RESTRICT_FLOAT_ONLY);
+		formManager.addForm("biddingStart", paramManager.getIndividualParam("biddingStart"), FormManager.RESTRICT_FLOAT_ONLY);
+		formManager.addForm("auctionEnd", paramManager.getIndividualParam("auctionEnd"), FormManager.RESTRICT_NUMERIC_ONLY);
+		formManager.addForm("biddingIncrements", paramManager.getIndividualParam("biddingIncrements"), FormManager.RESTRICT_FLOAT_ONLY);
 		// it's optional so i think don't add it
 		//formManager.addForm("endOfAuction", paramManager.getIndividualParam("endOfAuction"));
 	}
 
-	public void addAuction(Part file, String diskLocation, String location, String author, Timestamp endOfAuction) {
+	public void addAuction(Part file, String diskLocation, String location, String author) {
 		String filename = getFilename(file);
 		try {
 			InputStream is = file.getInputStream();
 			OutputStream os = new FileOutputStream(diskLocation + location + filename);
-			
+
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int bytes;
 			while ((bytes = is.read(buffer)) != -1) {
 				os.write(buffer, 0, bytes);
 			}
-			
+
 			is.close();
 			os.close();
 		} catch (Exception e) {
@@ -81,20 +98,28 @@ public class AddAuctionController extends MasterFormBasedController {
 			//TODO cleanup file if written
 			return ;
 		}
-		
-		JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + filename, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), endOfAuction, false);
+
+		JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + filename, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), getEndOfAuction(), false);
 	}
-	
+
+	private Timestamp getEndOfAuction() {
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MINUTE, Integer.parseInt(paramManager.getIndividualParam("auctionEnd")));
+		ts = new Timestamp(date.getTime());
+		return ts;
+	}
 	//credit from stackoverflow - http://stackoverflow.com/questions/2422468/how-to-upload-files-to-server-using-jsp-servlet
 	//CHECK FOR ATTACKS
 	private static String getFilename(Part part) {
-	    for (String cd : part.getHeader("content-disposition").split(";")) {
-	        if (cd.trim().startsWith("filename")) {
-	            String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-	            return filename.substring(filename.lastIndexOf('/') + 1).substring(filename.lastIndexOf('\\') + 1);
-	        }
-	    }
-	    return null;
+		for (String cd : part.getHeader("content-disposition").split(";")) {
+			if (cd.trim().startsWith("filename")) {
+				String filename = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+				return filename.substring(filename.lastIndexOf('/') + 1).substring(filename.lastIndexOf('\\') + 1);
+			}
+		}
+		return null;
 	}
 
 }
