@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,8 +47,9 @@ public class ControllerServlet extends HttpServlet {
 	//private RegistrationController registrationController;
 
 
-	ParameterManager pm;
-
+	private ParameterManager pm;
+	
+	private final java.util.concurrent.ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public ControllerServlet() {
 
@@ -91,7 +94,9 @@ public class ControllerServlet extends HttpServlet {
 
 				forward = doAddAuction(request);
 			}
-			else if ("halt_auction".equals(action)) {}
+			else if ("halt_auction".equals(action)) {
+				
+			}
 			else if ("remove_auction".equals(action)) {}
 			else if ("ban_user".equals(action)) {}
 			else if ("logout".equals(action)) {
@@ -129,7 +134,9 @@ public class ControllerServlet extends HttpServlet {
 
 				forward=JSP_ACCOUNT;
 				request.getSession().setAttribute("userInfo", ub);
-				ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
+				
+				//TODO add check
+				scheduler.schedule(new popAuction(ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername())), Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
 				request.setAttribute("message", "Added new auction");
 
 			} else {

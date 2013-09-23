@@ -2,7 +2,7 @@ package beans;
 
 import java.sql.Timestamp;
 
-public class AuctionBean {
+public class AuctionBean implements Runnable {
 
 	private int id;
 	private String title;
@@ -87,6 +87,12 @@ public class AuctionBean {
 	//TODO: STYLIZE THIS
 	public String display() {
 		return "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><br>Start Price: " + startPrice + "<br>Bidding Increments: " + biddingIncrements + "<br>End of auction: " + endOfAuction.toString() + "<br>";
+	}
+
+	@Override
+	public void run() {
+		//DELETE AUCTION
+		
 	}
 
 }

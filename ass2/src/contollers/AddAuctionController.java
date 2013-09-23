@@ -79,7 +79,7 @@ public class AddAuctionController extends MasterFormBasedController {
 		//formManager.addForm("endOfAuction", paramManager.getIndividualParam("endOfAuction"));
 	}
 
-	public void addAuction(Part file, String diskLocation, String location, String author) {
+	public int addAuction(Part file, String diskLocation, String location, String author) {
 		String filename = getFilename(file);
 		try {
 			InputStream is = file.getInputStream();
@@ -96,10 +96,10 @@ public class AddAuctionController extends MasterFormBasedController {
 		} catch (Exception e) {
 			System.out.println("Could not upload file.");
 			//TODO cleanup file if written
-			return ;
 		}
 
-		JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + filename, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), getEndOfAuction(), false);
+		return JDBCConnector.addAuction(paramManager.getIndividualParam("title"), author, paramManager.getIndividualParam("category"), location + filename, paramManager.getIndividualParam("description"), paramManager.getIndividualParam("postageDetails"), Float.parseFloat(paramManager.getIndividualParam("reservePrice")), Float.parseFloat(paramManager.getIndividualParam("biddingStart")), Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")), getEndOfAuction(), false);
+		
 	}
 
 	private Timestamp getEndOfAuction() {
@@ -110,6 +110,7 @@ public class AddAuctionController extends MasterFormBasedController {
 		ts = new Timestamp(cal.getTime().getTime());
 		return ts;
 	}
+	
 	//credit from stackoverflow - http://stackoverflow.com/questions/2422468/how-to-upload-files-to-server-using-jsp-servlet
 	//CHECK FOR ATTACKS
 	private static String getFilename(Part part) {

@@ -24,8 +24,8 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getAuction(id, author, title);
 	}
 	
-	public void finishAuction() {
-		
+	public static void popAuction(int id) {
+		JDBCConnector.deleteAuction(id);
 	}
 	
 }

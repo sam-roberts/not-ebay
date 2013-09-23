@@ -90,18 +90,31 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT COUNT(username) AS total FROM username WHERE username=? AND password=?");
+			PreparedStatement ps = c.prepareStatement("SELECT banned AS total FROM username WHERE username=? AND password=?");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				return (rs.getInt("total") > 0) ? true : false;
+				return !rs.getBoolean("banned");
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not check user.");
 		}
 		close(c);
 		return false;
+	}
+	
+	public static void banUser(String username) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("UPDATE username SET banned=TRUE WHERE username=?");
+			ps.setString(1, username);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could notban user.");
+		}
+		close(c);
 	}
 	
 	public static UserBean getUserBean(String username) {
@@ -130,11 +143,11 @@ public class JDBCConnector {
 		return null;
 	}
 	
-	public static void addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
+	public static int addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, title);
 			ps.setString(2, author);
 			ps.setString(3, category);
@@ -146,11 +159,16 @@ public class JDBCConnector {
 			ps.setFloat(9, biddingIncrements);
 			ps.setTimestamp(10, date);
 			ps.setBoolean(11, halt);
-			ps.execute();
+			ps.executeUpdate();
+			
+			ResultSet gk = ps.getGeneratedKeys();
+			gk.next();
+			return (int) gk.getLong(1);
 		} catch (SQLException e) {
 			System.out.println("Could not add auction.");
 		}
 		close(c);
+		return 0;
 	}
 	
 	public static AuctionListBean getAuction(int id, String author, String title) {
@@ -210,6 +228,19 @@ public class JDBCConnector {
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Could not delete auction.");
+		}
+		close(c);
+	}
+	
+	public static void haltAuction(int id) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("UPDATE auction SET halt=TRUE WHERE id=?");
+			ps.setInt(1, id);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could notban user.");
 		}
 		close(c);
 	}

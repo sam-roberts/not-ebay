@@ -11,7 +11,7 @@
 	<jsp:include page="/header.jsp" />
 
 	<c:choose>
-		<c:when test="${empty auction}">
+		<c:when test="${empty auction || auction.isEmpty()}">
 			No auctions found.
 		</c:when>
 		<c:otherwise>

@@ -18,6 +18,10 @@ public class AuctionListBean {
 		return auctions;
 	}
 	
+	public boolean isEmpty() {
+		return auctions.isEmpty();
+	}
+	
 	public int getNumAuctions() {
 		return auctions.size();
 	}
