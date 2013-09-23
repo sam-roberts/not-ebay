@@ -120,6 +120,10 @@ public class ControllerServlet extends HttpServlet {
 			else if ("bid".equals(action)) {
 				forward = doBid(request);
 			}
+			else if ("win".equals(action)) {
+				GetAuctionController gac = new GetAuctionController(pm);
+				gac.winAuction();
+			}
 		}
 
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);

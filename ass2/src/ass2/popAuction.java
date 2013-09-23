@@ -2,6 +2,8 @@ package ass2;
 
 import contollers.GetAuctionController;
 
+//TODO add a flag and store in controller when someone wins bid
+
 public class popAuction implements Runnable {
 	int id;
 	

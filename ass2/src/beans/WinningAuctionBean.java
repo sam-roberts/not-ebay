@@ -46,7 +46,10 @@ public class WinningAuctionBean {
 
 	//TODO: STYLIZE THIS
 	public String display() {
-		return "<a href='controller?action=auction&id=" + auctionID + "'>" + auctionTitle + "</a><br>Reserve Price: " + auctionReservePrice + "<br>Your bid: " + bidPrice + "<br>";
+		String s = "<a href='controller?action=auction&id=" + auctionID + "'>" + auctionTitle + "</a><br>Reserve Price: " + auctionReservePrice + "<br>Your bid: " + bidPrice + "<br>";
+		if (bidPrice < auctionReservePrice) s += "You must pay the reserve price to win this auction.<br>";
+		s += "<form action='controller?action=win' method='POST'><input type='hidden' name='id' value='" + id + "'><input type='submit' value='Win'></form>";
+		return s;
 	}
 
 }

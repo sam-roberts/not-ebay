@@ -227,11 +227,24 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("DELETE FROM auction WHERE id=?");
+			PreparedStatement ps = c.prepareStatement("SELECT auction FROM winningauction WHERE id=?");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			int auctionID = 0;
+			while (rs.next()) {
+				auctionID = rs.getInt("auction");
+			}
+			ps = c.prepareStatement("DELETE FROM winningauction WHERE id=?");
 			ps.setInt(1, id);
 			ps.execute();
+			ps = c.prepareStatement("DELETE FROM bidding WHERE auction=?");
+			ps.setInt(1, auctionID);
+			ps.execute();
+			ps = c.prepareStatement("DELETE FROM auction WHERE id=?");
+			ps.setInt(1, auctionID);
+			ps.execute();
 		} catch (SQLException e) {
-			System.out.println("Could not delete auction.");
+			System.out.println("Could not clean auction.");
 		}
 		close(c);
 	}

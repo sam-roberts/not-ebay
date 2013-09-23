@@ -16,7 +16,6 @@
 		</c:when>
 		<c:otherwise>
 			${wauction.display()}
-			TODO: DISPLAY FORM TO ACCEPT BID
 		</c:otherwise>
 	</c:choose>
 	
