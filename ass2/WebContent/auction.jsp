@@ -35,7 +35,7 @@
 				 -->
 			<li>End of Auction (in how many minutes): <select
 				name="auctionEnd" form="mainForm">
-					<c:forEach begin="3" end="60" var="minutes">
+					<c:forEach begin="1" end="60" var="minutes">
 						<option value="${minutes}">${minutes}</option>
 					</c:forEach>
 			</select>

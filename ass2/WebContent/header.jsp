@@ -7,7 +7,7 @@
 
 <c:if test="${not empty account}">
 		<br />
-					Welcome, You are logged in. Current Auctions <a href="account.jsp">Change Details</a>
+					Welcome, You are logged in. <a href="controller?action=auction&author=${account.username}">My Auctions</a> <a href="controller?action=wauction">My Winning Auctions</a> <a href="account.jsp">Change Details</a>
 		
 	</c:if>
 <hr>

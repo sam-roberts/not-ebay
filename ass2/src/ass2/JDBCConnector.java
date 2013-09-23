@@ -13,6 +13,8 @@ import beans.AuctionListBean;
 import beans.BidBean;
 import beans.BidListBean;
 import beans.UserBean;
+import beans.WinningAuctionBean;
+import beans.WinningAuctionListBean;
 
 public class JDBCConnector {
 
@@ -90,7 +92,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT banned AS total FROM username WHERE username=? AND password=?");
+			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=?");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -98,7 +100,7 @@ public class JDBCConnector {
 				return !rs.getBoolean("banned");
 			}
 		} catch (SQLException e) {
-			System.out.println("Could not check user.");
+			System.out.println("Could not check user login.");
 		}
 		close(c);
 		return false;
@@ -147,7 +149,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = c.prepareStatement("INSERT INTO Auction VALUES (DEFAULT, ?, (SELECT username FROM Username WHERE username=?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, title);
 			ps.setString(2, author);
 			ps.setString(3, category);
@@ -159,6 +161,7 @@ public class JDBCConnector {
 			ps.setFloat(9, biddingIncrements);
 			ps.setTimestamp(10, date);
 			ps.setBoolean(11, halt);
+			ps.setBoolean(12, false);
 			ps.executeUpdate();
 			
 			ResultSet gk = ps.getGeneratedKeys();
@@ -181,6 +184,7 @@ public class JDBCConnector {
 		if (id > 0) query += "AND id=? ";
 		if (author != null) query += "AND LOWER(author) LIKE ? ";
 		if (title != null) query += "AND LOWER(title) LIKE ? ";
+		query += "AND finished=FALSE";
 
 		try {
 			c = connect();
@@ -261,17 +265,32 @@ public class JDBCConnector {
 		close(c);
 	}
 	
-	public static BidListBean getBiddings(int id) {
+	public static void finishAuction(int id) {
 		Connection c = null;
-
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT * FROM Bidding WHERE auction=(SELECT id FROM Auction WHERE id=?) ORDER BY price DESC");
+			PreparedStatement ps = c.prepareStatement("UPDATE auction SET finished=TRUE WHERE id=?");
+			ps.setInt(1, id);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not finish auction.");
+		}
+		close(c);
+	}
+	
+	public static BidListBean getBiddings(int id, boolean topBid) {
+		Connection c = null;
+		String query = "SELECT * FROM Bidding WHERE auction=(SELECT id FROM Auction WHERE id=?) ORDER BY price DESC";
+		if (topBid) query += " LIMIT 1";
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement(query);
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			BidListBean blb = new BidListBean();
 			while (rs.next()) {	
 				blb.addBid(new BidBean(
+						rs.getInt("id"),
 						rs.getString("author"),
 						rs.getFloat("price"))
 				);
@@ -280,6 +299,47 @@ public class JDBCConnector {
 			return blb;
 		} catch (SQLException e) {
 			System.out.println("Could not get biddings.");
+		}
+		close(c);
+		return null;
+	}
+	
+	public static void addWinningAuction(int auctionID, int bidID) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("INSERT INTO WinningAuction VALUES (DEFAULT, (SELECT id FROM Auction WHERE id=?), (SELECT id FROM Bidding WHERE id=?))");
+			ps.setInt(1, auctionID);
+			ps.setInt(2, bidID);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not add winning auction.");
+		}
+		close(c);
+	}
+	
+	public static WinningAuctionListBean getWinningAuctions(String user) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("select wa.id as wid, a.id as aid, a.title as atitle, a.reserve_price as areserve_price, b.id as bid, b.price as bprice from winningauction wa inner join auction AS a on wa.auction=a.id inner join bidding b on wa.bid=b.id and b.author=(SELECT username FROM username WHERE username=?)");;
+			ps.setString(1, user);
+			ResultSet rs = ps.executeQuery();
+			WinningAuctionListBean walb = new WinningAuctionListBean();
+			while (rs.next()) {	
+				walb.addAuction(new WinningAuctionBean(
+						rs.getInt("wid"),
+						rs.getInt("aid"),
+						rs.getString("atitle"),
+						rs.getFloat("areserve_price"),
+						rs.getInt("bid"),
+						rs.getFloat("bprice"))
+				);
+			}
+			close(c);
+			return walb;
+		} catch (SQLException e) {
+			System.out.println("Could not get winning auctions.");
 		}
 		close(c);
 		return null;

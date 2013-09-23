@@ -30,14 +30,29 @@ CREATE TABLE Auction (
     bidding_increments  FLOAT,
     end_of_auction      TIMESTAMP,
     halt                BOOLEAN,
+    finished            BOOLEAN,
     primary key (id)
 );
 
 CREATE TABLE Bidding (
     id          serial,
     author      GV REFERENCES Username(username) NOT null,
-    auction     INTEGER REFERENCES Auction(id) NOT Null,
+    auction     INTEGER REFERENCES Auction(id) NOT null,
     price       FLOAT,
     bid_date    TIMESTAMP,
+    primary key (id)
+);
+
+CREATE TABLE WinningAuction (
+    id          serial,
+    auction     INTEGER REFERENCES Auction(id) NOT null,
+    bid         INTEGER REFERENCES Bidding(id) NOT null,
+    primary key (id)
+);
+
+CREATE TABLE Message (
+    id          serial,
+    author      GV REFERENCES Username(username) NOT null,
+    auction     INTEGER REFERENCES Auction(id),
     primary key (id)
 );

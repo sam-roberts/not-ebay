@@ -40,7 +40,7 @@ public class BidController extends MasterFormBasedController {
 	
 	//TODO fix integer parsing
 	public BidListBean getBids() {
-		return JDBCConnector.getBiddings(Integer.parseInt(paramManager.getIndividualParam("id")));
+		return JDBCConnector.getBiddings(Integer.parseInt(paramManager.getIndividualParam("id")), false);
 	}
 
 }

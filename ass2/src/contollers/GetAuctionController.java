@@ -1,6 +1,8 @@
 package contollers;
 
 import beans.AuctionListBean;
+import beans.BidListBean;
+import beans.WinningAuctionListBean;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
@@ -24,8 +26,20 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getAuction(id, author, title);
 	}
 	
+	public WinningAuctionListBean getWinningAuctions(String author) {
+		return JDBCConnector.getWinningAuctions(author);
+	}
+	
 	public static void popAuction(int id) {
-		JDBCConnector.deleteAuction(id);
+		BidListBean biddings = JDBCConnector.getBiddings(id, true);
+		//TODO make transaction i suppose?
+		JDBCConnector.finishAuction(id);
+		if (!biddings.getBids().isEmpty()) {
+			JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
+		} else {
+			System.out.println("ERRR");
+			//TODO give back a message
+		}
 	}
 	
 }

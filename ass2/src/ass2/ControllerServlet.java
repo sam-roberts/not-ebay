@@ -40,6 +40,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_GET = "/getAuction.jsp";
 	private static final String JSP_CONTROLLER = "/controller";
 	private static final String JSP_ACCOUNT = "/account.jsp";
+	private static final String JSP_WAUCTIONS = "/winningAuctions.jsp";
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,6 +76,13 @@ public class ControllerServlet extends HttpServlet {
 				request.setAttribute("bid", bd.getBids());
 			}
 			forward = JSP_GET;
+		} else if ("wauction".equals(action)) {
+			GetAuctionController gac = new GetAuctionController(pm);
+			UserBean ub = null;
+			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+				request.setAttribute("wauction", gac.getWinningAuctions(ub.getUsername()));
+			}
+			forward = JSP_WAUCTIONS;
 		}
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
