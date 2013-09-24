@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import sun.org.mozilla.javascript.internal.Context;
+import beans.AuctionListBean;
 import beans.UserBean;
 import contollers.AccountController;
 import contollers.AddAuctionController;
@@ -189,14 +190,15 @@ public class ControllerServlet extends HttpServlet {
 	private String doBid(HttpServletRequest request) {
 		String forward;
 		BidController bd = new BidController(pm);
+		GetAuctionController gac = new GetAuctionController(pm);
 		UserBean ub = null;
-		if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+		AuctionListBean alb = gac.getAuction();
+		if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
+			!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
 			bd.addBid(ub.getUsername());
 		}
-		//repeat get request
-		//TODO FIX ALL BELOW COPY-PASTED CODE
-		GetAuctionController gac = new GetAuctionController(pm);
-		request.setAttribute("auction", gac.getAuction());
+
+		request.setAttribute("auction", alb);
 		forward = JSP_GET;
 		if (request.getParameter("id") != null) {
 			request.setAttribute("bid", bd.getBids());
