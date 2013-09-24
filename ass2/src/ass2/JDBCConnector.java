@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
+import beans.AlertBean;
+import beans.AlertListBean;
 import beans.AuctionBean;
 import beans.AuctionListBean;
 import beans.BidBean;
@@ -223,6 +225,24 @@ public class JDBCConnector {
 		return null;
 	}
 	
+	public static boolean isOwnerWinningAuction(int id, String bidder) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT b.author FROM winningauction wa INNER JOIN bidding b ON wa.bid=b.id AND wa.id=? AND b.author=?");
+			ps.setInt(1, id);
+			ps.setString(2, bidder);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next())
+				return true;
+		} catch (SQLException e) {
+			System.out.println("Could not check owner of winning auction.");
+		}
+		close(c);
+		return false;
+	}
+	
+	//make transaction?
 	public static void deleteAuction(int id) {
 		Connection c = null;
 		try {
@@ -231,9 +251,8 @@ public class JDBCConnector {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			int auctionID = 0;
-			while (rs.next()) {
+			while (rs.next())
 				auctionID = rs.getInt("auction");
-			}
 			ps = c.prepareStatement("DELETE FROM winningauction WHERE id=?");
 			ps.setInt(1, id);
 			ps.execute();
@@ -370,6 +389,31 @@ public class JDBCConnector {
 			System.out.println("Could not clear DB (does not revert changes).");
 		}
 		close(c);
+	}
+	
+	public static AlertListBean getAlerts(String author) {
+		Connection c = null;
+
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT * FROM alert WHERE author=(SELECT username FROM username WHERE username=?)");
+			ps.setString(1, author);
+			ResultSet rs = ps.executeQuery();
+			AlertListBean alb = new AlertListBean();
+			while (rs.next()) {
+				close(c);	
+				alb.addAlert(new AlertBean(
+						rs.getInt("id"),
+						rs.getString("author"),
+						rs.getInt("auction"),
+						rs.getString("message")));
+			}
+			return alb;
+		} catch (SQLException e) {
+			System.out.println("Could not get auctions.");
+		}
+		close(c);
+		return null;
 	}
 	
 }

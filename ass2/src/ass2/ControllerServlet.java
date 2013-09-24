@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import sun.org.mozilla.javascript.internal.Context;
 import beans.UserBean;
 import contollers.AddAuctionController;
+import contollers.AlertController;
 import contollers.BidController;
 import contollers.GetAuctionController;
 import contollers.LoginController;
@@ -83,6 +84,13 @@ public class ControllerServlet extends HttpServlet {
 				request.setAttribute("wauction", gac.getWinningAuctions(ub.getUsername()));
 			}
 			forward = JSP_WAUCTIONS;
+		} else if ("account".equals(action)) {
+			AlertController ac = new AlertController(pm);
+			UserBean ub;
+			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+				request.setAttribute("alert", ac.getAlert(ub.getUsername()));
+			}
+			forward = JSP_ACCOUNT;
 		}
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
@@ -122,7 +130,10 @@ public class ControllerServlet extends HttpServlet {
 			}
 			else if ("win".equals(action)) {
 				GetAuctionController gac = new GetAuctionController(pm);
-				gac.winAuction();
+				UserBean ub;
+				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+					gac.winAuction(ub.getUsername());
+				}
 			}
 		}
 

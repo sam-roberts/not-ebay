@@ -50,9 +50,10 @@ CREATE TABLE WinningAuction (
     primary key (id)
 );
 
-CREATE TABLE Message (
+CREATE TABLE Alert (
     id          serial,
     author      GV REFERENCES Username(username) NOT null,
     auction     INTEGER REFERENCES Auction(id),
+    message     GV,
     primary key (id)
 );

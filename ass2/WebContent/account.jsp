@@ -21,8 +21,17 @@
 ${message}
 	<!-- Most of the stuff will be coded in using scriplets -->
 	<c:if test="${not empty account}">
-		Hello, ${account.username}
+		Hello, ${account.username}<br>
 	</c:if>
+	
+	<c:choose>
+		<c:when test="${empty alert || alert.isEmpty()}">
+			No new alerts.
+		</c:when>
+		<c:otherwise>
+			${alert.display()}
+		</c:otherwise>
+	</c:choose>
 
 
 </body>

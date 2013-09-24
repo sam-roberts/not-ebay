@@ -36,19 +36,22 @@ public class GetAuctionController extends MasterFormBasedController {
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
 		if (!biddings.getBids().isEmpty()) {
-			JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
+				JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
 		} else {
 			System.out.println("ERRR");
 			//TODO give back a message
 		}
 	}
 	
-	//TODO This shoul dbe a transaction AND check if the input is safe
-	public void winAuction() {
+	//TODO This shoul dbe a transaction 
+	public void winAuction(String bidder) {
 		//TODO get the emails and email them i suppose
 		
-		
-		JDBCConnector.deleteAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
+		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
+		if (JDBCConnector.isOwnerWinningAuction(id, bidder))
+			JDBCConnector.deleteAuction(id);
+		//TODO ELSE INPUT IS INVALID
+		else;
 	}
 	
 }
