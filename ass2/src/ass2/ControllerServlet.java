@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import sun.org.mozilla.javascript.internal.Context;
 import beans.UserBean;
+import contollers.AccountController;
 import contollers.AddAuctionController;
 import contollers.AlertController;
 import contollers.BidController;
@@ -133,6 +134,13 @@ public class ControllerServlet extends HttpServlet {
 				UserBean ub;
 				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
 					gac.winAuction(ub.getUsername());
+				}
+			}
+			else if (("update").equals(action)) {
+				AccountController ac = new AccountController(pm);
+				UserBean ub;
+				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+					ac.updateAccount(ub.getUsername());
 				}
 			}
 		}

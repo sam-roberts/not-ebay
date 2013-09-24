@@ -108,6 +108,42 @@ public class JDBCConnector {
 		return false;
 	}
 	
+	public static boolean updateAccount(UserBean ub) {
+		Connection c = null;
+		String query = "UPDATE username SET ";
+		if (ub.getPassword() != null && !ub.getPassword().equals("")) query += "password=?, ";
+		if (ub.getEmail() != null && !ub.getEmail().equals("")) query += "email_address=?, ";
+		if (ub.getNickname() != null && !ub.getNickname().equals("")) query += "nickname=?, ";
+		if (ub.getFirstName() != null && !ub.getFirstName().equals("")) query += "first_name=?, ";
+		if (ub.getLastName() != null && !ub.getLastName().equals("")) query += "last_name=?, ";
+		if (ub.getYearOfBirth() != 0) query += "year_of_birth=?, ";
+		if (ub.getPostalAddress() != null && !ub.getPostalAddress().equals("")) query += "postal_address=?, ";
+		if (ub.getCcNumber() != 0) query += "cc_number=?, ";
+		query = query.substring(0, query.length() - 2);
+		query += " WHERE username=?";
+		
+		System.out.println(query);
+		try {
+			c = connect();
+			int i = 1;
+			PreparedStatement ps = c.prepareStatement(query);
+			if (ub.getPassword() != null && !ub.getPassword().equals("")) ps.setString(i++, ub.getPassword());
+			if (ub.getEmail() != null && !ub.getEmail().equals("")) ps.setString(i++, ub.getEmail());
+			if (ub.getNickname() != null && !ub.getNickname().equals("")) ps.setString(i++, ub.getNickname());
+			if (ub.getFirstName() != null && !ub.getFirstName().equals("")) ps.setString(i++, ub.getFirstName());
+			if (ub.getLastName() != null && !ub.getLastName().equals("")) ps.setString(i++, ub.getLastName());
+			if (ub.getYearOfBirth() != 0) ps.setInt(i++, ub.getYearOfBirth());
+			if (ub.getPostalAddress() != null && !ub.getPostalAddress().equals("")) ps.setString(i++, ub.getPostalAddress());
+			if (ub.getCcNumber() != 0) ps.setInt(i++, ub.getCcNumber());
+			if (ub.getUsername() != null && !ub.getUsername().equals("")) ps.setString(i++, ub.getUsername());
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not update account.");
+		}
+		close(c);
+		return false;
+	}
+	
 	public static void banUser(String username) {
 		Connection c = null;
 		try {
@@ -130,15 +166,15 @@ public class JDBCConnector {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				close(c);
-				return new UserBean(
-						rs.getString("username"),
-						rs.getString("email_address"),
-						rs.getString("nickname"),
-						rs.getString("first_name"),
-						rs.getString("last_name"),
-						rs.getInt("year_of_birth"),
-						rs.getString("postal_address")
-				);
+				UserBean ub = new UserBean();
+				ub.setUsername(rs.getString("username"));
+				ub.setEmail(rs.getString("email_address"));
+				ub.setNickname(rs.getString("nickname"));
+				ub.setFirstName(rs.getString("first_name"));
+				ub.setLastName(rs.getString("last_name"));
+				ub.setYearOfBirth(rs.getInt("year_of_birth"));
+				ub.setPostalAddress(rs.getString("postal_address"));
+				return ub;
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not get userbean.");

@@ -36,7 +36,7 @@ public class GetAuctionController extends MasterFormBasedController {
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
 		if (!biddings.getBids().isEmpty()) {
-				JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
+			 JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
 		} else {
 			System.out.println("ERRR");
 			//TODO give back a message
