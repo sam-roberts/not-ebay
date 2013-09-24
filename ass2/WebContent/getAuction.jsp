@@ -15,19 +15,22 @@
 			No auctions found.
 		</c:when>
 		<c:otherwise>
-			${auction.display()}
-			<c:if test="${not empty bid}">
-				${bid.display()}
-			</c:if>
-			<c:if test="${not empty param.id && not empty account}">
-				<form action="controller?action=bid" method="POST">
-				<input type="hidden" name="id" value="${ param.id }">
-					<ul>
-						<li>Bid: <input type="text" name="bid"></li>
-						<li><input type="submit" value="submit"></li>
-					</ul>
-				</form>
-			</c:if>	
+		
+			<c:forEach items="${auction.auctions}" var="auct">
+				${auct.display()}
+				<c:if test="${not empty bid}">
+					${bid.display()}
+				</c:if>
+				<c:if test="${not empty param.id && not empty account && not auct.finished}">
+					<form action="controller?action=bid" method="POST">
+					<input type="hidden" name="id" value="${param.id }">
+						<ul>
+							<li>Bid: <input type="text" name="bid"></li>
+							<li><input type="submit" value="submit"></li>
+						</ul>
+					</form>
+				</c:if>
+			</c:forEach>
 		</c:otherwise>
 	</c:choose>
 	

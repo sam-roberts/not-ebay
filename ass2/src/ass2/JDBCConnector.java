@@ -222,8 +222,8 @@ public class JDBCConnector {
 		if (id > 0) query += "AND id=? ";
 		if (author != null) query += "AND LOWER(author) LIKE ? ";
 		if (title != null) query += "AND LOWER(title) LIKE ? ";
-		query += "AND finished=FALSE";
-
+		query += "ORDER BY end_of_auction DESC";
+				
 		try {
 			c = connect();
 			PreparedStatement ps = c.prepareStatement(query);
@@ -250,7 +250,8 @@ public class JDBCConnector {
 						rs.getFloat("start_price"),
 						rs.getFloat("bidding_increments"),
 						rs.getTimestamp("end_of_auction"),
-						rs.getBoolean("halt"))
+						rs.getBoolean("halt"),
+						rs.getBoolean("finished"))
 				);
 			}
 			return alb;

@@ -16,11 +16,12 @@ public class AuctionBean {
 	private float biddingIncrements;
 	private Timestamp endOfAuction;
 	private boolean halt;
+	private boolean finished;
 	
 	public AuctionBean(int id, String title, String author, String category,
 			String picture, String description, String postageDetails,
 			float reservePrice, float startPrice, float biddingIncrements,
-			Timestamp endOfAuction, boolean halt) {
+			Timestamp endOfAuction, boolean halt, boolean finished) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -34,6 +35,7 @@ public class AuctionBean {
 		this.biddingIncrements = biddingIncrements;
 		this.endOfAuction = endOfAuction;
 		this.halt = halt;
+		this.finished = finished;
 	}
 
 	public int getId() {
@@ -79,6 +81,11 @@ public class AuctionBean {
 	public Timestamp getEndOfAuction() {
 		return endOfAuction;
 	}
+	
+	public boolean getFinished() {
+		return finished;
+	}
+
 
 	public boolean isHalt() {
 		return halt;
@@ -86,7 +93,9 @@ public class AuctionBean {
 	
 	//TODO: STYLIZE THIS
 	public String display() {
-		return "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><br>Start Price: " + startPrice + "<br>Bidding Increments: " + biddingIncrements + "<br>End of auction: " + endOfAuction.toString() + "<br>";
+		String s = "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><br>Start Price: " + startPrice + "<br>Bidding Increments: " + biddingIncrements + "<br>" + "End of auction: " + endOfAuction.toString() + "<br>";
+		if (finished) s += "Auction has ended<br>";
+		return s;
 	}
 	
 }
