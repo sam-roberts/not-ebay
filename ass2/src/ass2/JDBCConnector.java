@@ -452,4 +452,18 @@ public class JDBCConnector {
 		return null;
 	}
 	
+	public static void removeAlert(int id, String author) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("DELETE FROM alert WHERE id=? AND author=?");
+			ps.setInt(1, id);
+			ps.setString(2, author);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not remove alert.");
+		}
+		close(c);
+	}
+	
 }

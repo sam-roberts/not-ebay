@@ -136,6 +136,15 @@ public class ControllerServlet extends HttpServlet {
 					gac.winAuction(ub.getUsername());
 				}
 			}
+			else if ("removeAlert".equals(action)) {
+				AlertController ac = new AlertController(pm);
+				UserBean ub;
+				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
+					ac.removeAlert(ub.getUsername());
+					request.setAttribute("alert", ac.getAlert(ub.getUsername()));
+				}
+				forward = JSP_ACCOUNT;
+			}
 			else if (("update").equals(action)) {
 				AccountController ac = new AccountController(pm);
 				UserBean ub;

@@ -35,7 +35,10 @@ public class AlertBean {
 
 	//TODO: STYLIZE THIS
 	public String display() {
-		return (auctionID == 0) ? "message: " + message + "<br>" : "auction: " + auctionID + "<br>message: " + message + "<br>";
+		String s = "message: " + message + "<br>";
+		if (auctionID != 0) s += "auction: " + auctionID + "<br>";
+		s += "<form action='controller?action=removeAlert' method='POST'><input type='hidden' name='id' value='" + id + "'><input type='submit' value='Remove'></form>";
+		return s;
 	}
 	
 }
