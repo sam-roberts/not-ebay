@@ -12,7 +12,6 @@
 <body>
 	<jsp:include page="/header.jsp" />
 
-<p>${message} </p>
 Click <a href="index.jsp">here</a> to go back home.
 
 </body>

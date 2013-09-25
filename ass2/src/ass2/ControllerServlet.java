@@ -73,7 +73,6 @@ public class ControllerServlet extends HttpServlet {
 			GetAuctionController gac = new GetAuctionController(pm);
 			request.setAttribute("auction", gac.getAuction());
 
-			//TODO this makes 2 calls to the database - fix to one using join
 			if (request.getParameter("id") != null) {
 				BidController bd = new BidController(pm);
 				request.setAttribute("bid", bd.getBids());
@@ -165,19 +164,14 @@ public class ControllerServlet extends HttpServlet {
 		String forward = JSP_ADD_AUCTION;
 		AddAuctionController ac = new AddAuctionController(pm);
 
-		if (ac.isInvalidForm()) {
+		if (ac.isInvalidForm() || request.getPart("picture") == null) {
 			request.setAttribute("message", ac.getFormMessage());
 		} else {
 			UserBean ub;
-			// if we are logged in
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
-				//TODO get username? or nickname
-
-				forward=JSP_ACCOUNT;
-				request.getSession().setAttribute("userInfo", ub);
-				
-				//TODO add check
-				scheduler.schedule(new popAuction(ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername())), Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
+				forward=JSP_HOME;
+				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
+				scheduler.schedule(new popAuction(id), Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
 				request.setAttribute("message", "Added new auction");
 
 			} else {

@@ -16,7 +16,6 @@
 	</c:if>
 
 	<jsp:include page="/header.jsp" />
-	${message}
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
 		<ul>

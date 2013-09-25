@@ -18,7 +18,6 @@
 
 	<jsp:include page="/header.jsp" />
 
-${message}
 	<!-- Most of the stuff will be coded in using scriplets -->
 	<c:if test="${not empty account}">
 		Hello, ${account.username}<br>

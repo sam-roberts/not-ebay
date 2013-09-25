@@ -8,6 +8,8 @@ import ass2.ParameterManager;
 
 public class GetAuctionController extends MasterFormBasedController {
 	
+	private final static String NO_BIDS = "There were no bids to your auction!";
+	
 	public GetAuctionController(ParameterManager params) {
 		super(params);
 	}
@@ -30,16 +32,16 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getWinningAuctions(author);
 	}
 	
-	//TODO fix static
-	public static void popAuction(int id) {
+	public void popAuction(int id) {
 		BidListBean biddings = JDBCConnector.getBiddings(id, true);
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
 		if (!biddings.getBids().isEmpty()) {
 			 JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
 		} else {
-			System.out.println("ERRR");
-			//TODO give back a message
+			AuctionListBean alb = JDBCConnector.getAuction(id, null, null);
+			if (!alb.isEmpty())
+				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, NO_BIDS);
 		}
 	}
 	
@@ -50,8 +52,6 @@ public class GetAuctionController extends MasterFormBasedController {
 		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
 		if (JDBCConnector.isOwnerWinningAuction(id, bidder))
 			JDBCConnector.deleteAuction(id);
-		//TODO ELSE INPUT IS INVALID
-		else;
 	}
 	
 }

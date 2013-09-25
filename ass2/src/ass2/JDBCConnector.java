@@ -428,6 +428,21 @@ public class JDBCConnector {
 		close(c);
 	}
 	
+	public static void addAlert(String author, int auctionID, String msg) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("INSERT INTO alert VALUES (DEFAULT, (SELECT username FROM username WHERE username=?), ?, ?)");
+			ps.setString(1, author);
+			ps.setInt(2, auctionID);
+			ps.setString(3, msg);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not add alert.");
+		}
+		close(c);
+	}
+	
 	public static AlertListBean getAlerts(String author) {
 		Connection c = null;
 

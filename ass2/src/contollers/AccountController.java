@@ -22,7 +22,6 @@ public class AccountController extends MasterFormBasedController {
 		formManager.addForm("ccNumber", paramManager.getIndividualParam("ccNumber"), FormManager.RESTRICT_NUMERIC_ONLY);
 	}
 
-	//TODO fix parsing
 	public void updateAccount(String username) {
 		UserBean ub = new UserBean();
 		ub.setUsername(username);

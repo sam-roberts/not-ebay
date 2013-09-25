@@ -13,7 +13,7 @@ public class popAuction implements Runnable {
 	
 	public void run() {
 		System.out.println("popping auction: " + id);
-		GetAuctionController.popAuction(id);
+		new GetAuctionController(null).popAuction(id);
 	}
 
 }

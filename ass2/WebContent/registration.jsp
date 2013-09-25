@@ -12,8 +12,6 @@
 <body>
 	<jsp:include page="/header.jsp" />
 
-	${message}
-
 	<form action="controller?action=register" method="POST">
 		<ul>
 			<li>Username: <input type="text" name="username"></li>
