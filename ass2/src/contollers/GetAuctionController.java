@@ -32,7 +32,7 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getWinningAuctions(author);
 	}
 	
-	public void popAuction(int id) {
+	public static void popAuction(int id) {
 		BidListBean biddings = JDBCConnector.getBiddings(id, true);
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
