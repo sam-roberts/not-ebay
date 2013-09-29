@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +37,9 @@ import contollers.RegistrationController;
 @MultipartConfig
 public class ControllerServlet extends HttpServlet {
 
+	//TODO fix removing auctions
+	private LinkedList<popAuction> popAuctions;
+	
 	private static final String JSP_LOGIN = "/login.jsp";
 	private static final String JSP_HOME = "/index.jsp";
 	private static final String JSP_REGISTRATION = "/registration.jsp";
@@ -60,7 +65,7 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	public void init(){
-
+		popAuctions = new LinkedList<popAuction>();
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -112,7 +117,27 @@ public class ControllerServlet extends HttpServlet {
 				forward = doAddAuction(request);
 			}
 			else if ("halt_auction".equals(action)) {
+				GetAuctionController gac = new GetAuctionController(pm);
+				UserBean ub = null;
+				if ((ub = (UserBean) request.getSession().getAttribute("account")) != null && ub.getIsAdmin()) {
+					gac.haltAuction();
+				}
+
+				Iterator<popAuction> i = popAuctions.iterator();
+				popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
+				while (i.hasNext()) {
+					popAuction pa = i.next();
+					if (pa.equals(tmp))
+						pa.stop();
+				}
 				
+				request.setAttribute("auction", gac.getAuction());
+
+				if (request.getParameter("id") != null) {
+					BidController bd = new BidController(pm);
+					request.setAttribute("bid", bd.getBids());
+				}
+				forward = JSP_GET;
 			}
 			else if ("remove_auction".equals(action)) {}
 			else if ("ban_user".equals(action)) {}
@@ -121,7 +146,10 @@ public class ControllerServlet extends HttpServlet {
 				forward = JSP_HOME;
 			}
 			else if ("login".equals(action)) {
-				forward = doLogin(request);
+				forward = doLogin(request, false);
+			}
+			else if ("adminLogin".equals(action)) {
+				forward = doLogin(request, true);
 			}
 			else if ("register".equals(action)) {
 				forward = doRegister(request);
@@ -171,7 +199,9 @@ public class ControllerServlet extends HttpServlet {
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
 				forward=JSP_HOME;
 				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
-				scheduler.schedule(new popAuction(id), Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
+				popAuction pa = new popAuction(id);
+				scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
+				popAuctions.add(pa);
 				request.setAttribute("message", "Added new auction");
 
 			} else {
@@ -200,7 +230,7 @@ public class ControllerServlet extends HttpServlet {
 		return forward;
 	}
 
-	private String doLogin(HttpServletRequest request) {
+	private String doLogin(HttpServletRequest request, boolean isAdminLogin) {
 		String forward;
 		LoginController loginController = new LoginController(pm);
 		if (loginController.isInvalidForm()) {
@@ -209,7 +239,7 @@ public class ControllerServlet extends HttpServlet {
 			request.setAttribute("message", loginController.getFormMessage());
 		} else {
 			//check to see if its a valid account					
-			UserBean ub = loginController.requestLogin();
+			UserBean ub = loginController.requestLogin(isAdminLogin);
 			if (ub != null) {
 				request.getSession().setAttribute("account", ub);
 				forward = JSP_HOME;

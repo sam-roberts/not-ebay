@@ -11,6 +11,7 @@ public class UserBean {
 	private int yearOfBirth;
 	private String postalAddress;
 	private int ccNumber;
+	private boolean isAdmin;
 	
 	public UserBean() {
 		username = null;
@@ -21,6 +22,7 @@ public class UserBean {
 		lastName = null;
 		yearOfBirth = 0;
 		postalAddress = null;
+		isAdmin = false;
 		ccNumber = 0;
 	}
 	
@@ -51,6 +53,9 @@ public class UserBean {
 	public void setCcNumber(int ccNumber) {
 		this.ccNumber = ccNumber;
 	}
+	public void setIsAdmin(boolean admin) {
+		isAdmin = admin;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -77,6 +82,9 @@ public class UserBean {
 	}
 	public int getCcNumber() {
 		return ccNumber;
+	}
+	public boolean getIsAdmin() {
+		return isAdmin;
 	}
 	
 	

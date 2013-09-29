@@ -17,10 +17,10 @@ public class LoginController extends MasterFormBasedController {
 		formManager.addForm("password", paramManager.getIndividualParam("password"));	
 	}
 
-	public UserBean requestLogin() {
+	public UserBean requestLogin(boolean isAdminLogin) {
 		if (JDBCConnector.hasLogin(paramManager.getIndividualParam("username"), paramManager.getIndividualParam("password"))) {
 			message = "Success!";
-			return JDBCConnector.getUserBean(paramManager.getIndividualParam("username"));
+			return JDBCConnector.getUserBean(paramManager.getIndividualParam("username"), isAdminLogin);
 		} else {
 			message = "Invalid Username/Password!";
 		}

@@ -54,4 +54,8 @@ public class GetAuctionController extends MasterFormBasedController {
 			JDBCConnector.deleteAuction(id);
 	}
 	
+	public void haltAuction() {
+		JDBCConnector.haltAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
+	}
+	
 }

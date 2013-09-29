@@ -54,7 +54,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -66,6 +66,7 @@ public class JDBCConnector {
 			ps.setString(8, postalAddress);
 			ps.setInt(9, CCNumber);
 			ps.setBoolean(10, banned);
+			ps.setBoolean(11, false);
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Could not add user.\n" + e.getMessage());
@@ -95,6 +96,24 @@ public class JDBCConnector {
 		try {
 			c = connect();
 			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=?");
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return !rs.getBoolean("banned");
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not check user login.");
+		}
+		close(c);
+		return false;
+	}
+	
+	public static boolean hasAdminLogin(String username, String password) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=? AND admin=TRUE");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -157,11 +176,11 @@ public class JDBCConnector {
 		close(c);
 	}
 	
-	public static UserBean getUserBean(String username) {
+	public static UserBean getUserBean(String username, boolean isAdminLogin) {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address FROM username WHERE username=?");
+			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address, admin FROM username WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -174,6 +193,8 @@ public class JDBCConnector {
 				ub.setLastName(rs.getString("last_name"));
 				ub.setYearOfBirth(rs.getInt("year_of_birth"));
 				ub.setPostalAddress(rs.getString("postal_address"));
+				if (isAdminLogin) ub.setIsAdmin(rs.getBoolean("admin"));
+				else ub.setIsAdmin(false);
 				return ub;
 			}
 		} catch (SQLException e) {

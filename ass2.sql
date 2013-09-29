@@ -14,6 +14,7 @@ CREATE TABLE Username (
     postal_address  GV,
     cc_number       INTEGER,
     banned          BOOLEAN,
+    admin           BOOLEAN,
     primary key (username)
 );
 
