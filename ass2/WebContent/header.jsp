@@ -10,7 +10,7 @@
 					Welcome, You are logged in. <a href="auction.jsp">Add New Auction</a> <a href="controller?action=auction&author=${account.username}">My Auctions</a> <a href="controller?action=wauction">My Winning Auctions</a> <a href="controller?action=account">My Account</a>
 		
 	<c:if test="${account.isAdmin}">
-		<a href="admin.jsp">Admin Page</a>
+		<a href="controller?action=admin">Admin Page</a>
 	</c:if>
 </c:if>
 <hr>

@@ -1,5 +1,7 @@
 package contollers;
 
+import java.util.LinkedList;
+
 import beans.AuctionListBean;
 import beans.BidListBean;
 import beans.WinningAuctionListBean;
@@ -51,11 +53,19 @@ public class GetAuctionController extends MasterFormBasedController {
 		
 		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
 		if (JDBCConnector.isOwnerWinningAuction(id, bidder))
-			JDBCConnector.deleteAuction(id);
+			JDBCConnector.deleteWinningAuction(id);
 	}
 	
 	public void haltAuction() {
 		JDBCConnector.haltAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
+	}
+	
+	public LinkedList<Integer> haltAllAuctions() {
+		return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
+	}
+	
+	public void deleteAuction() {
+		JDBCConnector.deleteAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
 	}
 	
 }

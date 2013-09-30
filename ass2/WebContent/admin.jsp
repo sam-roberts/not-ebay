@@ -21,34 +21,25 @@
 		%>
 	</c:if>
 
-<form action="controller?action=halt_auction" method="POST">
+Halt all of a user's auctions.
+<form action="controller?action=halt_all_auctions" method="POST">
 	<ul>
-		<li>Auction ID: 
-			<select name="auction_ID">
-<!-- get auction ids -->
-			</select>
+		<li>
+			<c:if test="${not empty users}">
+				${users.display()}
+			</c:if>
 		</li>
 		<li><input type="submit" value="submit"></li>
 	</ul>
 </form>
 
-<form action="controller?action=remove_auction" method="POST">
-	<ul>
-		<li>Auction ID: 
-			<select name="auction_ID">
-<!-- get auction ids -->
-			</select>
-		</li>
-		<li><input type="submit" value="submit"></li>
-	</ul>
-</form>
-
+Ban a user.
 <form action="controller?action=ban_user" method="POST">
 	<ul>
-		<li>User ID: 
-			<select name="user_ID">
-<!-- get auction ids -->
-			</select>
+		<li>Users: 
+			<c:if test="${not empty users}">
+				${users.display()}
+			</c:if>
 		</li>
 		<li><input type="submit" value="submit"></li>
 	</ul>

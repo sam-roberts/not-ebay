@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.LinkedList;
 
 import beans.AlertBean;
 import beans.AlertListBean;
@@ -15,6 +16,7 @@ import beans.AuctionListBean;
 import beans.BidBean;
 import beans.BidListBean;
 import beans.UserBean;
+import beans.UserListBean;
 import beans.WinningAuctionBean;
 import beans.WinningAuctionListBean;
 
@@ -204,6 +206,27 @@ public class JDBCConnector {
 		return null;
 	}
 	
+	public static UserListBean getUsers() {
+		Connection c = null;
+		UserListBean ulb = new UserListBean();
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT username FROM username");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				close(c);
+				UserBean ub = new UserBean();
+				ub.setUsername(rs.getString("username"));
+				ulb.addUser(ub);
+			}
+			return ulb;
+		} catch (SQLException e) {
+			System.out.println("Could not get userbean.");
+		}
+		close(c);
+		return ulb;
+	}
+	
 	public static int addAuction(String title, String author, String category, String picture, String description, String postageDetails, float reservePrice, float startPrice, float biddingIncrements, Timestamp date, boolean halt) {
 		Connection c = null;
 		try {
@@ -301,7 +324,7 @@ public class JDBCConnector {
 	}
 	
 	//make transaction?
-	public static void deleteAuction(int id) {
+	public static void deleteWinningAuction(int id) {
 		Connection c = null;
 		try {
 			c = connect();
@@ -326,6 +349,29 @@ public class JDBCConnector {
 		close(c);
 	}
 	
+	//make transaction?
+	public static void deleteAuction(int id) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("DELETE FROM winningauction WHERE auction=?");
+			ps.setInt(1, id);
+			ps.execute();
+			ps = c.prepareStatement("DELETE FROM bidding WHERE auction=?");
+			ps.setInt(1, id);
+			ps.execute();
+			ps = c.prepareStatement("DELETE FROM alert WHERE auction=?");
+			ps.setInt(1, id);
+			ps.execute();
+			ps = c.prepareStatement("DELETE FROM auction WHERE id=?");
+			ps.setInt(1, id);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not hard delete auction.");
+		}
+		close(c);
+	}
+	
 	public static void haltAuction(int id) {
 		Connection c = null;
 		try {
@@ -337,6 +383,26 @@ public class JDBCConnector {
 			System.out.println("Could notban user.");
 		}
 		close(c);
+	}
+	
+	public static LinkedList<Integer> haltAllAuctions(String author) {
+		Connection c = null;
+		LinkedList<Integer> li = new LinkedList<Integer>();
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("UPDATE auction SET halt=TRUE WHERE author=?", Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, author);
+			ps.execute();
+			
+			ResultSet gk = ps.getGeneratedKeys();
+			while (gk.next())
+				li.add(gk.getInt(1));
+			return li;
+		} catch (SQLException e) {
+			System.out.println("Could notban user.");
+		}
+		close(c);
+		return li;
 	}
 	
 	public static void addBidding(String author, int auctionID, float price, Timestamp bidDate) {

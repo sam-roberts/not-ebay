@@ -1,6 +1,7 @@
 package contollers;
 
 import beans.UserBean;
+import beans.UserListBean;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
@@ -13,8 +14,8 @@ public class LoginController extends MasterFormBasedController {
 	}
 
 	protected void createForm() {
-		formManager.addForm("username", paramManager.getIndividualParam("username"));
-		formManager.addForm("password", paramManager.getIndividualParam("password"));	
+		if (paramManager.hasParameter("username")) formManager.addForm("username", paramManager.getIndividualParam("username"));
+		if (paramManager.hasParameter("password")) formManager.addForm("password", paramManager.getIndividualParam("password"));	
 	}
 
 	public UserBean requestLogin(boolean isAdminLogin) {
@@ -25,6 +26,14 @@ public class LoginController extends MasterFormBasedController {
 			message = "Invalid Username/Password!";
 		}
 		return null;
+	}
+	
+	public UserListBean getUsers() {
+		return JDBCConnector.getUsers();
+	}
+	
+	public void banUsers() {
+		JDBCConnector.banUser(paramManager.getIndividualParam("username"));
 	}
 
 }
