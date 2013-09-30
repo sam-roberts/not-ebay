@@ -1,5 +1,6 @@
 package contollers;
 
+import ass2.Emailer;
 import ass2.FormManager;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
@@ -33,7 +34,7 @@ public class RegistrationController extends MasterFormBasedController {
 	}
 	
 	//fix so JDBC returns val if something goes wrong.
-	public void registerUser() {
+	public void registerUser(String url) {
 		String username = paramManager.getIndividualParam("username");
 		String password = paramManager.getIndividualParam("password"); 
 		String email = paramManager.getIndividualParam("email");
@@ -43,6 +44,11 @@ public class RegistrationController extends MasterFormBasedController {
 		int yearOfBirth = Integer.parseInt(paramManager.getIndividualParam("yearOfBirth")); 
 		String postalAddress= paramManager.getIndividualParam("address");
 		int CCNumber = Integer.parseInt(paramManager.getIndividualParam("ccNumber"));
-		JDBCConnector.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, false);
+		int hash = username.hashCode();
+		JDBCConnector.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, false, hash);
+		String title = "Email activation required";
+		String msg = "To activate your account, go to: " + url + "?action=verify&username=" + username + "&hash=" + hash;
+		Emailer e = new Emailer(email, title, msg);
+		e.email();
 	}
 }

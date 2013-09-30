@@ -35,5 +35,15 @@ public class LoginController extends MasterFormBasedController {
 	public void banUsers() {
 		JDBCConnector.banUser(paramManager.getIndividualParam("username"));
 	}
+	
+	public void verify() {
+		if (!paramManager.hasParameter("hash") || !paramManager.hasParameter("username")) return;
+		
+		if (JDBCConnector.checkVerification(paramManager.getIndividualParam("username"), Integer.parseInt(paramManager.getIndividualParam("hash")))) {
+			JDBCConnector.verify(paramManager.getIndividualParam("username"));
+		} else {
+			//verification failed
+		}
+	}
 
 }

@@ -35,7 +35,7 @@
 						</form>
 					</c:if>
 				</c:if>
-				<c:if test="${not empty param.id && not empty account && not auct.finished}">
+				<c:if test="${not empty param.id && not empty account && not auct.halt && not auct.finished}">
 					<form action="controller?action=bid" method="POST">
 					<input type="hidden" name="id" value="${param.id }">
 						<ul>

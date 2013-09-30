@@ -52,11 +52,11 @@ public class JDBCConnector {
 		}
 	}
 	
-	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned) {
+	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned, int hash) {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement ps = c.prepareStatement("INSERT INTO username VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 			ps.setString(1, username);
 			ps.setString(2, password);
@@ -69,9 +69,41 @@ public class JDBCConnector {
 			ps.setInt(9, CCNumber);
 			ps.setBoolean(10, banned);
 			ps.setBoolean(11, false);
+			ps.setBoolean(12, false);
+			ps.setInt(13, hash);
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Could not add user.\n" + e.getMessage());
+		}
+		close(c);
+	}
+	
+	public static boolean checkVerification(String username, int hash) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("SELECT username FROM username WHERE username=? AND hash=?");
+			ps.setString(1, username);
+			ps.setInt(2, hash);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next())
+				return true;
+		} catch (SQLException e) {
+			System.out.println("Could not check verification.");
+		}
+		close(c);
+		return false;
+	}
+	
+	public static void verify(String username) {
+		Connection c = null;
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement("UPDATE username SET verified=TRUE WHERE username=?");
+			ps.setString(1, username);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not update verification.");
 		}
 		close(c);
 	}
@@ -97,7 +129,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=?");
+			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=? AND verified=TRUE");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -115,7 +147,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=? AND admin=TRUE");
+			PreparedStatement ps = c.prepareStatement("SELECT banned FROM username WHERE username=? AND password=? AND admin=TRUE AND verified=TRUE");
 			ps.setString(1, username);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
@@ -129,6 +161,7 @@ public class JDBCConnector {
 		return false;
 	}
 	
+	//TODO update account update the bean too
 	public static boolean updateAccount(UserBean ub) {
 		Connection c = null;
 		String query = "UPDATE username SET ";
@@ -256,7 +289,7 @@ public class JDBCConnector {
 		return 0;
 	}
 	
-	public static AuctionListBean getAuction(int id, String author, String title) {
+	public static AuctionListBean getAuction(int id, String author, String title, boolean getNotFinished) {
 		Connection c = null;
 		
 		if (author != null)author = author.toLowerCase();
@@ -266,6 +299,7 @@ public class JDBCConnector {
 		if (id > 0) query += "AND id=? ";
 		if (author != null) query += "AND LOWER(author) LIKE ? ";
 		if (title != null) query += "AND LOWER(title) LIKE ? ";
+		if (getNotFinished) query += "AND finished=FALSE ";
 		query += "ORDER BY end_of_auction DESC";
 				
 		try {
@@ -328,6 +362,21 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
+			PreparedStatement ps = c.prepareStatement("DELETE FROM winningauction WHERE id=?");
+			ps.setInt(1, id);
+			ps.execute();
+		} catch (SQLException e) {
+			System.out.println("Could not delete winning auction.");
+		}
+		close(c);
+	}
+	
+	/*
+	 * 	//make transaction?
+	public static void deleteWinningAuction(int id) {
+		Connection c = null;
+		try {
+			c = connect();
 			PreparedStatement ps = c.prepareStatement("SELECT auction FROM winningauction WHERE id=?");
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
@@ -348,6 +397,7 @@ public class JDBCConnector {
 		}
 		close(c);
 	}
+	 */
 	
 	//make transaction?
 	public static void deleteAuction(int id) {
@@ -567,6 +617,30 @@ public class JDBCConnector {
 			System.out.println("Could not remove alert.");
 		}
 		close(c);
+	}
+	
+	public static String[] getUserEmailsFromWA(int id) {
+		Connection c = null;
+		String query = 	"SELECT au.email_address as aemail, bu.email_address as bemail FROM winningauction wa " +
+						"INNER JOIN auction a ON wa.auction=a.id " +
+						"INNER JOIN username au ON au.username=a.author " +
+						"INNER JOIN bidding b ON wa.bid=b.id " +
+						"INNER JOIN username bu ON bu.username=b.author AND wa.id=?";
+		String[] emailArr = new String[2];
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				emailArr[0] = rs.getString("aemail");
+				emailArr[1] = rs.getString("bemail");
+			}
+		} catch (SQLException e) {
+			System.out.println("Could not get userbean.");
+		}
+		close(c);
+		return emailArr;
 	}
 	
 }

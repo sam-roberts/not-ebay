@@ -106,6 +106,9 @@ public class ControllerServlet extends HttpServlet {
 			} else
 				forward = JSP_HOME;
 			forward = JSP_ADMIN;
+		} else if ("verify".equals(action)) {
+			LoginController lc = new LoginController(pm);
+			lc.verify();
 		}
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
@@ -275,7 +278,17 @@ public class ControllerServlet extends HttpServlet {
 		AuctionListBean alb = gac.getAuction();
 		if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
 			!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
-			bd.addBid(ub.getUsername());
+			if (bd.addBid(ub.getUsername()) == false) {
+				Iterator<popAuction> i = popAuctions.iterator();
+				popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
+				while (i.hasNext()) {
+					popAuction pa = i.next();
+					if (pa.equals(tmp))
+						pa.stop();
+				}
+				
+				gac.popAuction(Integer.parseInt(request.getParameter("id")), true);
+			}
 		}
 
 		request.setAttribute("auction", alb);
@@ -323,11 +336,8 @@ public class ControllerServlet extends HttpServlet {
 
 				//TODO make sure to securily parse strings
 
-				registrationController.registerUser();
+				registrationController.registerUser(request.getRequestURL().toString());
 
-				//TODO Create the account in the database
-
-				//TODO Email the user
 			}
 		}
 		return forward;

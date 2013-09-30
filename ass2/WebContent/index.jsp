@@ -13,6 +13,7 @@
 	<!-- SEARCH FORM -->
 	<form action="controller" method="GET">
 		<input type="hidden" name="action" value="auction" />
+		<input type="hidden" name="only_not_finished" value="onf"/>
 		<ul>
 			<li>Search: <input type="text" name="title"></li>
 			<li><input type="submit" value="submit"></li>

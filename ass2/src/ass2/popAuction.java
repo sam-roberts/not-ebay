@@ -19,7 +19,7 @@ public class popAuction implements Runnable {
 		
 		System.out.println("popping auction: " + id);
 		//GetAuctionController gac = new GetAuctionController(null);
-		GetAuctionController.popAuction(id);
+		GetAuctionController.popAuction(id, false);
 	}
 	
 	public void stop() {

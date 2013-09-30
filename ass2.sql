@@ -15,6 +15,8 @@ CREATE TABLE Username (
     cc_number       INTEGER,
     banned          BOOLEAN,
     admin           BOOLEAN,
+    verified        BOOLEAN,
+    hash            INTEGER,
     primary key (username)
 );
 
