@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.tomcat.util.codec.binary.StringUtils;
+
 public class FormManager {
 
 
@@ -14,6 +16,7 @@ public class FormManager {
 	public static final int RESTRICT_EMAIL = 3;
 	public static final int RESTRICT_NUMERIC_ONLY = 4;	
 	public static final int RESTRICT_FLOAT_ONLY = 5;
+	public static final int RESTIRCT_WORD_MAX = 6;
 
 
 
@@ -21,7 +24,7 @@ public class FormManager {
 	private static final String ERROR_INVALID_ALPHANUMERIC = "field should contain only alphanumeric values";
 	private static final String ERROR_INVALID_EMAIL = "email address provided is invalid";
 	private static final String ERROR_NUMERIC_ONLY = "field must contain numbers only";
-	
+
 	private static final String ERROR_FLOAT_ONLY = "field must be a positive number";
 
 
@@ -42,6 +45,15 @@ public class FormManager {
 		f.setRestrictionType(restrictionType);
 		forms.put(key, f);
 	}
+
+	public void addForm(String key, String value, int restrictionType, int howMuch) {
+		Form f = new Form(key,value);
+		f.setRestrictionType(restrictionType);
+		if (restrictionType == RESTIRCT_WORD_MAX && howMuch > 0) {
+			f.setRestrictionMax(howMuch);
+		}
+		forms.put(key, f);
+	}
 	public boolean isMissingDetails() {
 
 		//Work out if everything is correct
@@ -58,18 +70,27 @@ public class FormManager {
 			//if its missing information, it doesn't matter if it doesn't look right.
 			if (thisForm.getInvalid() == false) {
 				if (thisForm.getRestrictionType() != RESTRICT_NONE) {
-					if (thisForm.getValue().toLowerCase().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
-						thisForm.setInvalid(true);
-						if (thisForm.getRestrictionType() == RESTRICT_ALPHHANUMERIC_NOSPACE) {
-							thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
-						} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
-							thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
-						} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
-							thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
-						} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY) {
-							thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
+
+					if (thisForm.getRestrictionType() == RESTIRCT_WORD_MAX) {
+						if (getWordCount(thisForm.getValue()) > thisForm.getRestrictionMax()) {
+							thisForm.setInvalid(true);
+							thisForm.setErrorMessage("field must contain less than " + thisForm.getRestrictionMax() + " words");
+						}
+					} else {
+						if (thisForm.getValue().toLowerCase().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
+							thisForm.setInvalid(true);
+							if (thisForm.getRestrictionType() == RESTRICT_ALPHHANUMERIC_NOSPACE) {
+								thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
+							} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
+								thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
+							} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
+								thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
+							} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY) {
+								thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
+							}
 						}
 					}
+
 				}
 			}
 		}
@@ -82,6 +103,10 @@ public class FormManager {
 			}
 		}
 		return false;
+	}
+
+	private int getWordCount(String value) {
+		return value.trim().split("\\s+").length;
 	}
 
 	private String getPatternFromType(int restrictionType) {

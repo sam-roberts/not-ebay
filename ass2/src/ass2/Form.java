@@ -6,6 +6,7 @@ public class Form {
 	String errorMessage;
 	int restrictionType;
 	Boolean invalid;
+	int restrictionMax = 0;
 	
 	public Form(String key, String value) {
 		super();
@@ -50,9 +51,12 @@ public class Form {
 	public void setInvalid(Boolean invalid) {
 		this.invalid = invalid;
 	}
+	public void setRestrictionMax(int howMuch) {
+		restrictionMax = howMuch;
+	}
+	
+	public int getRestrictionMax() {
+		return restrictionMax;
+	}
 
-	
-	
-	
-	
 }
