@@ -251,18 +251,23 @@ public class ControllerServlet extends HttpServlet {
 		String forward = JSP_ADD_AUCTION;
 		AddAuctionController ac = new AddAuctionController(pm);
 
-		if (ac.isInvalidForm() || request.getPart("picture") == null) {
-			request.setAttribute("message", ac.getFormMessage());
+		if (ac.isInvalidForm() || request.getPart("picture").getSize() <= 0) {
+			String msg = ac.getFormMessage();
+			if (request.getPart("picture").getSize() <= 0)
+				msg += "picture not specified.\n";
+			request.setAttribute("message", msg);
 		} else {
 			UserBean ub;
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null) {
-				forward=JSP_HOME;
 				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
-				popAuction pa = new popAuction(id);
-				scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
-				popAuctions.add(pa);
-				request.setAttribute("message", "Added new auction");
-
+				if (id > 0) {
+					forward=JSP_HOME;
+					popAuction pa = new popAuction(id);
+					scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
+					popAuctions.add(pa);
+					request.setAttribute("message", "Added new auction");
+				} else
+					request.setAttribute("message", ac.getMessage());
 			} else {
 				request.setAttribute("message", "What are you doing here? You need to be logged in to create an auction");
 			}
@@ -276,26 +281,32 @@ public class ControllerServlet extends HttpServlet {
 		GetAuctionController gac = new GetAuctionController(pm);
 		UserBean ub = null;
 		AuctionListBean alb = gac.getAuction();
-		if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
-			!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
-			if (bd.addBid(ub.getUsername()) == false) {
-				Iterator<popAuction> i = popAuctions.iterator();
-				popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
-				while (i.hasNext()) {
-					popAuction pa = i.next();
-					if (pa.equals(tmp))
-						pa.stop();
-				}
-				
-				gac.popAuction(Integer.parseInt(request.getParameter("id")), true);
+		if (bd.isInvalidForm()) {
+			request.setAttribute("message", bd.getFormMessage());
+		} else {
+			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
+				!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
+				if (bd.addBid(ub.getUsername()) == false) {
+					Iterator<popAuction> i = popAuctions.iterator();
+					popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
+					while (i.hasNext()) {
+						popAuction pa = i.next();
+						if (pa.equals(tmp))
+							pa.stop();
+					}
+					
+					GetAuctionController.popAuction(Integer.parseInt(request.getParameter("id")), true);
+				} else
+					request.setAttribute("message", bd.message);
 			}
 		}
-
+		alb = gac.getAuction();
 		request.setAttribute("auction", alb);
 		forward = JSP_GET;
 		if (request.getParameter("id") != null) {
 			request.setAttribute("bid", bd.getBids());
 		}
+		
 		return forward;
 	}
 

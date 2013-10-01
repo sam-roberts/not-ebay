@@ -80,7 +80,32 @@ public class AddAuctionController extends MasterFormBasedController {
 	}
 
 	public int addAuction(Part file, String diskLocation, String location, String author) {
+		String err = "";
+		if (Float.parseFloat(paramManager.getIndividualParam("reservePrice")) <= 0)
+			err += "reserve price must be greater than 0<br>";
+		if (Float.parseFloat(paramManager.getIndividualParam("biddingIncrements")) <= 0)
+			err += "bidding increments must be greater than 0<br>";
+		if (Float.parseFloat(paramManager.getIndividualParam("biddingStart")) < 0)
+			err += "bidding start must not be negative<br>";
+		if (Integer.parseInt(paramManager.getIndividualParam("auctionEnd")) < 3 || Integer.parseInt(paramManager.getIndividualParam("auctionEnd")) > 60)
+			err += "you have modified the form and specified an invalid auction end<br>";
+		
 		String filename = getFilename(file);
+		
+		String ext = "";
+		int indexOf = filename.lastIndexOf('.');
+		if (indexOf > 0)
+		    ext = filename.substring(indexOf + 1);
+		    
+		//file extensions
+		if (!ext.equals("jpg") && !ext.equals("jpeg") && !ext.equals("png") && !ext.equals("gif") && !ext.equals("bmp"))
+			err += "your file is not a picture<br>";
+			
+		if (!err.equals("")) {
+			message = err;
+			return 0;
+		}
+		
 		try {
 			InputStream is = file.getInputStream();
 			OutputStream os = new FileOutputStream(diskLocation + location + filename);

@@ -7,6 +7,7 @@ import beans.AuctionListBean;
 import beans.BidBean;
 import beans.BidListBean;
 import ass2.Emailer;
+import ass2.FormManager;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
@@ -18,7 +19,7 @@ public class BidController extends MasterFormBasedController {
 
 	@Override
 	protected void createForm() {
-		if (paramManager.hasParameter("bid")) formManager.addForm("bid", paramManager.getIndividualParam("bid"));
+		if (paramManager.hasParameter("bid")) formManager.addForm("bid", paramManager.getIndividualParam("bid"), FormManager.RESTRICT_FLOAT_ONLY);
 	}
 	
 	//TODO this makes many calls to DB, fix (also fix parsing numbers)
@@ -42,9 +43,15 @@ public class BidController extends MasterFormBasedController {
 			e.email();
 			return false;
 		} else {
+			if (bid < alb.getAuctions().get(0).getStartPrice()) {
+				message = "bid must be greater than start price<br>";
+				return true;
+			}
 			for (BidBean b : blb.getBids())
-				if (bid < b.getPrice() + alb.getAuctions().get(0).getBiddingIncrements())
+				if (bid < b.getPrice() + alb.getAuctions().get(0).getBiddingIncrements()) {
+					message = "bid must be greater than or equal to the highest bid plus the increment<br>";
 					return true;
+				}
 		
 			JDBCConnector.addBidding(username, Integer.parseInt(paramManager.getIndividualParam("id")), Float.parseFloat(paramManager.getIndividualParam("bid")), new Timestamp(new Date().getTime()));
 		}
