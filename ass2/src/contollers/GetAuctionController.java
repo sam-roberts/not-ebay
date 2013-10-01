@@ -79,8 +79,13 @@ public class GetAuctionController extends MasterFormBasedController {
 		}
 	}
 	
-	public void haltAuction() {
+	public void haltAuction(String url) {
 		JDBCConnector.haltAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
+		String email = JDBCConnector.getOwnerEmailFromAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
+		String title = "Your auction has been halted!.";
+		String msg = "Your auction has been halted!. You can still view the auction here: " + url + "?action=auction&id=" + paramManager.getIndividualParam("id");
+		Emailer e = new Emailer(email, title, msg);
+		e.email();
 	}
 	
 	public LinkedList<Integer> haltAllAuctions() {

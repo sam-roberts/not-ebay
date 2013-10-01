@@ -21,7 +21,17 @@ public class LoginController extends MasterFormBasedController {
 	public UserBean requestLogin(boolean isAdminLogin) {
 		if (JDBCConnector.hasLogin(paramManager.getIndividualParam("username"), paramManager.getIndividualParam("password"))) {
 			message = "Success!";
-			return JDBCConnector.getUserBean(paramManager.getIndividualParam("username"), isAdminLogin);
+			UserBean ub = JDBCConnector.getUserBean(paramManager.getIndividualParam("username"), isAdminLogin);
+			if (isAdminLogin) {
+				if (ub.getIsAdmin()) {
+					message = "Success!";
+					return ub;
+				} else
+					message = "Not an admin account";
+			} else {
+				message = "Success!";
+				return ub;
+			}
 		} else {
 			message = "Invalid Username/Password!";
 		}

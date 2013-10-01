@@ -11,6 +11,7 @@ public class UserBean {
 	private int yearOfBirth;
 	private String postalAddress;
 	private int ccNumber;
+	private boolean isBanned;
 	private boolean isAdmin;
 	
 	public UserBean() {
@@ -56,6 +57,9 @@ public class UserBean {
 	public void setIsAdmin(boolean admin) {
 		isAdmin = admin;
 	}
+	public void setIsBanned(boolean banned) {
+		isBanned = banned;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -86,7 +90,8 @@ public class UserBean {
 	public boolean getIsAdmin() {
 		return isAdmin;
 	}
-	
-	
+	public boolean getIsBanned() {
+		return isBanned;
+	}
 	
 }

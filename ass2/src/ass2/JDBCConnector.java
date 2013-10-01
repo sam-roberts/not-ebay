@@ -134,7 +134,7 @@ public class JDBCConnector {
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				return !rs.getBoolean("banned");
+				return true;
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not check user login.");
@@ -152,7 +152,7 @@ public class JDBCConnector {
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				return !rs.getBoolean("banned");
+				return true;
 			}
 		} catch (SQLException e) {
 			System.out.println("Could not check user login.");
@@ -215,7 +215,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address, admin FROM username WHERE username=?");
+			PreparedStatement ps = c.prepareStatement("SELECT username, email_address, nickname, first_name, last_name, year_of_birth, postal_address, banned, admin FROM username WHERE username=?");
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -228,6 +228,7 @@ public class JDBCConnector {
 				ub.setLastName(rs.getString("last_name"));
 				ub.setYearOfBirth(rs.getInt("year_of_birth"));
 				ub.setPostalAddress(rs.getString("postal_address"));
+				ub.setIsBanned(rs.getBoolean("banned"));
 				if (isAdminLogin) ub.setIsAdmin(rs.getBoolean("admin"));
 				else ub.setIsAdmin(false);
 				return ub;
@@ -641,6 +642,24 @@ public class JDBCConnector {
 		}
 		close(c);
 		return emailArr;
+	}
+	
+	public static String getOwnerEmailFromAuction(int id) {
+		Connection c = null;
+		String query = 	"SELECT u.email_address AS email FROM auction a " +
+						"INNER JOIN username u ON a.author=u.username AND a.id=?";
+		try {
+			c = connect();
+			PreparedStatement ps = c.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next())
+				return rs.getString("email");
+		} catch (SQLException e) {
+			System.out.println("Could not get email from auction.");
+		}
+		close(c);
+		return "";
 	}
 	
 }
