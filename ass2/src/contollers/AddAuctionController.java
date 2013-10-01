@@ -66,10 +66,10 @@ public class AddAuctionController extends MasterFormBasedController {
 		<li><input type="submit" value="submit"></li>
 		 */
 
-		formManager.addForm("title", paramManager.getIndividualParam("title"));
+		formManager.addForm("title", paramManager.getIndividualParam("title"), FormManager.RESTIRCT_WORD_MAX, 10);
 		formManager.addForm("category", paramManager.getIndividualParam("category"));
 		//formManager.addForm("picture", paramManager.getIndividualParam("picture"));
-		formManager.addForm("description", paramManager.getIndividualParam("description"));
+		formManager.addForm("description", paramManager.getIndividualParam("description"), FormManager.RESTIRCT_WORD_MAX, 100);
 		formManager.addForm("postageDetails", paramManager.getIndividualParam("postageDetails"));
 		formManager.addForm("reservePrice", paramManager.getIndividualParam("reservePrice"),FormManager.RESTRICT_FLOAT_ONLY);
 		formManager.addForm("biddingStart", paramManager.getIndividualParam("biddingStart"), FormManager.RESTRICT_FLOAT_ONLY);

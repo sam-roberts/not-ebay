@@ -32,12 +32,13 @@ public class DatabaseTester {
 		jdbc.getUserBean("a");
 	 */
 	
-	
+	/*
 	@Test
 	public void testCreateAccount() {
 		//jdbc.addUser(username, password, email, nickname, firstName, lastName, yearOfBirth, postalAddress, CCNumber, banned);
-		jdbc.addUser("user1", "coolpassword", "a", "a", "a", "a", 9, "a", 9, false);
-		jdbc.addUser("example", "example", "a", "a", "a", "a", 1901, "address", 1, false);
+		//jdbc.addUser("user1", "coolpassword", "a", "a", "a", "a", 9, "a", 9, false);
+		//jdbc.addUser("example", "example", "a", "a", "a", "a", 1901, "address", 1, false);
+		
 		
 		assertTrue(jdbc.isUserExists("user1"));
 		assertTrue(jdbc.isUserExists("example"));
@@ -46,4 +47,5 @@ public class DatabaseTester {
 		assertFalse(jdbc.isUserExists("notreal09account"));
 		
 	}
+	*/
 }
