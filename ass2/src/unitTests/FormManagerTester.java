@@ -110,6 +110,25 @@ public class FormManagerTester {
 	}
 	
 	
-	
+	@Test
+	public void testValidSpaces() {
+		fm.addForm("blah", "this only has a few spaces", FormManager.RESTIRCT_WORD_MAX, 10);
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("blah", "this has the exact limit of ten words nine ten");
+		assertFalse(fm.isMissingDetails());
 
+		fm.setForm("blah", "this sentence has exactly eleven words FILLER FILLER FILLER FILLER FILLER");
+		assertTrue(fm.isMissingDetails());
+
+		
+	}
+
+	@Test
+	public void testInvalidSpaces() {
+		fm.addForm("blah", "this has many words but a low limit", FormManager.RESTIRCT_WORD_MAX, 4);
+		assertTrue(fm.isMissingDetails());
+		
+		
+	}
 }
