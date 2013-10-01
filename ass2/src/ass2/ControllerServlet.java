@@ -286,7 +286,7 @@ public class ControllerServlet extends HttpServlet {
 		} else {
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
 				!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
-				if (bd.addBid(ub.getUsername()) == false) {
+				if (bd.addBid(ub.getUsername(), ub.getEmail(), request.getRequestURL().toString()) == false) {
 					Iterator<popAuction> i = popAuctions.iterator();
 					popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
 					while (i.hasNext()) {
@@ -296,9 +296,9 @@ public class ControllerServlet extends HttpServlet {
 					}
 					
 					GetAuctionController.popAuction(Integer.parseInt(request.getParameter("id")), true);
-				} else
-					request.setAttribute("message", bd.message);
+				}
 			}
+			request.setAttribute("message", bd.message);
 		}
 		alb = gac.getAuction();
 		request.setAttribute("auction", alb);
