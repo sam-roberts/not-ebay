@@ -33,7 +33,10 @@
 	</c:choose>
 
 	<form action="controller?action=update" method="POST">
+		
 		<ul>
+			Update your details:
+		
 			<li>Password: <input type="password" name="password"></li>
 			<li>Email Address: <input type="text" name="email"></li>
 			<li>Nickname: <input type="text" name="nickname"></li>

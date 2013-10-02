@@ -36,14 +36,18 @@ public class FormManager {
 		forms = new HashMap<String, Form>();
 	}
 
-	public void addForm(String key, String value) {
-		forms.put(key, new Form(key, value));
+	public Form addForm(String key, String value) {
+		Form f = new Form(key, value);
+		forms.put(key, f);
+		return f;
 	}
 
-	public void addForm(String key, String value, int restrictionType) {
+	public Form addForm(String key, String value, int restrictionType) {
 		Form f = new Form(key,value);
 		f.setRestrictionType(restrictionType);
 		forms.put(key, f);
+
+		return f;
 	}
 
 	public void addForm(String key, String value, int restrictionType, int howMuch) {
@@ -54,43 +58,65 @@ public class FormManager {
 		}
 		forms.put(key, f);
 	}
+
+	public void addOptionalForm(String key, String value) {
+		Form f = addForm(key, value);
+		f.setOptional();		
+
+
+	}
+
+
+	public void addOptionalForm(String key, String value,
+			int restrictionType) {
+		Form f = addForm(key,value,restrictionType);
+		f.setOptional();		
+	}
+
 	public boolean isMissingDetails() {
 
 		//Work out if everything is correct
 		for (String key: forms.keySet()) {
 			Form thisForm = forms.get(key);
-			if (thisForm.getValue().equals("")) {
+			if (thisForm.getValue().equals("") && thisForm.isOptional() == false) {
 
 				// if you set something invalid, you must also set an error message!!
 				thisForm.setInvalid(true);
 				thisForm.setErrorMessage(ERROR_MISSING);
 
+
 			}
+			
+			//i think this is right but i'm cautious
+			if (thisForm.isOptional() && isValueBlank(thisForm.getKey())) {
+				thisForm.setInvalid(false);
+			} else {
 
-			//if its missing information, it doesn't matter if it doesn't look right.
-			if (thisForm.getInvalid() == false) {
-				if (thisForm.getRestrictionType() != RESTRICT_NONE) {
+				//if its missing information, it doesn't matter if it doesn't look right.
+				if (thisForm.getInvalid() == false) {
+					if (thisForm.getRestrictionType() != RESTRICT_NONE) {
 
-					if (thisForm.getRestrictionType() == RESTIRCT_WORD_MAX) {
-						if (getWordCount(thisForm.getValue()) > thisForm.getRestrictionMax()) {
-							thisForm.setInvalid(true);
-							thisForm.setErrorMessage("field must contain less than " + thisForm.getRestrictionMax() + " words");
-						}
-					} else {
-						if (thisForm.getValue().toLowerCase().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
-							thisForm.setInvalid(true);
-							if (thisForm.getRestrictionType() == RESTRICT_ALPHHANUMERIC_NOSPACE) {
-								thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
-							} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
-								thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
-							} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
-								thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
-							} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY) {
-								thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
+						if (thisForm.getRestrictionType() == RESTIRCT_WORD_MAX) {
+							if (getWordCount(thisForm.getValue()) > thisForm.getRestrictionMax()) {
+								thisForm.setInvalid(true);
+								thisForm.setErrorMessage("field must contain less than " + thisForm.getRestrictionMax() + " words");
+							}
+						} else {
+							if (thisForm.getValue().toLowerCase().matches(getPatternFromType(thisForm.getRestrictionType())) == false) {
+								thisForm.setInvalid(true);
+								if (thisForm.getRestrictionType() == RESTRICT_ALPHHANUMERIC_NOSPACE) {
+									thisForm.setErrorMessage(ERROR_INVALID_ALPHANUMERIC);
+								} else if (thisForm.getRestrictionType() == RESTRICT_EMAIL) {
+									thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
+								} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
+									thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
+								} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY) {
+									thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
+								}
 							}
 						}
-					}
 
+					}
 				}
 			}
 		}
@@ -129,7 +155,7 @@ public class FormManager {
 		StringBuilder s = new StringBuilder();
 		for (String key: forms.keySet()) {
 			Form thisForm = forms.get(key);
-			if (thisForm.getInvalid() == true) {
+			if (thisForm.getInvalid() ) {
 				s.append(key + " " + thisForm.getErrorMessage() + ".<br />\n");
 			}
 		}
@@ -144,6 +170,16 @@ public class FormManager {
 			forms.get(key).setInvalid(false);
 		}
 	}
+
+	public boolean isValueBlank(String key) {
+		if (forms.containsKey(key)) {
+			return (forms.get(key).getValue().equals(""));
+		}
+		System.out.println("Form Doesn't exist?");
+		return true; 
+	}
+
+
 
 
 }

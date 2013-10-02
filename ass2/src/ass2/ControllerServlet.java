@@ -164,15 +164,32 @@ public class ControllerServlet extends HttpServlet {
 			}
 			else if (("update").equals(action)) {
 				AccountController ac = new AccountController(pm);
+				forward= JSP_ACCOUNT;
+
 				if (ub != null) {
-					ac.updateAccount(ub.getUsername());
+					if (ac.isInvalidForm()) {
+						request.setAttribute("message", ac.getFormMessage());
+					} else {
+						ac.updateAccount(ub);
+						request.setAttribute("message", "Technically should have only changed:" + ac.getChangedDetails() + "<br />");
+					}
 				}
 			}
 		}
 
+		formatMessage(request);
+		
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
 		requestDispatcher.forward(request, response);
+	}
+
+	private void formatMessage(HttpServletRequest request) {
+		String message = (String) request.getAttribute("message");
+		if (message != null) {
+			message = "<font color=\"red\">" + message + "</font>";
+		}
+		request.setAttribute("message", message);
 	}
 
 	private String doRemoveAlert(HttpServletRequest request, UserBean ub) {

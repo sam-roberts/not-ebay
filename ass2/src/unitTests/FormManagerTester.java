@@ -109,6 +109,22 @@ public class FormManagerTester {
 		
 	}
 	
+	@Test
+	public void testOptionalForms() {
+		fm.addOptionalForm("blah", "value");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.addForm("correctEmail", "hello@email.com", FormManager.RESTRICT_EMAIL);
+		assertFalse(fm.isMissingDetails());
+
+		
+		fm.addForm("wrongEmail", "s4j082038m",FormManager.RESTRICT_EMAIL);
+		assertTrue(fm.isMissingDetails());
+
+		
+		
+	}
+	
 	
 	
 

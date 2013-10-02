@@ -8,12 +8,15 @@ public class Form {
 	Boolean invalid;
 	int restrictionMax = 0;
 	
+	boolean optional;
+	
 	public Form(String key, String value) {
 		super();
 		this.key = key;
 		this.value = value;
 		this.invalid = false;
 		this.restrictionType = 0;
+		this.optional = false;
 	}
 	
 	public String getKey() {
@@ -57,6 +60,15 @@ public class Form {
 	
 	public int getRestrictionMax() {
 		return restrictionMax;
+	}
+
+	public void setOptional() {
+		this.optional= true;
+		
+	}
+	
+	public boolean isOptional() {
+		return this.optional;
 	}
 
 }
