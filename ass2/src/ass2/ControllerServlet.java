@@ -39,7 +39,7 @@ public class ControllerServlet extends HttpServlet {
 
 	//TODO fix removing auctions
 	private LinkedList<popAuction> popAuctions;
-	
+
 	private static final String JSP_LOGIN = "/login.jsp";
 	private static final String JSP_HOME = "/index.jsp";
 	private static final String JSP_REGISTRATION = "/registration.jsp";
@@ -58,7 +58,7 @@ public class ControllerServlet extends HttpServlet {
 
 
 	private ParameterManager pm;
-	
+
 	private final java.util.concurrent.ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
 	public ControllerServlet() {
@@ -75,7 +75,7 @@ public class ControllerServlet extends HttpServlet {
 		String forward = JSP_HOME;
 
 		String action = request.getParameter("action");
-		
+
 		UserBean ub = getAccountBean(request);
 		if ("auction".equals(action)) {
 			GetAuctionController gac = new GetAuctionController(pm);
@@ -121,7 +121,7 @@ public class ControllerServlet extends HttpServlet {
 
 		//default go home?
 		String forward = JSP_HOME;
-		
+
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
 			if ("addAuction".equals(action)) {
@@ -171,14 +171,19 @@ public class ControllerServlet extends HttpServlet {
 						request.setAttribute("message", ac.getFormMessage());
 					} else {
 						ac.updateAccount(ub);
-						request.setAttribute("message", "Technically should have only changed:" + ac.getChangedDetails() + "<br />");
+						if  (ac.hasChanged()) {
+							request.setAttribute("message", "Updated: " + ac.getChangedDetails() + "<br />");
+
+							//i think we need to update the session as the bean changes??
+							request.getSession().setAttribute("account", ub);
+						}
 					}
 				}
 			}
 		}
 
 		formatMessage(request);
-		
+
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
 		requestDispatcher.forward(request, response);
@@ -219,7 +224,7 @@ public class ControllerServlet extends HttpServlet {
 			GetAuctionController gac = new GetAuctionController(pm);
 			LinkedList<Integer> ids = null;
 			ids = gac.haltAllAuctions();
-			
+
 			Iterator<popAuction> i = popAuctions.iterator();
 			while (i.hasNext()) {
 				popAuction pa = i.next();
@@ -248,7 +253,7 @@ public class ControllerServlet extends HttpServlet {
 					pa.stop();
 			}
 		}
-		
+
 		forward = JSP_HOME;
 		return forward;
 	}
@@ -290,7 +295,7 @@ public class ControllerServlet extends HttpServlet {
 					pa.stop();
 			}
 		}
-		
+
 		request.setAttribute("auction", gac.getAuction());
 
 		if (request.getParameter("id") != null) {
@@ -300,7 +305,7 @@ public class ControllerServlet extends HttpServlet {
 		forward = JSP_GET;
 		return forward;
 	}
-	
+
 	private UserBean getAccountBean(HttpServletRequest request) {
 		return (UserBean) request.getSession().getAttribute("account");
 	}
@@ -345,7 +350,7 @@ public class ControllerServlet extends HttpServlet {
 		} else {
 			bd.message = "something went wrong (modified data/priviledges)<br>";
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
-				!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
+					!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
 				if (bd.addBid(ub.getUsername(), ub.getEmail(), request.getRequestURL().toString()) == false) {
 					Iterator<popAuction> i = popAuctions.iterator();
 					popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
@@ -354,7 +359,7 @@ public class ControllerServlet extends HttpServlet {
 						if (pa.equals(tmp))
 							pa.stop();
 					}
-					
+
 					GetAuctionController.popAuction(Integer.parseInt(request.getParameter("id")), true);
 				}
 			}
@@ -366,7 +371,7 @@ public class ControllerServlet extends HttpServlet {
 		if (request.getParameter("id") != null) {
 			request.setAttribute("bid", bd.getBids());
 		}
-		
+
 		return forward;
 	}
 

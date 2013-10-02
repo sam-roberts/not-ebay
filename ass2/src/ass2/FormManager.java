@@ -86,7 +86,7 @@ public class FormManager {
 
 
 			}
-			
+
 			//i think this is right but i'm cautious
 			if (thisForm.isOptional() && isValueBlank(thisForm.getKey())) {
 				thisForm.setInvalid(false);
@@ -174,8 +174,9 @@ public class FormManager {
 	public boolean isValueBlank(String key) {
 		if (forms.containsKey(key)) {
 			return (forms.get(key).getValue().equals(""));
+		} else {
+			System.out.println(key + " form Doesn't exist?");
 		}
-		System.out.println("Form Doesn't exist?");
 		return true; 
 	}
 

@@ -3,6 +3,7 @@ package contollers;
 import java.util.ArrayList;
 
 import beans.UserBean;
+import beans.UserBeanHelper;
 import ass2.FormManager;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
@@ -29,76 +30,56 @@ public class AccountController extends MasterFormBasedController {
 
 	public void updateAccount(UserBean ub) {
 		if (ub != null) {
-			if (formManager.isValueBlank("password") == false) {
-				ub.setPassword(paramManager.getIndividualParam("password"));
-				thingsChanged.add("password");
 
+			//i guess we should only set things if they actually changed
+
+			String[] stringForms = {"password", "email", "nickname", "firstName", "lastName", "address"};
+			String[] intForms = {"yearOfBirth", "ccNumber"};
+
+			UserBeanHelper ubHelper = new UserBeanHelper(ub);
+
+			for (String form: stringForms) {
+				if (formManager.isValueBlank(form) == false) {
+					if (ubHelper.getStringAttributeFromName(form).equals(paramManager.getIndividualParam(form)) == false) {
+						thingsChanged.add(form);
+						ubHelper.setStringAttributeFromName(form, paramManager.getIndividualParam(form));
+					}
+
+				}
 			}
 
-			if (formManager.isValueBlank("email") == false) {
-				ub.setEmail(paramManager.getIndividualParam("email"));
-				thingsChanged.add("email");
+			for (String form: intForms) {
+				if (formManager.isValueBlank(form) == false) {
+					int num = Integer.parseInt(paramManager.getIndividualParam(form));
 
+					if (ubHelper.getIntAttributeFromName(form) != num) {
+						thingsChanged.add(form);
+						ubHelper.setIntAttributeFromName(form, num);
+					}
+
+				}
+			}
+			if (hasChanged()) {
+				JDBCConnector.updateAccount(ub);
 
 			}
-
-			if (formManager.isValueBlank("nickname") == false) {
-				ub.setNickname(paramManager.getIndividualParam("nickname"));
-				thingsChanged.add("nickname");
-
-
-			}
-
-			if (formManager.isValueBlank("firstName") == false) {
-				ub.setFirstName(paramManager.getIndividualParam("firstName"));
-				thingsChanged.add("first name");
-
-
-			}
-
-			if (formManager.isValueBlank("lastName") == false) {
-				ub.setLastName(paramManager.getIndividualParam("lastName"));
-				thingsChanged.add("last name");
-
-
-			}
-
-			if (formManager.isValueBlank("yearOfBirth") == false) {
-				ub.setYearOfBirth(Integer.parseInt(paramManager.getIndividualParam("yearOfBirth")));
-				thingsChanged.add("year of birth");
-
-
-			}
-
-			if (formManager.isValueBlank("address") == false) {
-				ub.setPostalAddress(paramManager.getIndividualParam("address"));
-				thingsChanged.add("address");
-
-
-			}
-
-			if (formManager.isValueBlank("ccNumber") == false) {
-				ub.setCcNumber(Integer.parseInt(paramManager.getIndividualParam("ccNumber")));
-				thingsChanged.add("credit card number");
-
-
-			}
-			JDBCConnector.updateAccount(ub);
 		} else {
 			System.out.println("User is null, i'm not going to update the account");
 		}
 	}
-	
+	public boolean hasChanged() {
+		return thingsChanged.size() > 0;
+	}
 	public String getChangedDetails() {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < thingsChanged.size(); i++) {
 			s.append(thingsChanged.get(i));
-			
+
 			if (i > 0 && i < thingsChanged.size()) {
 				s.append(", ");
 			}
 		}
-		
+
 		return s.toString();
 	}
 

@@ -20,10 +20,7 @@
 
 	<!-- Most of the stuff will be coded in using scriplets -->
 	<c:if test="${not empty account}">
-		Hello, ${account.username}<br>
-	</c:if>
-	
-	<c:choose>
+			<c:choose>
 		<c:when test="${empty alert || alert.isEmpty()}">
 			No new alerts.
 		</c:when>
@@ -37,17 +34,20 @@
 		<ul>
 			Update your details:
 		
-			<li>Password: <input type="password" name="password"></li>
-			<li>Email Address: <input type="text" name="email"></li>
-			<li>Nickname: <input type="text" name="nickname"></li>
-			<li>First Name: <input type="text" name="firstName"></li>
-			<li>Last Name: <input type="text" name="lastName"></li>
-			<li>Year of Birth: <input type="text" name="yearOfBirth"></li>
-			<li>Postal Address: <input type="text" name="address"></li>
+			<li>Password: <input type="password" name="password"}></li>
+			<li>Email Address: <input type="text" name="email" value=${account.email}></li>
+			<li>Nickname: <input type="text" name="nickname" value=${account.nickname}></li>
+			<li>First Name: <input type="text" name="firstName" value=${account.firstName}></li>
+			<li>Last Name: <input type="text" name="lastName" value=${account.lastName}></li>
+			<li>Year of Birth: <input type="text" name="yearOfBirth" value=${account.yearOfBirth}></li>
+			<li>Postal Address: <input type="text" name="address" value=${account.postalAddress}></li>
 			<li>CC Number: <input type="text" name="ccNumber"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>
 	</form>
+		
+	</c:if>
+	
 
 </body>
 </html>
