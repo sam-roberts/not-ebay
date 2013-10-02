@@ -170,13 +170,8 @@ public class ControllerServlet extends HttpServlet {
 					if (ac.isInvalidForm()) {
 						request.setAttribute("message", ac.getFormMessage());
 					} else {
-						ac.updateAccount(ub);
-						if  (ac.hasChanged()) {
-							request.setAttribute("message", "Updated: " + ac.getChangedDetails() + "<br />");
-
-							//i think we need to update the session as the bean changes??
-							request.getSession().setAttribute("account", ub);
-						}
+						request.getSession().setAttribute("account", ac.updateAccount(ub.getUsername(), ub.getIsAdmin()));
+						request.setAttribute("message", "Successfully updated<br />");
 					}
 				}
 			}

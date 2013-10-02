@@ -176,7 +176,6 @@ public class JDBCConnector {
 		query = query.substring(0, query.length() - 2);
 		query += " WHERE username=?";
 		
-		System.out.println(query);
 		try {
 			c = connect();
 			int i = 1;

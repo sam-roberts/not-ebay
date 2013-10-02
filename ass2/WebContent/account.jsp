@@ -32,15 +32,15 @@
 	<form action="controller?action=update" method="POST">
 		
 		<ul>
-			Update your details:
+			Update your details (only non-blank fields will be updated):
 		
-			<li>Password: <input type="password" name="password"}></li>
-			<li>Email Address: <input type="text" name="email" value=${account.email}></li>
-			<li>Nickname: <input type="text" name="nickname" value=${account.nickname}></li>
-			<li>First Name: <input type="text" name="firstName" value=${account.firstName}></li>
-			<li>Last Name: <input type="text" name="lastName" value=${account.lastName}></li>
-			<li>Year of Birth: <input type="text" name="yearOfBirth" value=${account.yearOfBirth}></li>
-			<li>Postal Address: <input type="text" name="address" value=${account.postalAddress}></li>
+			<li>Password: <input type="password" name="password"></li>
+			<li>Email Address: <input type="text" name="email" value="${account.email}"></li>
+			<li>Nickname: <input type="text" name="nickname" value="${account.nickname}"></li>
+			<li>First Name: <input type="text" name="firstName" value="${account.firstName}"></li>
+			<li>Last Name: <input type="text" name="lastName" value="${account.lastName}"></li>
+			<li>Year of Birth: <input type="text" name="yearOfBirth" value="${account.yearOfBirth}"></li>
+			<li>Postal Address: <input type="text" name="address" value="${account.postalAddress}"></li>
 			<li>CC Number: <input type="text" name="ccNumber"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>
