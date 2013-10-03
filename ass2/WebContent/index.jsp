@@ -10,28 +10,32 @@
 <body>
 
 	<jsp:include page="/header.jsp" />
-	<!-- SEARCH FORM -->
-	<form action="controller" method="GET">
-		<input type="hidden" name="action" value="auction" />
-		<input type="hidden" name="only_not_finished" value="onf"/>
-		<ul>
-			<li>Search: <input autofocus type="text" name="title"></li>
-			<li><input type="submit" value="submit"></li>
-		</ul>
-	</form>
-
-	<c:choose>
-		<c:when test="${empty account}">
-			<a href="login.jsp">Login</a>
-			<a href="registration.jsp">Registration</a>
-		</c:when>
-		<c:otherwise>
-			<form action="controller?action=logout" method="POST">
-				<input type="submit" value="logout">
+	<div class="container">
+		<!-- SEARCH FORM -->
+		<h1>Welcome to eBuy</h1>
+		<!-- 
+			<form action="controller" method="GET">
+				<input type="hidden" name="action" value="auction" /> <input
+					type="hidden" name="only_not_finished" value="onf" />
+				<ul>
+					<li>Search: <input autofocus type="text" name="title"></li>
+					<li><input type="submit" value="submit"></li>
+				</ul>
 			</form>
-			<a href="auction.jsp">Add Auction</a>
-		</c:otherwise>
-	</c:choose>
-	
+ -->
+
+		<c:choose>
+			<c:when test="${empty account}">
+				<a href="login.jsp">Login</a>
+				<a href="registration.jsp">Registration</a>
+			</c:when>
+			<c:otherwise>
+				<form action="controller?action=logout" method="POST">
+					<input type="submit" value="logout">
+				</form>
+				<h2><a href="auction.jsp">Add Auction</a></h2>
+			</c:otherwise>
+		</c:choose>
+	</div>
 </body>
 </html>

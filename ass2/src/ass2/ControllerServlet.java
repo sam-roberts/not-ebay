@@ -132,7 +132,7 @@ public class ControllerServlet extends HttpServlet {
 		UserBean ub = getAccountBean(request);
 
 		//useful for debugging
-		//pm.printAllValues();
+		pm.printAllValues();
 
 		//default go home?
 		String forward = JSP_HOME;

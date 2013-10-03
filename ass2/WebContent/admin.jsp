@@ -8,7 +8,7 @@
 <title>Admin Page</title>
 </head>
 <body>
-	<c:if test="${empty account && not account.isAdmin}">
+	<c:if test="${empty account || not account.isAdmin}">
 		<%
 			response.sendRedirect("index.jsp");
 		%>
