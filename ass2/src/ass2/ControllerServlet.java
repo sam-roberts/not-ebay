@@ -124,15 +124,6 @@ public class ControllerServlet extends HttpServlet {
 		pm = new ParameterManager(request.getParameterMap());		
 
 
-		if (request.getSession().getAttribute("oldParameters") != null) {
-			System.out.println("oldParams exists");
-			ParameterManager oldParameterMap = (ParameterManager) request.getSession().getAttribute("oldParameters");
-			createFormParameters(request, oldParameterMap);
-			request.getSession().removeAttribute("oldParameters");
-		} else {
-			System.out.println("oldParams not exists");
-
-		}
 
 		UserBean ub = getAccountBean(request);
 
@@ -205,6 +196,18 @@ public class ControllerServlet extends HttpServlet {
 		}
 
 		formatMessage(request);
+		
+
+		//responsible for saving cached copies of form data
+		if (request.getSession().getAttribute("oldParameters") != null) {
+			System.out.println("oldParams exists");
+			ParameterManager oldParameterMap = (ParameterManager) request.getSession().getAttribute("oldParameters");
+			createFormParameters(request, oldParameterMap);
+			request.getSession().removeAttribute("oldParameters");
+		} else {
+			//System.out.println("oldParams not exists");
+
+		}
 
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
@@ -352,6 +355,9 @@ public class ControllerServlet extends HttpServlet {
 			if (request.getPart("picture").getSize() <= 0)
 				msg += "picture not specified.\n";
 			request.setAttribute("message", msg);
+			
+			request.getSession().setAttribute("oldParameters", pm);
+
 		} else {
 			UserBean ub;
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null && !ub.getIsAdmin() && !ub.getIsBanned()) {

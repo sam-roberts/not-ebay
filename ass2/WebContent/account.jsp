@@ -34,7 +34,7 @@
 		<ul>
 			Update your details:
 		
-			<li>Password: <input type="password" name="password"}></li>
+			<li>Password: <input autofocus type="password" name="password"}></li>
 			<li>Email Address: <input type="text" name="email" value=${account.email}></li>
 			<li>Nickname: <input type="text" name="nickname" value=${account.nickname}></li>
 			<li>First Name: <input type="text" name="firstName" value=${account.firstName}></li>

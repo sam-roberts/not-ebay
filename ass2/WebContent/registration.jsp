@@ -14,7 +14,7 @@
 
 	<form action="controller?action=register" method="POST">
 		<ul>
-			<li>Username: <input type="text" name="username" value="${formValue_username}"></li>
+			<li>Username: <input autofocus type="text" name="username" value="${formValue_username}"></li>
 			<li>Password: <input type="password" name="password"></li>
 			<li>Email Address: <input type="text" name="email" value="${formValue_email}"></li>
 			<li>Nickname: <input type="text" name="nickname" value="${formValue_nickname}"></li>

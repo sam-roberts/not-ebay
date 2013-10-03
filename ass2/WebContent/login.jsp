@@ -14,7 +14,7 @@
 
 	<form action="controller?action=login" method="POST">
 		<ul>
-			<li>Username: <input type="text" name="username"></li>
+			<li>Username: <input autofocus type="text" name="username" value="${formValue_username}"></li>
 			<li>Password: <input type="password" name="password"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>
