@@ -26,4 +26,8 @@ public class BidListBean {
 		return strConcat;
 	}
 	
+	public String displayOne() {
+		return bids.get(0).display();
+	}
+	
 }

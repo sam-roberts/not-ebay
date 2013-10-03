@@ -10,6 +10,11 @@
 <title>Login</title>
 </head>
 <body>
+	<c:if test="${not empty account}">
+		<%
+			response.sendRedirect("index.jsp");
+		%>
+	</c:if>
 	<jsp:include page="/header.jsp" />
 
 	<form action="controller?action=login" method="POST">

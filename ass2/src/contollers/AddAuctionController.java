@@ -125,7 +125,6 @@ public class AddAuctionController extends MasterFormBasedController {
 	}
 	
 	//credit from stackoverflow - http://stackoverflow.com/questions/2422468/how-to-upload-files-to-server-using-jsp-servlet
-	//CHECK FOR ATTACKS
 	private static String getFilename(Part part) {
 		for (String cd : part.getHeader("content-disposition").split(";")) {
 			if (cd.trim().startsWith("filename")) {

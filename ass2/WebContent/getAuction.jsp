@@ -18,8 +18,8 @@
 		
 			<c:forEach items="${auction.auctions}" var="auct">
 				${auct.display()}
-				<c:if test="${not empty bid}">
-					${bid.display()}
+				<c:if test="${not empty bid && not bid.bids.isEmpty()}">
+					Current Winning Bid: ${bid.displayOne()}
 				</c:if>
 				<c:if test="${not empty account}">
 					<c:if test="${account.isAdmin && not auct.halt && not auct.finished}">
@@ -35,7 +35,7 @@
 						</form>
 					</c:if>
 				</c:if>
-				<c:if test="${not empty param.id && not empty account && not auct.halt && not auct.finished}">
+				<c:if test="${not empty param.id && not empty account && not auct.halt && not auct.finished && auct.author != account.username}">
 					<form action="controller?action=bid" method="POST">
 					<input type="hidden" name="id" value="${param.id }">
 						<ul>

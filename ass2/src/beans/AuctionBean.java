@@ -93,7 +93,14 @@ public class AuctionBean {
 	
 	//TODO: STYLIZE THIS
 	public String display() {
-		String s = "<a href='controller?action=auction&id=" + id + "'>" + title + "</a><br>Start Price: " + startPrice + "<br>Bidding Increments: " + biddingIncrements + "<br>" + "End of auction: " + endOfAuction.toString() + "<br>";
+		String s = "<a href='controller?action=auction&id=" + id + "'>" + title + "</a>"
+				+ "<br><img src='" + picture + "'>"
+				+ "<br>Description: " + description
+				+ "<br>Postage Details: " + postageDetails
+				+ "</a><br>Start Price: " + startPrice
+				+ "<br>Bidding Increments: " + biddingIncrements
+				+ "<br>" + "End of auction: " + endOfAuction.toString()
+				+ "<br>";
 		if (halt) s += "Auction has been halted<br>";
 		if (finished) s += "Auction has finished<br>";
 		return s;

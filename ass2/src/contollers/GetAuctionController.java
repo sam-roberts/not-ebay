@@ -89,7 +89,9 @@ public class GetAuctionController extends MasterFormBasedController {
 	}
 	
 	public LinkedList<Integer> haltAllAuctions() {
-		return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
+		if (paramManager.hasParameter("username") && "".equals(paramManager.hasParameter("username")))
+			return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
+		return new LinkedList<Integer>();
 	}
 	
 	public void deleteAuction() {

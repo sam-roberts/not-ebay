@@ -244,7 +244,7 @@ public class JDBCConnector {
 		UserListBean ulb = new UserListBean();
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT username FROM username");
+			PreparedStatement ps = c.prepareStatement("SELECT username FROM username WHERE banned=FALSE AND admin=FALSE");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				close(c);

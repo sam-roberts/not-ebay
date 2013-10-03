@@ -8,6 +8,11 @@
 <title>Auction</title>
 </head>
 <body>
+	<c:if test="${empty account}">
+		<%
+			response.sendRedirect("index.jsp");
+		%>
+	</c:if>
 	<jsp:include page="/header.jsp" />
 
 	<c:choose>

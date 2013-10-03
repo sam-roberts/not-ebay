@@ -44,14 +44,30 @@ public class LoginController extends MasterFormBasedController {
 		return JDBCConnector.getUsers();
 	}
 	
-	public void banUsers() {
+	public boolean banUser() {
+		if (!paramManager.hasParameter("username") || !"".equals(paramManager.getIndividualParam("username"))) {
+			message = "Invalid GET data<br>";
+			return false;
+		}
+		message = "Cannot ban the user " + paramManager.getIndividualParam("username") + "<br>";
+		UserBean banUser = JDBCConnector.getUserBean(paramManager.getIndividualParam("username"), true);
+		if (banUser.getIsAdmin())
+			return false;
 		JDBCConnector.banUser(paramManager.getIndividualParam("username"));
+		message = "User " + paramManager.getIndividualParam("username") + " banned<br>";
+		return true;
 	}
 	
 	public void verify() {
 		if (!paramManager.hasParameter("hash") || !paramManager.hasParameter("username")) {
 			message="Verification is Missing username or hash";
 			return;
+		} else {
+			try {
+				Integer.parseInt(paramManager.getIndividualParam("hash"));
+			} catch (Exception e) {
+				return;
+			}
 		}
 		
 		if (JDBCConnector.checkVerification(paramManager.getIndividualParam("username"), Integer.parseInt(paramManager.getIndividualParam("hash")))) {
