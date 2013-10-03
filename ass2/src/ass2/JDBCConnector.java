@@ -56,7 +56,7 @@ public class JDBCConnector {
 	}
 	
 	private static void close(Connection c) {
-		/*
+		/* doesnt work with derby
 		try {
 			if (!c.isClosed())
 				c.close();

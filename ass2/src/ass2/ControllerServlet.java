@@ -153,7 +153,7 @@ public class ControllerServlet extends HttpServlet {
 						forward = doAddAuction(request);
 						request.getSession().setAttribute("token", "used");
 					} else {
-						request.getSession().setAttribute("message", "You cannot resubmit your form!");
+						request.setAttribute("message", "You cannot resubmit your form!");
 					}
 				}
 			}

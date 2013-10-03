@@ -42,7 +42,6 @@ public class GetAuctionController extends MasterFormBasedController {
 		BidListBean biddings = JDBCConnector.getBiddings(id, true);
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
-		System.out.println("asd");
 		AuctionListBean alb = JDBCConnector.getAuction(id, null, null, false);
 		if (!biddings.getBids().isEmpty()) {
 			if (!reserve) {
