@@ -17,7 +17,8 @@ public class FormManager {
 	public static final int RESTRICT_NUMERIC_ONLY = 4;	
 	public static final int RESTRICT_FLOAT_ONLY = 5;
 	public static final int RESTIRCT_WORD_MAX = 6;
-
+	public static final int RESTRICT_FLOAT_ONLY_GREATER_ZERO = 7;
+	
 
 
 	private static final String ERROR_MISSING = "field is empty";
@@ -26,7 +27,7 @@ public class FormManager {
 	private static final String ERROR_NUMERIC_ONLY = "field must contain numbers only";
 
 	private static final String ERROR_FLOAT_ONLY = "field must be a positive number";
-
+	private static final String ERROR_NON_ZERO = "field must be greater than zero";
 
 	Map<String, Form> forms;
 
@@ -59,12 +60,14 @@ public class FormManager {
 		forms.put(key, f);
 	}
 
+	
 	public void addOptionalForm(String key, String value) {
 		Form f = addForm(key, value);
 		f.setOptional();		
 
 
 	}
+
 
 
 	public void addOptionalForm(String key, String value,
@@ -114,6 +117,19 @@ public class FormManager {
 									thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
 								}
 							}
+							
+							if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY_GREATER_ZERO) {
+								try {
+									float fForm = Float.parseFloat(thisForm.getValue());
+									if (fForm <= 0) {
+										thisForm.setInvalid(true);
+										thisForm.setErrorMessage(ERROR_NON_ZERO);
+									}
+								} catch (Exception e) {
+									
+								}
+								
+							}
 						}
 
 					}
@@ -145,7 +161,7 @@ public class FormManager {
 			return "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
 		} else if (restrictionType == RESTRICT_NUMERIC_ONLY) {
 			return "\\d+";
-		} else if (restrictionType == RESTRICT_FLOAT_ONLY) {
+		} else if (restrictionType == RESTRICT_FLOAT_ONLY || restrictionType == RESTRICT_FLOAT_ONLY_GREATER_ZERO) {
 			return "^(?:[1-9]\\d*|0)?(?:\\.\\d+)?$";
 		}
 		return null;

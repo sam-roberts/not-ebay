@@ -59,10 +59,10 @@ public class AddAuctionController extends MasterFormBasedController {
 		//formManager.addForm("picture", paramManager.getIndividualParam("picture"));
 		formManager.addForm("description", paramManager.getIndividualParam("description"), FormManager.RESTIRCT_WORD_MAX, 100);
 		formManager.addForm("postageDetails", paramManager.getIndividualParam("postageDetails"));
-		formManager.addForm("reservePrice", paramManager.getIndividualParam("reservePrice"),FormManager.RESTRICT_FLOAT_ONLY);
+		formManager.addForm("reservePrice", paramManager.getIndividualParam("reservePrice"),FormManager.RESTRICT_FLOAT_ONLY_GREATER_ZERO);
 		formManager.addForm("biddingStart", paramManager.getIndividualParam("biddingStart"), FormManager.RESTRICT_FLOAT_ONLY);
 		formManager.addForm("auctionEnd", paramManager.getIndividualParam("auctionEnd"), FormManager.RESTRICT_NUMERIC_ONLY);
-		formManager.addForm("biddingIncrements", paramManager.getIndividualParam("biddingIncrements"), FormManager.RESTRICT_FLOAT_ONLY);
+		formManager.addForm("biddingIncrements", paramManager.getIndividualParam("biddingIncrements"), FormManager.RESTRICT_FLOAT_ONLY_GREATER_ZERO);
 		// it's optional so i think don't add it
 		//formManager.addForm("endOfAuction", paramManager.getIndividualParam("endOfAuction"));
 	}

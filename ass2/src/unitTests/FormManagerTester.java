@@ -110,6 +110,21 @@ public class FormManagerTester {
 	}
 	
 	@Test
+	public void testNonZeroFloat() {
+		fm.addForm("blah", "0", FormManager.RESTRICT_FLOAT_ONLY_GREATER_ZERO);
+		assertTrue(fm.isMissingDetails());
+		
+		fm.setForm("blah", "0.1");
+		assertFalse(fm.isMissingDetails());
+		
+		fm.setForm("blah", "-1");
+		assertTrue(fm.isMissingDetails());
+
+		
+	}
+	
+	
+	@Test
 	public void testOptionalForms() {
 		fm.addOptionalForm("blah", "value");
 		assertFalse(fm.isMissingDetails());

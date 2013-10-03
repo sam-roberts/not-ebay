@@ -7,7 +7,7 @@ public class Form {
 	int restrictionType;
 	Boolean invalid;
 	int restrictionMax = 0;
-	
+	int restrictionMin = 0;
 	boolean optional;
 	
 	public Form(String key, String value) {
@@ -67,6 +67,15 @@ public class Form {
 		
 	}
 	
+	
+	public int getRestrictionMin() {
+		return restrictionMin;
+	}
+
+	public void setRestrictionMin(int restrictionMin) {
+		this.restrictionMin = restrictionMin;
+	}
+
 	public boolean isOptional() {
 		return this.optional;
 	}

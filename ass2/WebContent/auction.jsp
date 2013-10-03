@@ -22,7 +22,7 @@
 			<li>Title: <input autofocus type="text" name="title" value="${formValue_title}"></li>
 			<li>Category: <input type="text" name="category" value="${formValue_category}"></li>
 			<li>Picture: <input type="file" accept="image/*" name="picture"></li>
-			<li>Description: <textArea name="description" rows=6 value="${formValue_description}"></textArea></li>
+			<li>Description: <textArea name="description" rows=6>${formValue_description}</textArea></li>
 			<li>Postage Details: <input type="text" name="postageDetails" value="${formValue_postageDetails}"></li>
 			<li>Reserve Price: $<input type="text" name="reservePrice" value="${formValue_reservePrice}"></li>
 			<li>Bidding Start Price: $<input type="text" name="biddingStart" value="${formValue_biddingStart}"></li>
