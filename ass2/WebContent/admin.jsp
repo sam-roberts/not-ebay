@@ -8,8 +8,6 @@
 <title>Admin Page</title>
 </head>
 <body>
-	<jsp:include page="/header.jsp" />
-
 	<c:if test="${empty account}">
 		<%
 			response.sendRedirect("index.jsp");
@@ -20,6 +18,9 @@
 			response.sendRedirect("index.jsp");
 		%>
 	</c:if>
+	<jsp:include page="/header.jsp" />
+
+
 
 Halt all of a user's auctions.
 <form action="controller?action=halt_all_auctions" method="POST">

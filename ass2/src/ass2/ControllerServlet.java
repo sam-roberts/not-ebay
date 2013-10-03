@@ -128,7 +128,9 @@ public class ControllerServlet extends HttpServlet {
 		UserBean ub = getAccountBean(request);
 
 		//useful for debugging
-		//pm.printAllValues();
+		pm.printAllValues();
+		
+		//System.out.println("YAY DOPOST");
 
 		//default go home?
 		String forward = JSP_HOME;
