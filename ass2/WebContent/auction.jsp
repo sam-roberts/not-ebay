@@ -19,15 +19,15 @@
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
 		<ul>
-			<li>Title: <input type="text" name="title"></li>
-			<li>Category: <input type="text" name="category"></li>
-			<li>Picture: <input type="file" name="picture"></li>
-			<li>Description: <textArea name="description" rows=6></textArea></li>
-			<li>Postage Details: <input type="text" name="postageDetails"></li>
-			<li>Reserve Price: $<input type="text" name="reservePrice" value=0.00></li>
-			<li>Bidding Start Price: $<input type="text" name="biddingStart" value=0.00></li>
+			<li>Title: <input autofocus type="text" name="title" value="${formValue_title}"></li>
+			<li>Category: <input type="text" name="category" value="${formValue_category}"></li>
+			<li>Picture: <input type="file" accept="image/*" name="picture"></li>
+			<li>Description: <textArea name="description" rows=6 value="${formValue_description}"></textArea></li>
+			<li>Postage Details: <input type="text" name="postageDetails" value="${formValue_postageDetails}"></li>
+			<li>Reserve Price: $<input type="text" name="reservePrice" value="${formValue_reservePrice}"></li>
+			<li>Bidding Start Price: $<input type="text" name="biddingStart" value="${formValue_biddingStart}"></li>
 			<li>Bidding Increments: $<input type="text"
-				name="biddingIncrements" value=0.00></li>
+				name="biddingIncrements" value="${formValue_biddingIncrements}"></li>
 			<!-- <li>End of Auction (yyyy-MM-dd hh:mm:ss): <input type="datetime"
 				name="endOfAuction"></li>
 				

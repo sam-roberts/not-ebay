@@ -41,6 +41,7 @@
 			<li>Last Name: <input type="text" name="lastName" value="${account.lastName}"></li>
 			<li>Year of Birth: <input type="text" name="yearOfBirth" value="${account.yearOfBirth}"></li>
 			<li>Postal Address: <input type="text" name="address" value="${account.postalAddress}"></li>
+
 			<li>CC Number: <input type="text" name="ccNumber"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>

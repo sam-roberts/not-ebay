@@ -22,6 +22,10 @@ public class ParameterManager {
 		return map.get(whichParameter);
 
 	}
+	
+	public Map<String, String[]> getMap() {
+		return this.map;
+	}
 
 	public void printAllValues() {
 		for(String keys: map.keySet()) {

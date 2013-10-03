@@ -3,6 +3,7 @@ package contollers;
 import java.util.ArrayList;
 
 import beans.UserBean;
+import beans.UserBeanHelper;
 import ass2.FormManager;
 import ass2.JDBCConnector;
 import ass2.ParameterManager;
@@ -27,21 +28,44 @@ public class AccountController extends MasterFormBasedController {
 		formManager.addOptionalForm("ccNumber", paramManager.getIndividualParam("ccNumber"), FormManager.RESTRICT_NUMERIC_ONLY);
 	}
 
-	public UserBean updateAccount(String username, boolean isAdminLogin) {
-		UserBean ub = new UserBean();
-		ub.setUsername(username);
-		ub.setPassword(paramManager.getIndividualParam("password"));
-		ub.setEmail(paramManager.getIndividualParam("email"));
-		ub.setNickname(paramManager.getIndividualParam("nickname"));
-		ub.setFirstName(paramManager.getIndividualParam("firstName"));
-		ub.setLastName(paramManager.getIndividualParam("lastName"));
-		if (!"".equals(paramManager.getIndividualParam("yearOfBirth")))
-			ub.setYearOfBirth(Integer.parseInt(paramManager.getIndividualParam("yearOfBirth")));
-		ub.setPostalAddress(paramManager.getIndividualParam("address"));
-		if (!"".equals(paramManager.getIndividualParam("ccNumber")))
-			ub.setCcNumber(Integer.parseInt(paramManager.getIndividualParam("ccNumber")));
-		JDBCConnector.updateAccount(ub);
-		return JDBCConnector.getUserBean(username, isAdminLogin);
+	public void updateAccount(UserBean ub) {
+		if (ub != null) {
+
+			//i guess we should only set things if they actually changed
+
+			String[] stringForms = {"password", "email", "nickname", "firstName", "lastName", "address"};
+			String[] intForms = {"yearOfBirth", "ccNumber"};
+
+			UserBeanHelper ubHelper = new UserBeanHelper(ub);
+
+			for (String form: stringForms) {
+				if (formManager.isValueBlank(form) == false) {
+					if (ubHelper.getStringAttributeFromName(form).equals(paramManager.getIndividualParam(form)) == false) {
+						thingsChanged.add(form);
+						ubHelper.setStringAttributeFromName(form, paramManager.getIndividualParam(form));
+					}
+
+				}
+			}
+
+			for (String form: intForms) {
+				if (formManager.isValueBlank(form) == false) {
+					int num = Integer.parseInt(paramManager.getIndividualParam(form));
+
+					if (ubHelper.getIntAttributeFromName(form) != num) {
+						thingsChanged.add(form);
+						ubHelper.setIntAttributeFromName(form, num);
+					}
+
+				}
+			}
+			if (hasChanged()) {
+				JDBCConnector.updateAccount(ub);
+
+			}
+		} else {
+			System.out.println("User is null, i'm not going to update the account");
+		}
 	}
 	public boolean hasChanged() {
 		return thingsChanged.size() > 0;

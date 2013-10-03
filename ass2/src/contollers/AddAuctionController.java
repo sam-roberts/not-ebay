@@ -53,18 +53,6 @@ public class AddAuctionController extends MasterFormBasedController {
 	}
 
 	protected void createForm() {
-		/*
-		<li>Title: <input type="text" name="title"></li>
-		<li>Category: <input type="password" name="category"></li>
-		<li>Picture: <input type="file" name="picture"></li>
-		<li>Description: <input type="text" name="description" width=600 height=300></li>
-		<li>Postage Details: <input type="text" name="postageDetails"></li>
-		<li>Reserve Price: <input type="text" name="reservePrice"></li> 	
-		<li>Bidding Start Price: <input type="text" name="biddingStart"></li>
-		<li>Bidding Increments: <input type="text" name="biddingIncrements"></li>
-		<li>End of Auction: <input type="text" name="endOfAuction"></li>
-		<li><input type="submit" value="submit"></li>
-		 */
 
 		formManager.addForm("title", paramManager.getIndividualParam("title"), FormManager.RESTIRCT_WORD_MAX, 10);
 		formManager.addForm("category", paramManager.getIndividualParam("category"));
