@@ -11,6 +11,7 @@
 
 	<jsp:include page="/header.jsp" />
 	<div class="container">
+		<br>${message}</br>
 		<!-- SEARCH FORM -->
 		<h1>Welcome to eBuy</h1>
 		<!-- 
@@ -33,7 +34,7 @@
 				<form action="controller?action=logout" method="POST">
 					<input type="submit" value="logout">
 				</form>
-				<h2><a href="auction.jsp">Add Auction</a></h2>
+				<h2><a href="controller?action=add_auction">Add Auction</a></h2>
 			</c:otherwise>
 		</c:choose>
 	</div>

@@ -34,11 +34,17 @@
 						<li><a
 							href="controller?action=auction&author=${account.username}">My
 								Auctions</a></li>
-						<li><a href="controller?action=wauction">My Won Auctions</a></li>
+						<li><a href="controller?action=add_auction">Add Auction <span class="glyphicon glyphicon-plus"></span></a></li>
+						<li><a href="controller?action=wauction">My Won Auctions <span class="glyphicon glyphicon-ok"></span></a></li>
+						<li><a href="controller?action=account">Update Account <span class="glyphicon glyphicon-list"></span></a></li>
 						<c:if test="${account.isAdmin}">
 							<li><a href="controller?action=admin">Admin Page</a></li>
 						</c:if>
-						<li><a href="controller?action=logout">Log out</a></li>
+						<li>
+						<form action="controller?action=logout" method="POST">
+							<button type="submit" value="logout">logout</button>
+						</form>
+						</li>
 					</c:otherwise>
 				</c:choose>
 

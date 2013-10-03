@@ -9,7 +9,8 @@ public class UserBeanHelper {
 
 	public String getStringAttributeFromName(String which) {
 		if (which.equals("password")) {
-			return ub.getPassword();
+			//return ub.getPassword();
+			return "";
 		} else if (which.equals("email")) {
 			return ub.getEmail();
 		} else if (which.equals("nickname")) {

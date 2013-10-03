@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +55,7 @@ public class ControllerServlet extends HttpServlet {
 	private static final String JSP_WAUCTIONS = "/winningAuctions.jsp";
 	private static final String JSP_ADMIN = "/admin.jsp";
 	private static final String JSP_ADMINLOGIN = "/adminLogin.jsp";
+	private static final String JSP_REDIRECT = "/redirect.jsp";
 
 	private static final long serialVersionUID = 1L;
 
@@ -78,7 +80,6 @@ public class ControllerServlet extends HttpServlet {
 		pm = new ParameterManager(request.getParameterMap());		
 		response.setContentType("text/html");
 		String forward = JSP_HOME;
-
 		String action = request.getParameter("action");
 
 		UserBean ub = getAccountBean(request);
@@ -114,7 +115,12 @@ public class ControllerServlet extends HttpServlet {
 			LoginController lc = new LoginController(pm);
 			lc.verify();
 			request.setAttribute("message", lc.getMessage());
-
+		} else if ("add_auction".equals(action)) {
+			Random r = new Random();
+			int rand = r.nextInt();
+			request.getSession().setAttribute("token", ""+rand);
+			request.setAttribute("rand", ""+rand);
+			forward = JSP_ADD_AUCTION;
 		}
 		formatMessage(request);
 
@@ -140,7 +146,16 @@ public class ControllerServlet extends HttpServlet {
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
 			if ("addAuction".equals(action)) {
-				forward = doAddAuction(request);
+				if (request.getParameter("token") != null && request.getSession().getAttribute("token") != null) {
+					if (request.getParameter("token").equals(request.getSession().getAttribute("token"))) {
+						System.out.println(request.getParameter("token") + " " + request.getSession().getAttribute("token"));
+						request.getSession().setAttribute("token", request.getParameter("token"));
+						forward = doAddAuction(request);
+						request.getSession().setAttribute("token", "used");
+					} else {
+						request.getSession().setAttribute("message", "You cannot resubmit your form!");
+					}
+				}
 			}
 			else if ("halt_auction".equals(action)) {
 				forward = doHaltAuction(request, ub);
@@ -157,7 +172,6 @@ public class ControllerServlet extends HttpServlet {
 			else if ("logout".equals(action)) {
 				sessions.remove(request.getSession());
 				request.getSession().removeAttribute("account");
-				request.getSession().invalidate();
 				forward = JSP_HOME;
 			}
 			else if ("login".equals(action)) {
@@ -182,8 +196,9 @@ public class ControllerServlet extends HttpServlet {
 			}
 			else if (("update").equals(action)) {
 				AccountController ac = new AccountController(pm);
+				AlertController aac = new AlertController(pm);
+				request.setAttribute("alert", aac.getAlert(ub.getUsername()));
 				forward= JSP_ACCOUNT;
-
 				if (ub != null) {
 					if (ac.isInvalidForm()) {
 						request.setAttribute("message", ac.getFormMessage());
@@ -287,7 +302,6 @@ public class ControllerServlet extends HttpServlet {
 							UserBean ubb = (UserBean) s.getAttribute("account");
 							if (ubb.getUsername().equals(request.getParameter("username"))) {
 								s.removeAttribute("account");
-								s.invalidate();
 							}
 						}
 					} catch (IllegalStateException e) {}	
@@ -397,7 +411,7 @@ public class ControllerServlet extends HttpServlet {
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null && !ub.getIsAdmin() && !ub.getIsBanned()) {
 				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
 				if (id > 0) {
-					forward=JSP_HOME;
+					forward=JSP_REDIRECT;
 					popAuction pa = new popAuction(id);
 					scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
 					popAuctions.add(pa);

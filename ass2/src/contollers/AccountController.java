@@ -41,6 +41,7 @@ public class AccountController extends MasterFormBasedController {
 
 			for (String form: stringForms) {
 				if (formManager.isValueBlank(form) == false) {
+					System.out.println(ubHelper.getStringAttributeFromName(form));
 					if (ubHelper.getStringAttributeFromName(form).equals(paramManager.getIndividualParam(form)) == false) {
 						thingsChanged.add(form);
 						ubHelper.setStringAttributeFromName(form, paramManager.getIndividualParam(form));

@@ -14,10 +14,11 @@
 			response.sendRedirect("index.jsp");
 		%>
 	</c:if>
-
 	<jsp:include page="/header.jsp" />
+	${message}
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
+		<input type="hidden" name="token" value="${rand}">
 		<ul>
 			<li>Title: <input autofocus type="text" name="title" value="${formValue_title}"></li>
 			<li>Category: <input type="text" name="category" value="${formValue_category}"></li>
@@ -47,8 +48,6 @@
 			</select>
 			</li>
 			<li><input type="submit" value="submit"></li>
-
-
 
 		</ul>
 	</form>

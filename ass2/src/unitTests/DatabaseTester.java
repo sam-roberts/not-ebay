@@ -18,6 +18,12 @@ public class DatabaseTester {
 		jdbc = new JDBCConnector();
     }
 	
+	@Test
+	public void testValidFloat() {
+		//jdbc.addUser("a", "a", "a@A.com", "a", "firstName", "lastName", 5, "postalAddress", 5, false, 5);
+		jdbc.getUserBean("a", false);
+	}
+	
 	
 	/*
 	 * 		//tests for jdbc

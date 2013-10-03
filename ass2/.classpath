@@ -14,5 +14,13 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/commons-collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbcp.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool.jar"/>
+	<classpathentry kind="lib" path="lib/derbyclient.jar"/>
+	<classpathentry kind="lib" path="lib/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/standard.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

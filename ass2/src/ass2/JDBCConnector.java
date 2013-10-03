@@ -23,15 +23,27 @@ import beans.WinningAuctionListBean;
 public class JDBCConnector {
 
 	//Possibly store these in a file rather than in code
-	private static final String postgreConn = "jdbc:postgresql://127.0.0.1:5432/ass2";
-	private static final String user = "test";
-	private static final String pass = "test";
+	//private static final String postgreConn = "jdbc:postgresql://127.0.0.1:5432/ass2";
+	//private static final String user = "test";
+	//private static final String pass = "test";
+	
+	//derby connection
+	private static final String postgreConn = "jdbc:derby://localhost:1527/ass2";
+	private static final String user = "root";
+	private static final String pass = "root";
 	
 	private static Connection connect() {
 		try {
-			Class.forName("org.postgresql.Driver");
+			//Class.forName("org.postgresql.Driver");
+			Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
 		} catch (ClassNotFoundException e) {
 			System.out.println("No postgresql driver.");
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		try {
@@ -44,12 +56,13 @@ public class JDBCConnector {
 	}
 	
 	private static void close(Connection c) {
+		/*
 		try {
 			if (!c.isClosed())
 				c.close();
 		} catch (SQLException e) {
 			System.out.println("Cannot close connection.");
-		}
+		}*/
 	}
 	
 	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned, int hash) {
@@ -254,7 +267,7 @@ public class JDBCConnector {
 			}
 			return ulb;
 		} catch (SQLException e) {
-			System.out.println("Could not get userbean.");
+			System.out.println("Could not get userbeans.");
 		}
 		close(c);
 		return ulb;

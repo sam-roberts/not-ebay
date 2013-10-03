@@ -28,7 +28,8 @@
 			${alert.display()}
 		</c:otherwise>
 	</c:choose>
-
+	
+	<br><br>${message}
 	<form action="controller?action=update" method="POST">
 		
 		<ul>
