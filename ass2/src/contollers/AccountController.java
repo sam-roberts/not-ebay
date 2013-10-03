@@ -30,6 +30,7 @@ public class AccountController extends MasterFormBasedController {
 
 	public void updateAccount(UserBean ub) {
 		if (ub != null) {
+			thingsChanged.clear();
 
 			//i guess we should only set things if they actually changed
 

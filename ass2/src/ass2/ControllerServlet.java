@@ -181,23 +181,26 @@ public class ControllerServlet extends HttpServlet {
 					if (ac.isInvalidForm()) {
 						request.setAttribute("message", ac.getFormMessage());
 					} else {
-						request.setAttribute("message", "Successfully updated<br />");
-						if  (ac.hasChanged()) {
-							request.setAttribute("message", "Updated: " + ac.getChangedDetails() + "<br />");
-							ac.updateAccount(ub);
+						ac.updateAccount(ub);
 
-							//i think we need to update the session as the bean changes??
+						if (ac.hasChanged()) {
+							request.setAttribute("message", "Updated: " + ac.getChangedDetails() + "<br />");
 							request.getSession().setAttribute("account", ub);
+
+
 						} else {
 							request.setAttribute("message", "No changes made.");
+
 						}
+						//i think we need to update the session as the bean changes??
+
 					}
 				}
 			}
 		}
 
 		formatMessage(request);
-		
+
 
 		//responsible for saving cached copies of form data
 		if (request.getSession().getAttribute("oldParameters") != null) {
@@ -356,7 +359,7 @@ public class ControllerServlet extends HttpServlet {
 			if (request.getPart("picture").getSize() <= 0)
 				msg += "picture not specified.\n";
 			request.setAttribute("message", msg);
-			
+
 			request.getSession().setAttribute("oldParameters", pm);
 
 		} else {
