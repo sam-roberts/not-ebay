@@ -9,7 +9,8 @@
 </head>
 <body>
 	<jsp:include page="/header.jsp" />
-
+	
+	<div class="container">
 	<c:choose>
 		<c:when test="${empty wauction || wauction.isEmpty()}">
 			No winning auctions found.
@@ -18,6 +19,6 @@
 			${wauction.display()}
 		</c:otherwise>
 	</c:choose>
-	
+	</div>
 </body>
 </html>

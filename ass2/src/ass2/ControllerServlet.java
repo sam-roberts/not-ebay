@@ -233,7 +233,7 @@ public class ControllerServlet extends HttpServlet {
 	private void formatMessage(HttpServletRequest request) {
 		String message = (String) request.getAttribute("message");
 		if (message != null) {
-			message = "<font color=\"red\">" + message + "</font>";
+			message = "<p class=\"text-warning\">" + message + "</p>";
 		}
 		request.setAttribute("message", message);
 	}
@@ -261,7 +261,7 @@ public class ControllerServlet extends HttpServlet {
 		LoginController lc = new LoginController(pm);
 		if (ub!= null && ub.getIsAdmin()) {
 			lc.banUsers();
-
+			request.setAttribute("message", lc.getMessage());
 			GetAuctionController gac = new GetAuctionController(pm);
 			LinkedList<Integer> ids = null;
 			ids = gac.haltAllAuctions();
@@ -305,6 +305,8 @@ public class ControllerServlet extends HttpServlet {
 		LinkedList<Integer> ids = null;
 		if (ub != null && ub.getIsAdmin()) {
 			ids = gac.haltAllAuctions();
+			
+			request.setAttribute("message", gac.getMessage());
 			LoginController lc = new LoginController(pm);
 			request.setAttribute("users", lc.getUsers());
 		}

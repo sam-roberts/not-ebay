@@ -16,6 +16,7 @@
 	</c:if>
 
 	<jsp:include page="/header.jsp" />
+	<div class="container">
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
 		<ul>
@@ -52,6 +53,7 @@
 
 		</ul>
 	</form>
+	</div>
 
 </body>
 </html>

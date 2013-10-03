@@ -4,12 +4,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<style>
+
+</style>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Auction</title>
 </head>
 <body>
 	<jsp:include page="/header.jsp" />
-
+	<div class="container">
 	<c:choose>
 		<c:when test="${empty auction || auction.isEmpty()}">
 			No auctions found.
@@ -17,6 +22,7 @@
 		<c:otherwise>
 		
 			<c:forEach items="${auction.auctions}" var="auct">
+				<div class="highlight">
 				${auct.display()}
 				<c:if test="${not empty bid}">
 					${bid.display()}
@@ -44,9 +50,10 @@
 						</ul>
 					</form>
 				</c:if>
+				</div>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
-	
+	</div>
 </body>
 </html>

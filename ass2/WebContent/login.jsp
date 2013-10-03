@@ -29,7 +29,7 @@
 
 		<form class="form-signin" action="controller?action=login" method="POST">
 		 <h2 class="form-signin-heading">Login</h2>
-		 <h5 color=red>${message}</h5>
+		 <h5 class="text-warning">${message}</h5>
 		 
 			<input type="text" class="form-control" placeholder="Username" name="username" value="${formValue_username}" autofocus>
 			<input type="password" class="form-control" name="password" placeholder="Password">

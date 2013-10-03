@@ -89,6 +89,7 @@ public class GetAuctionController extends MasterFormBasedController {
 	}
 	
 	public LinkedList<Integer> haltAllAuctions() {
+		message = "Halted the auctions of " + (paramManager.getIndividualParam("username"));
 		return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
 	}
 	

@@ -5,15 +5,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style>
+
+</style>
 <title>Home</title>
 </head>
 <body>
-
+	<div id="wrap">
 	<jsp:include page="/header.jsp" />
 	<div class="container">
-		<!-- SEARCH FORM -->
-		<h1>Welcome to eBuy</h1>
-		<!-- 
+		<div class="hero-unit">
+			<!-- SEARCH FORM -->
+			<h1>Welcome to <font color="#cc3333">e</font><font color="#0063d1">B</font><font color="#ff9900">u</font><font color="#99cc00">y</font></h1>
+			<!-- 
 			<form action="controller" method="GET">
 				<input type="hidden" name="action" value="auction" /> <input
 					type="hidden" name="only_not_finished" value="onf" />
@@ -24,18 +29,25 @@
 			</form>
  -->
 
-		<c:choose>
-			<c:when test="${empty account}">
-				<a href="login.jsp">Login</a>
-				<a href="registration.jsp">Registration</a>
-			</c:when>
-			<c:otherwise>
-				<form action="controller?action=logout" method="POST">
-					<input type="submit" value="logout">
-				</form>
-				<h2><a href="auction.jsp">Add Auction</a></h2>
-			</c:otherwise>
-		</c:choose>
+			<c:choose>
+				<c:when test="${empty account}">
+					<a href="login.jsp">Login</a>
+					<a href="registration.jsp">Registration</a>
+				</c:when>
+				<c:otherwise>
+					<form action="controller?action=logout" method="POST">
+						<input type="submit" value="logout">
+					</form>
+
+				</c:otherwise>
+			</c:choose>
+		</div>
+		
+		
 	</div>
+	<hr />
+      <div class="container" >
+        <p class="text-muted credit">By Sam Roberts and Ben Lee for COMP9321</p>
+      </div>
 </body>
 </html>
