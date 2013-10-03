@@ -422,7 +422,8 @@ public class ControllerServlet extends HttpServlet {
 		} else {
 			bd.message = "something went wrong (modified data/priviledges)<br>";
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
-					!alb.isEmpty() && !alb.getAuctions().get(0).getFinished()) {
+					!alb.isEmpty() && !alb.getAuctions().get(0).getFinished() &&
+					!alb.getAuctions().get(0).getAuthor().equals(ub.getUsername())) {
 				if (bd.addBid(ub.getUsername(), ub.getEmail(), request.getRequestURL().toString()) == false) {
 					Iterator<popAuction> i = popAuctions.iterator();
 					popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
