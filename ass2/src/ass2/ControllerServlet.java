@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +71,7 @@ public class ControllerServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ParameterManager pm = new ParameterManager(request.getParameterMap());		
+		pm = new ParameterManager(request.getParameterMap());		
 		response.setContentType("text/html");
 		String forward = JSP_HOME;
 
@@ -108,16 +109,35 @@ public class ControllerServlet extends HttpServlet {
 		} else if ("verify".equals(action)) {
 			LoginController lc = new LoginController(pm);
 			lc.verify();
+			request.setAttribute("message", lc.getMessage());
+
 		}
+		formatMessage(request);
+
 		request.getRequestDispatcher(forward).forward(request, response);
 	}
 
+
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		pm = new ParameterManager(request.getParameterMap());
+
+		pm = new ParameterManager(request.getParameterMap());		
+
+
+		if (request.getSession().getAttribute("oldParameters") != null) {
+			System.out.println("oldParams exists");
+			ParameterManager oldParameterMap = (ParameterManager) request.getSession().getAttribute("oldParameters");
+			createFormParameters(request, oldParameterMap);
+			request.getSession().removeAttribute("oldParameters");
+		} else {
+			System.out.println("oldParams not exists");
+
+		}
+
 		UserBean ub = getAccountBean(request);
 
 		//useful for debugging
-		pm.printAllValues();
+		//pm.printAllValues();
 
 		//default go home?
 		String forward = JSP_HOME;
@@ -176,6 +196,8 @@ public class ControllerServlet extends HttpServlet {
 
 							//i think we need to update the session as the bean changes??
 							request.getSession().setAttribute("account", ub);
+						} else {
+							request.setAttribute("message", "No changes made.");
 						}
 					}
 				}
@@ -187,6 +209,16 @@ public class ControllerServlet extends HttpServlet {
 		RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher(forward);
 		System.out.println("Forwarding to: " + forward);
 		requestDispatcher.forward(request, response);
+	}
+
+	private void createFormParameters(HttpServletRequest request, ParameterManager oldParameterMap) {
+		Map<String,String[]> map = oldParameterMap.getMap();
+		for(String keys: map.keySet()) {
+			for (String value: map.get(keys)) {
+				request.setAttribute("formValue_" + keys, value);
+				System.out.println("Setting attribute: formValue_" +keys+ " as "+  value);
+			}
+		}
 	}
 
 	private void formatMessage(HttpServletRequest request) {
@@ -382,6 +414,8 @@ public class ControllerServlet extends HttpServlet {
 			//entered the wrong information, keep them on the same page
 			forward = JSP_LOGIN;
 			request.setAttribute("message", loginController.getFormMessage());
+
+			request.getSession().setAttribute("oldParameters", pm);
 		} else {
 			//check to see if its a valid account					
 			UserBean ub = loginController.requestLogin(isAdminLogin);
@@ -402,6 +436,12 @@ public class ControllerServlet extends HttpServlet {
 		if (registrationController.isInvalidForm()) {
 			forward = JSP_REGISTRATION;
 			request.setAttribute("message", registrationController.getFormMessage());
+
+			//System.out.println("SETTING OLD PARAMETERS as ");
+			//pm.printAllValues();
+			//System.out.println("-----");
+			request.getSession().setAttribute("oldParameters", pm);
+
 		} else {
 			if (registrationController.isAccountAlreadyExists()) {
 				forward = JSP_REGISTRATION;

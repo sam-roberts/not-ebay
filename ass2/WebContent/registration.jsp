@@ -14,15 +14,15 @@
 
 	<form action="controller?action=register" method="POST">
 		<ul>
-			<li>Username: <input type="text" name="username"></li>
+			<li>Username: <input type="text" name="username" value="${formValue_username}"></li>
 			<li>Password: <input type="password" name="password"></li>
-			<li>Email Address: <input type="text" name="email"></li>
-			<li>Nickname: <input type="text" name="nickname"></li>
-			<li>First Name: <input type="text" name="firstName"></li>
-			<li>Last Name: <input type="text" name="lastName"></li>
-			<li>Year of Birth: <input type="text" name="yearOfBirth"></li>
-			<li>Postal Address: <input type="text" name="address"></li>
-			<li>CC Number: <input type="text" name="ccNumber"></li>
+			<li>Email Address: <input type="text" name="email" value="${formValue_email}"></li>
+			<li>Nickname: <input type="text" name="nickname" value="${formValue_nickname}"></li>
+			<li>First Name: <input type="text" name="firstName" value="${formValue_firstName}"></li>
+			<li>Last Name: <input type="text" name="lastName" value="${formValue_lastName}"></li>
+			<li>Year of Birth: <input type="text" name="yearOfBirth" value="${formValue_yearOfBirth}"></li>
+			<li>Postal Address: <input type="text" name="address" value="${formValue_address}"></li>
+			<li>CC Number: <input type="text" name="ccNumber" value="${formValue_ccNumber}"></li>
 			<li><input type="submit" value="submit"></li>
 		</ul>
 	</form>

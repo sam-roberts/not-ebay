@@ -9,6 +9,8 @@ public class LoginController extends MasterFormBasedController {
 
 	//note we also have ParameterManager paramManager
 	
+	
+	
 	public LoginController(ParameterManager params) {
 		super(params);
 	}
@@ -47,12 +49,17 @@ public class LoginController extends MasterFormBasedController {
 	}
 	
 	public void verify() {
-		if (!paramManager.hasParameter("hash") || !paramManager.hasParameter("username")) return;
+		if (!paramManager.hasParameter("hash") || !paramManager.hasParameter("username")) {
+			message="Verification is Missing username or hash";
+			return;
+		}
 		
 		if (JDBCConnector.checkVerification(paramManager.getIndividualParam("username"), Integer.parseInt(paramManager.getIndividualParam("hash")))) {
 			JDBCConnector.verify(paramManager.getIndividualParam("username"));
+			message="Congratulations, You have been verified. You may log in now";
 		} else {
 			//verification failed
+			message="Incorrect verificaiton hash, or you may already be verified.";
 		}
 	}
 
