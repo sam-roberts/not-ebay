@@ -15,6 +15,7 @@
 <body>
 	<jsp:include page="/header.jsp" />
 	<div class="container">
+	${message}<br>
 	<c:choose>
 		<c:when test="${empty auction || auction.isEmpty()}">
 			No auctions found.

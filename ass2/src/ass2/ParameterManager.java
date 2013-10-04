@@ -1,5 +1,6 @@
 package ass2;
 
+import java.nio.MappedByteBuffer;
 import java.util.Map;
 
 public class ParameterManager {
@@ -7,6 +8,16 @@ public class ParameterManager {
 	private Map<String, String[]> map;
 	public ParameterManager(Map<String, String[]> map) {
 		this.map = map;
+		
+		for(String keys: map.keySet()) {
+			int i = 0;
+			for (String value: map.get(keys)) {
+				value = value.replaceAll("<", "&lt;");
+				value = value.replaceAll(">", "&gt;");
+				map.get(keys)[i] = value;
+				i++;
+			}
+		}
 	}
 
 	public boolean hasParameter(String whichParameter) {

@@ -27,6 +27,9 @@ public class FormManager {
 
 	private static final String ERROR_FLOAT_ONLY = "field must be a positive number";
 	private static final String ERROR_NON_ZERO = "field must be greater than zero";
+	
+	private static final String ERROR_LARGE = "field must not be longer than 500 characters";
+
 
 	Map<String, Form> forms;
 
@@ -88,7 +91,12 @@ public class FormManager {
 
 
 			}
-
+			
+			if (thisForm.getValue().length() > 500) {
+				thisForm.setInvalid(true);
+				thisForm.setErrorMessage(ERROR_LARGE);
+			}
+			
 			//i think this is right but i'm cautious
 			if (thisForm.isOptional() && isValueBlank(thisForm.getKey())) {
 				thisForm.setInvalid(false);
@@ -112,7 +120,7 @@ public class FormManager {
 									thisForm.setErrorMessage(ERROR_INVALID_EMAIL);
 								} else if (thisForm.getRestrictionType() == RESTRICT_NUMERIC_ONLY) {
 									thisForm.setErrorMessage(ERROR_NUMERIC_ONLY);
-								} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY) {
+								} else if (thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY || thisForm.getRestrictionType() == RESTRICT_FLOAT_ONLY_GREATER_ZERO) {
 									thisForm.setErrorMessage(ERROR_FLOAT_ONLY);
 								}
 							}

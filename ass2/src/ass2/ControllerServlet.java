@@ -115,6 +115,7 @@ public class ControllerServlet extends HttpServlet {
 			LoginController lc = new LoginController(pm);
 			lc.verify();
 			request.setAttribute("message", lc.getMessage());
+			forward = JSP_MESSAGE;
 		} else if ("add_auction".equals(action)) {
 			Random r = new Random();
 			int rand = r.nextInt();
@@ -146,13 +147,18 @@ public class ControllerServlet extends HttpServlet {
 		if (pm.hasParameter("action")) {
 			String action = pm.getIndividualParam("action");
 			if ("addAuction".equals(action)) {
-				if (request.getParameter("token") != null && request.getSession().getAttribute("token") != null) {
-					if (request.getParameter("token").equals(request.getSession().getAttribute("token"))) {
-						System.out.println(request.getParameter("token") + " " + request.getSession().getAttribute("token"));
-						request.getSession().setAttribute("token", request.getParameter("token"));
+				forward = JSP_MESSAGE;
+				if (request.getSession().getAttribute("token") != null) {
+					if (!"used".equals(request.getSession().getAttribute("token"))) {
+						//request.getSession().setAttribute("token", request.getParameter("token"));
 						forward = doAddAuction(request);
-						request.getSession().setAttribute("token", "used");
+						if (forward.equals(JSP_MESSAGE))
+							request.getSession().setAttribute("token", "used");
 					} else {
+						Random r = new Random();
+						int rand = r.nextInt();
+						request.getSession().setAttribute("token", ""+rand);
+						request.setAttribute("rand", ""+rand);
 						request.setAttribute("message", "You cannot resubmit your form!");
 					}
 				}
@@ -405,19 +411,20 @@ public class ControllerServlet extends HttpServlet {
 			request.setAttribute("message", msg);
 
 			request.getSession().setAttribute("oldParameters", pm);
-
 		} else {
 			UserBean ub;
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null && !ub.getIsAdmin() && !ub.getIsBanned()) {
 				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
 				if (id > 0) {
-					forward=JSP_REDIRECT;
+					forward=JSP_MESSAGE;
 					popAuction pa = new popAuction(id, request.getRequestURL().toString());
 					scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
 					popAuctions.add(pa);
 					request.setAttribute("message", "Added new auction");
-				} else
+				} else {
+					request.getSession().setAttribute("oldParameters", pm);
 					request.setAttribute("message", ac.getMessage());
+				}
 			} else {
 				request.setAttribute("message", "You cannot place an auction.");
 			}
@@ -436,7 +443,8 @@ public class ControllerServlet extends HttpServlet {
 		} else {
 			bd.message = "something went wrong (modified data/priviledges)<br>";
 			if ((ub = (UserBean) request.getSession().getAttribute("account")) != null &&
-					!alb.isEmpty() && !alb.getAuctions().get(0).getFinished() &&
+					!alb.isEmpty() && !alb.getAuctions().get(0).isHalt() &&
+					!alb.getAuctions().get(0).getFinished() &&
 					!alb.getAuctions().get(0).getAuthor().equals(ub.getUsername())) {
 				if (bd.addBid(ub.getUsername(), ub.getEmail(), request.getRequestURL().toString()) == false) {
 					/*
