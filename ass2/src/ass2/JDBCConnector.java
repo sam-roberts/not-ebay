@@ -56,12 +56,13 @@ public class JDBCConnector {
 	}
 	
 	private static void close(Connection c) {
+		/*
 		try {
 			if (!c.isClosed())
 				c.close();
 		} catch (SQLException e) {
 			System.out.println("Cannot close connection.");
-		}
+		}*/
 	}
 	
 	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned, int hash) {
@@ -230,7 +231,6 @@ public class JDBCConnector {
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				close(c);
 				UserBean ub = new UserBean();
 				ub.setUsername(rs.getString("username"));
 				ub.setEmail(rs.getString("email_address"));
@@ -242,6 +242,7 @@ public class JDBCConnector {
 				ub.setIsBanned(rs.getBoolean("banned"));
 				if (isAdminLogin) ub.setIsAdmin(rs.getBoolean("admin"));
 				else ub.setIsAdmin(false);
+				close(c);
 				return ub;
 			}
 		} catch (SQLException e) {
@@ -293,6 +294,7 @@ public class JDBCConnector {
 			
 			ResultSet gk = ps.getGeneratedKeys();
 			gk.next();
+			close(c);
 			return (int) gk.getLong(1);
 		} catch (SQLException e) {
 			System.out.println("Could not add auction.");

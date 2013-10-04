@@ -10,6 +10,11 @@
 <title>Admin Page</title>
 </head>
 <body>
+	<c:if test="${empty account || not account.isAdmin}">
+		<%
+			response.sendRedirect("index.jsp");
+		%>
+	</c:if>
 	<jsp:include page="/header.jsp" />
 	<div class="container">
 
@@ -53,8 +58,6 @@
 			</div>
 		</form>
 
-
-		<h2>TODO: Unban a user.</h2>
 	</div>
 </body>
 </html>

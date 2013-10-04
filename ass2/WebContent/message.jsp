@@ -13,6 +13,7 @@
 	<jsp:include page="/header.jsp" />
 
 <div class="container">
+${message}<br>
 Click <a href="index.jsp">here</a> to go back home.
 </div>
 </body>

@@ -45,7 +45,7 @@ public class LoginController extends MasterFormBasedController {
 	}
 	
 	public boolean banUser() {
-		if (!paramManager.hasParameter("username") || !"".equals(paramManager.getIndividualParam("username"))) {
+		if (!paramManager.hasParameter("username") || "".equals(paramManager.getIndividualParam("username"))) {
 			message = "Invalid GET data<br>";
 			return false;
 		}

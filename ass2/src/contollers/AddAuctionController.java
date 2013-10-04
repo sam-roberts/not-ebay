@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -93,6 +94,10 @@ public class AddAuctionController extends MasterFormBasedController {
 			message = err;
 			return 0;
 		}
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+		Date date = new Date();
+		filename = dateFormat.format(date) + filename;
 		
 		try {
 			InputStream is = file.getInputStream();
