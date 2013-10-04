@@ -8,6 +8,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Admin Login</title>
+ <link href="css/signin.css" rel="stylesheet">
+
 </head>
 <body>
 	<c:if test="${not empty account}">
@@ -17,12 +19,19 @@
 	</c:if>
 	<jsp:include page="/header.jsp" />
 
-	<form action="controller?action=adminLogin" method="POST">
-		<ul>
-			<li>Username: <input type="text" name="username"></li>
-			<li>Password: <input type="password" name="password"></li>
-			<li><input type="submit" value="submit"></li>
-		</ul>
-	</form>
+	<div class="container">
+
+		<form class="form-signin" action="controller?action=adminLogin" method="POST">
+		 <h2 class="form-signin-heading">Administrator Login</h2>
+		 <h5 class="text-warning">${message}</h5>
+		 
+			<input type="text" class="form-control" placeholder="Username" name="username" value="${formValue_username}" autofocus>
+			<input type="password" class="form-control" name="password" placeholder="Password">
+			
+			
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			
+		</form>
+	</div>
 </body>
 </html>

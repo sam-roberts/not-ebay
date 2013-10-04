@@ -10,11 +10,11 @@ import ass2.JDBCConnector;
 import ass2.ParameterManager;
 
 public class GetAuctionController extends MasterFormBasedController {
-	
+
 	private final static String NO_BIDS = "There were no bids to your auction!";
 	private final static String BEAT_RESERVE = "You have beat the reserve!";
 	private final static String PAY_RESERVE = "You must pay the reserve price to win the auction!";
-	
+
 	public GetAuctionController(ParameterManager params) {
 		super(params);
 	}
@@ -33,11 +33,11 @@ public class GetAuctionController extends MasterFormBasedController {
 		boolean finished = (paramManager.hasParameter("only_not_finished")) ? true : false;
 		return JDBCConnector.getAuction(id, author, title, finished);
 	}
-	
+
 	public WinningAuctionListBean getWinningAuctions(String author) {
 		return JDBCConnector.getWinningAuctions(author);
 	}
-	
+
 	public static void popAuction(int id, boolean reserve) {
 		BidListBean biddings = JDBCConnector.getBiddings(id, true);
 		//TODO make transaction i suppose?
@@ -58,11 +58,11 @@ public class GetAuctionController extends MasterFormBasedController {
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, NO_BIDS);
 		}
 	}
-	
+
 	//TODO This shoul dbe a transaction 
 	public void winAuction(String bidder) {
 		//TODO get the emails and email them i suppose
-		
+
 		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
 		if (JDBCConnector.isOwnerWinningAuction(id, bidder)) {
 			String[] emails = JDBCConnector.getUserEmailsFromWA(id);
@@ -74,11 +74,11 @@ public class GetAuctionController extends MasterFormBasedController {
 			tmp = emails[0];
 			e = new Emailer(emails[1], title, msg);
 			e.email();
-			
+
 			JDBCConnector.deleteWinningAuction(id);
 		}
 	}
-	
+
 	public void haltAuction(String url) {
 		JDBCConnector.haltAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
 		String email = JDBCConnector.getOwnerEmailFromAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
@@ -87,15 +87,20 @@ public class GetAuctionController extends MasterFormBasedController {
 		Emailer e = new Emailer(email, title, msg);
 		e.email();
 	}
-	
+
 	public LinkedList<Integer> haltAllAuctions() {
-		if (paramManager.hasParameter("username") && "".equals(paramManager.hasParameter("username")))
+		if (paramManager.hasParameter("username") && "".equals(paramManager.hasParameter("username"))) {
+			message = "Halted the auctions of " + (paramManager.getIndividualParam("username"));
 			return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
-		return new LinkedList<Integer>();
+
+
+		} else {
+			return new LinkedList<Integer>();
+		}
 	}
-	
+
 	public void deleteAuction() {
 		JDBCConnector.deleteAuction(Integer.parseInt(paramManager.getIndividualParam("id")));
 	}
-	
+
 }

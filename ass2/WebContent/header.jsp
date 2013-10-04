@@ -37,7 +37,11 @@
 						<li><a
 							href="controller?action=auction&author=${account.username}">My
 								Auctions <span class="glyphicon glyphicon-time"></a></li>
+<<<<<<< HEAD
 
+=======
+								
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 						<li><a href="controller?action=addAuction">Add Auction <span class="glyphicon glyphicon-plus"></span></a></li>
 						<li><a href="controller?action=wauction">My Won Auctions <span class="glyphicon glyphicon-ok"></span></a></li>
 						<li><a href="controller?action=account">Update Account <span class="glyphicon glyphicon-list"></span></a>
@@ -78,4 +82,9 @@
 
 
 <script src="js/jquery.js"></script>
+<<<<<<< HEAD
 <script src="js/bootstrap.js"></script>
+=======
+<script src="js/bootstrap.js"></script>
+
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16

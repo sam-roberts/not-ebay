@@ -12,7 +12,8 @@
 <body>
 	<jsp:include page="/header.jsp" />
 
+<div class="container">
 Click <a href="index.jsp">here</a> to go back home.
-
+</div>
 </body>
 </html>

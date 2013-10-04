@@ -26,7 +26,11 @@
 						name="username" value="${formValue_username}" autofocus>
 				</div>
 			</div>
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group has-success">
 				<label for="password" class="col-lg-2 control-label">Password</label>
 				<div class="col-lg-10">
@@ -34,7 +38,11 @@
 						name="password" value="${formValue_password}">
 				</div>
 			</div>
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group has-success">
 				<label for="email" class="col-lg-2 control-label">Email</label>
 				<div class="col-lg-10">
@@ -42,9 +50,15 @@
 						name="email" value="${formValue_email}">
 				</div>
 			</div>
+<<<<<<< HEAD
 
 			<hr />
 
+=======
+			
+			<hr />
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
 				<label for="nickname" class="col-lg-2 control-label">Nickname</label>
 				<div class="col-lg-10">
@@ -52,7 +66,11 @@
 						name="nickname" value="${formValue_nickname}">
 				</div>
 			</div>
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
 				<label for="firstName" class="col-lg-2 control-label">First Name</label>
 				<div class="col-lg-10">
@@ -60,7 +78,11 @@
 						name="firstName" value="${formValue_firstName}">
 				</div>
 			</div>
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
 				<label for="lastName" class="col-lg-2 control-label">Last Name</label>
 				<div class="col-lg-10">
@@ -92,9 +114,15 @@
 
 			<div class="form-group">
     			<div class="col-lg-offset-2 col-lg-10">
+<<<<<<< HEAD
 
 			<button class="btn btn-primary" type="submit">Register</button>
 
+=======
+			
+			<button class="btn btn-primary" type="submit">Register</button>
+			
+>>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			</div>
 			</div>
 

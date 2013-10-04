@@ -253,7 +253,7 @@ public class ControllerServlet extends HttpServlet {
 	private void formatMessage(HttpServletRequest request) {
 		String message = (String) request.getAttribute("message");
 		if (message != null) {
-			message = "<font color=\"red\">" + message + "</font>";
+			message = "<p class=\"text-warning\">" + message + "</p>";
 		}
 		request.setAttribute("message", message);
 	}
@@ -304,7 +304,7 @@ public class ControllerServlet extends HttpServlet {
 								s.removeAttribute("account");
 							}
 						}
-					} catch (IllegalStateException e) {}	
+					} catch (IllegalStateException e) {}
 				}
 			}
 			request.setAttribute("message", lc.getMessage());
