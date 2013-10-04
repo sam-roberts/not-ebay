@@ -197,6 +197,9 @@ public class ControllerServlet extends HttpServlet {
 			else if ("win".equals(action)) {
 				doWinAuction(ub);
 			}
+			else if ("reject".equals(action)) {
+				doRejectAuction(ub);
+			}
 			else if ("removeAlert".equals(action)) {
 				forward = doRemoveAlert(request, ub);
 			}
@@ -279,6 +282,13 @@ public class ControllerServlet extends HttpServlet {
 		GetAuctionController gac = new GetAuctionController(pm);
 		if (ub!= null) {
 			gac.winAuction(ub.getUsername());
+		}
+	}
+	
+	private void doRejectAuction(UserBean ub) {
+		GetAuctionController gac = new GetAuctionController(pm);
+		if (ub!= null) {
+			gac.rejectAuction(ub.getUsername());
 		}
 	}
 

@@ -354,13 +354,13 @@ public class JDBCConnector {
 		return null;
 	}
 	
-	public static boolean isOwnerWinningAuction(int id, String bidder) {
+	public static boolean isOwnerWinningAuction(int id, String auctionOwner) {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("SELECT b.author FROM winningauction wa INNER JOIN bidding b ON wa.bid=b.id AND wa.id=? AND b.author=?");
+			PreparedStatement ps = c.prepareStatement("SELECT a.author FROM winningauction wa INNER JOIN auction a ON wa.auction=a.id AND wa.id=? AND a.author=?");
 			ps.setInt(1, id);
-			ps.setString(2, bidder);
+			ps.setString(2, auctionOwner);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next())
 				return true;
@@ -542,7 +542,7 @@ public class JDBCConnector {
 		Connection c = null;
 		try {
 			c = connect();
-			PreparedStatement ps = c.prepareStatement("select wa.id as wid, a.id as aid, a.title as atitle, a.reserve_price as areserve_price, b.id as bid, b.price as bprice from winningauction wa inner join auction AS a on wa.auction=a.id inner join bidding b on wa.bid=b.id and b.author=(SELECT username FROM username WHERE username=?)");;
+			PreparedStatement ps = c.prepareStatement("select wa.id as wid, a.id as aid, a.title as atitle, a.reserve_price as areserve_price, b.id as bid, b.price as bprice from winningauction wa inner join bidding b on wa.bid=b.id inner join auction a on wa.auction=a.id and a.author=(SELECT username FROM username WHERE username=?)");;
 			ps.setString(1, user);
 			ResultSet rs = ps.executeQuery();
 			WinningAuctionListBean walb = new WinningAuctionListBean();

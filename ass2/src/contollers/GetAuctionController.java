@@ -49,7 +49,7 @@ public class GetAuctionController extends MasterFormBasedController {
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, PAY_RESERVE);
 				String title = "You have won (reserve).";
 				String msg = "You have completed an auction but must pay the reserve price to win the auction. Login to the site to review the action";
-				Emailer e = new Emailer(JDBCConnector.getUserBean(biddings.getBids().get(0).getAuthor(), false).getEmail(), title, msg);
+				Emailer e = new Emailer(JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail(), title, msg);
 				e.email();
 			} else {
 				String auctionEmail = JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail();
@@ -72,15 +72,32 @@ public class GetAuctionController extends MasterFormBasedController {
 	}
 
 	//TODO This shoul dbe a transaction 
-	public void winAuction(String bidder) {
+	public void winAuction(String auctionOwner) {
 		//TODO get the emails and email them i suppose
 
 		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
-		if (JDBCConnector.isOwnerWinningAuction(id, bidder)) {
+		if (JDBCConnector.isOwnerWinningAuction(id, auctionOwner)) {
 			String[] emails = JDBCConnector.getUserEmailsFromWA(id);
 			String tmp = emails[1];
 			String title = "You have won.";
 			String msg = "You have completed an auction. Your partner in this auction can be contacted on the email: " + tmp;
+			Emailer e = new Emailer(emails[0], title, msg);
+			e.email();
+			tmp = emails[0];
+			e = new Emailer(emails[1], title, msg);
+			e.email();
+
+			JDBCConnector.deleteWinningAuction(id);
+		}
+	}
+	
+	public void rejectAuction(String auctionOwner) {
+		int id = Integer.parseInt(paramManager.getIndividualParam("id"));
+		if (JDBCConnector.isOwnerWinningAuction(id, auctionOwner)) {
+			String[] emails = JDBCConnector.getUserEmailsFromWA(id);
+			String tmp = emails[1];
+			String title = "Auction rejected.";
+			String msg = "An auction has been rejected. Your partner in this auction can be contacted on the email: " + tmp;
 			Emailer e = new Emailer(emails[0], title, msg);
 			e.email();
 			tmp = emails[0];
