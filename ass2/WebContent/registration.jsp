@@ -22,127 +22,98 @@
 			<div class="form-group has-success">
 				<label for="username" class="col-lg-2 control-label">Username</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Username (Required)"
-						name="username" value="${formValue_username}" autofocus>
+					<input type="text" class="form-control"
+						placeholder="Username (Required)" name="username"
+						value="${formValue_username}" autofocus>
 				</div>
 			</div>
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group has-success">
 				<label for="password" class="col-lg-2 control-label">Password</label>
 				<div class="col-lg-10">
-					<input type="password" class="form-control" placeholder="Password (Required)"
-						name="password" value="${formValue_password}">
+					<input type="password" class="form-control"
+						placeholder="Password (Required)" name="password"
+						value="${formValue_password}">
 				</div>
 			</div>
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group has-success">
 				<label for="email" class="col-lg-2 control-label">Email</label>
 				<div class="col-lg-10">
-					<input type="email" class="form-control" placeholder="Email (Required)"
-						name="email" value="${formValue_email}">
+					<input type="email" class="form-control"
+						placeholder="Email (Required)" name="email"
+						value="${formValue_email}">
 				</div>
 			</div>
-<<<<<<< HEAD
+
 
 			<hr />
 
-=======
-			
-			<hr />
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
 				<label for="nickname" class="col-lg-2 control-label">Nickname</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Nickname (Optional)"
-						name="nickname" value="${formValue_nickname}">
+					<input type="text" class="form-control"
+						placeholder="Nickname (Optional)" name="nickname"
+						value="${formValue_nickname}">
 				</div>
 			</div>
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
-				<label for="firstName" class="col-lg-2 control-label">First Name</label>
+				<label for="firstName" class="col-lg-2 control-label">First
+					Name</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="First Name (Optional)"
-						name="firstName" value="${formValue_firstName}">
+					<input type="text" class="form-control"
+						placeholder="First Name (Optional)" name="firstName"
+						value="${formValue_firstName}">
 				</div>
 			</div>
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 			<div class="form-group">
-				<label for="lastName" class="col-lg-2 control-label">Last Name</label>
+				<label for="lastName" class="col-lg-2 control-label">Last
+					Name</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Last Name (Optional)"
-						name="lastName" value="${formValue_lastName}">
+					<input type="text" class="form-control"
+						placeholder="Last Name (Optional)" name="lastName"
+						value="${formValue_lastName}">
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="yearOfBirth" class="col-lg-2 control-label">Year of Birth</label>
+				<label for="yearOfBirth" class="col-lg-2 control-label">Year
+					of Birth</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Year of Birth (Optional)"
-						name="yearOfBirth" value="${formValue_yearOfBirth}">
+					<input type="text" class="form-control"
+						placeholder="Year of Birth (Optional)" name="yearOfBirth"
+						value="${formValue_yearOfBirth}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="address" class="col-lg-2 control-label">Address</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Address (Optional)"
-						name="address" value="${formValue_address}">
+					<input type="text" class="form-control"
+						placeholder="Address (Optional)" name="address"
+						value="${formValue_address}">
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="ccNumber" class="col-lg-2 control-label">Credit Card No</label>
+				<label for="ccNumber" class="col-lg-2 control-label">Credit
+					Card No</label>
 				<div class="col-lg-10">
-					<input type="text" class="form-control" placeholder="Credit Card Number (Optional)"
-						name="ccNumber" value="${formValue_firstName}">
+					<input type="text" class="form-control"
+						placeholder="Credit Card Number (Optional)" name="ccNumber"
+						value="${formValue_firstName}">
 				</div>
 			</div>
 
 			<div class="form-group">
-    			<div class="col-lg-offset-2 col-lg-10">
-<<<<<<< HEAD
+				<div class="col-lg-offset-2 col-lg-10">
 
-			<button class="btn btn-primary" type="submit">Register</button>
 
-=======
-			
-			<button class="btn btn-primary" type="submit">Register</button>
-			
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
-			</div>
+					<button class="btn btn-primary" type="submit">Register</button>
+
+				</div>
 			</div>
 
 		</form>
-		<!--  
-	<form action="controller?action=register" method="POST">
-		<ul>
-			<li>Username: <input autofocus type="text" name="username" value="${formValue_username}"></li>
-			<li>Password: <input type="password" name="password"></li>
-			<li>Email Address: <input type="text" name="email" value="${formValue_email}"></li>
-			<li>Nickname: <input type="text" name="nickname" value="${formValue_nickname}"></li>
-			<li>First Name: <input type="text" name="firstName" value="${formValue_firstName}"></li>
-			<li>Last Name: <input type="text" name="lastName" value="${formValue_lastName}"></li>
-			<li>Year of Birth: <input type="text" name="yearOfBirth" value="${formValue_yearOfBirth}"></li>
-			<li>Postal Address: <input type="text" name="address" value="${formValue_address}"></li>
-			<li>CC Number: <input type="text" name="ccNumber" value="${formValue_ccNumber}"></li>
-			<li><input type="submit" value="submit"></li>
-		</ul>
-	</form>
-	-->
 	</div>
 </body>
 </html>

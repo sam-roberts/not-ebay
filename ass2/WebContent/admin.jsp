@@ -10,23 +10,6 @@
 <title>Admin Page</title>
 </head>
 <body>
-	<<<<<<< HEAD
-	<c:if test="${empty account || not account.isAdmin}">
-		<c:if test="${empty account}">
-			<%
-				response.sendRedirect("index.jsp");
-			%>
-		</c:if>
-		<c:if test="${not account.isAdmin}">
-			<%
-				response.sendRedirect("index.jsp");
-			%>
-		</c:if>
-	</c:if>
-	<jsp:include page="/header.jsp" />
-
-
-	<<<<<<< HEAD
 	<jsp:include page="/header.jsp" />
 	<div class="container">
 
@@ -49,19 +32,7 @@
 				</div>
 			</div>
 		</form>
-		<!-- 
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
-<form action="controller?action=halt_all_auctions" method="POST">
-	<ul>
-		<li>
-			<c:if test="${not empty users}">
-				${users.display()}
-			</c:if>
-		</li>
-		<li><input type="submit" value="submit"></li>
-	</ul>
-</form>
- -->
+
 
 		<form class="form-horizontal" role="form"
 			action="controller?action=ban_user" method="POST">

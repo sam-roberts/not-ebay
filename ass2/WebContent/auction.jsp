@@ -15,11 +15,8 @@
 		%>
 	</c:if>
 	<jsp:include page="/header.jsp" />
-<<<<<<< HEAD
 	${message}
-=======
 	<div class="container">
->>>>>>> effac1e5a44a59f14fa8ff026e0b1a3cc527dc16
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
 		<input type="hidden" name="token" value="${rand}">
