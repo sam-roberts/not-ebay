@@ -69,7 +69,7 @@ public class BidController extends MasterFormBasedController {
 			String title = "You have place a winning bid!.";
 			String msg = "You have placed a winning bid. You can view the auction here: " + url + "?action=auction&id=" + alb.getAuctions().get(0).getId();
 			Emailer e = new Emailer(email, title, msg);
-			e.email();
+			new Thread(e).start();
 			
 		//}
 		return true;

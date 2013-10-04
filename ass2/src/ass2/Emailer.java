@@ -10,7 +10,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class Emailer {
+public class Emailer implements Runnable {
 
 	private static final String from = "teamebuy@gmail.com";
 	private static final String fromPass = "ilovecomp9321";
@@ -54,6 +54,11 @@ public class Emailer {
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public void run() {
+		email();
 	}
 
 }

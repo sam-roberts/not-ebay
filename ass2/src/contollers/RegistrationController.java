@@ -60,6 +60,6 @@ public class RegistrationController extends MasterFormBasedController {
 		String title = "Email activation required";
 		String msg = "To activate your account, go to: " + url + "?action=verify&username=" + username + "&hash=" + hash;
 		Emailer e = new Emailer(email, title, msg);
-		e.email();
+		new Thread(e).start();
 	}
 }

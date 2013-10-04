@@ -50,7 +50,7 @@ public class GetAuctionController extends MasterFormBasedController {
 				String title = "You have won (reserve).";
 				String msg = "You have completed an auction but must pay the reserve price to win the auction. Login to the site to review the action";
 				Emailer e = new Emailer(JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail(), title, msg);
-				e.email();
+				new Thread(e).start();
 			} else {
 				String auctionEmail = JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail();
 				String bidEmail = JDBCConnector.getUserBean(biddings.getBids().get(0).getAuthor(), false).getEmail();
@@ -58,10 +58,10 @@ public class GetAuctionController extends MasterFormBasedController {
 				String title = "You have won.";
 				String msg = "You have completed an auction. Your partner in this auction can be contacted on the email: " + tmp + ". You can view the auction here: " + url + "?action=auction&id=" + alb.getAuctions().get(0).getId();
 				Emailer e = new Emailer(auctionEmail, title, msg);
-				e.email();
+				new Thread(e).start();
 				tmp = auctionEmail;
 				e = new Emailer(bidEmail, title, msg);
-				e.email();
+				new Thread(e).start();
 
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, BEAT_RESERVE);
 			}
@@ -82,10 +82,10 @@ public class GetAuctionController extends MasterFormBasedController {
 			String title = "You have won.";
 			String msg = "You have completed an auction. Your partner in this auction can be contacted on the email: " + tmp;
 			Emailer e = new Emailer(emails[0], title, msg);
-			e.email();
+			new Thread(e).start();
 			tmp = emails[0];
 			e = new Emailer(emails[1], title, msg);
-			e.email();
+			new Thread(e).start();
 
 			JDBCConnector.deleteWinningAuction(id);
 		}
@@ -99,10 +99,10 @@ public class GetAuctionController extends MasterFormBasedController {
 			String title = "Auction rejected.";
 			String msg = "An auction has been rejected. Your partner in this auction can be contacted on the email: " + tmp;
 			Emailer e = new Emailer(emails[0], title, msg);
-			e.email();
+			new Thread(e).start();
 			tmp = emails[0];
 			e = new Emailer(emails[1], title, msg);
-			e.email();
+			new Thread(e).start();
 
 			JDBCConnector.deleteWinningAuction(id);
 		}
@@ -114,11 +114,11 @@ public class GetAuctionController extends MasterFormBasedController {
 		String title = "Your auction has been halted!.";
 		String msg = "Your auction has been halted!. You can still view the auction here: " + url + "?action=auction&id=" + paramManager.getIndividualParam("id");
 		Emailer e = new Emailer(email, title, msg);
-		e.email();
+		new Thread(e).start();
 	}
 
 	public LinkedList<Integer> haltAllAuctions() {
-		if (paramManager.hasParameter("username") && "".equals(paramManager.hasParameter("username"))) {
+		if (paramManager.hasParameter("username")) {
 			message = "Halted the auctions of " + (paramManager.getIndividualParam("username"));
 			return JDBCConnector.haltAllAuctions(paramManager.getIndividualParam("username"));
 

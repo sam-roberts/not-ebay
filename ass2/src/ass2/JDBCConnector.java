@@ -314,7 +314,7 @@ public class JDBCConnector {
 		if (author != null) query += "AND LOWER(author) LIKE ? ";
 		if (title != null) query += "AND LOWER(title) LIKE ? ";
 		if (getNotFinished) query += "AND finished=FALSE ";
-		query += "ORDER BY end_of_auction DESC";
+		query += "ORDER BY end_of_auction ASC";
 				
 		try {
 			c = connect();
@@ -459,9 +459,11 @@ public class JDBCConnector {
 			ps.execute();
 			
 			ResultSet gk = ps.getGeneratedKeys();
-			while (gk.next())
-				li.add(gk.getInt(1));
-			return li;
+			if (gk != null) {
+				while (gk.next())
+					li.add(gk.getInt(1));
+				return li;
+			}
 		} catch (SQLException e) {
 			System.out.println("Could notban user.");
 		}
