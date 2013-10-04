@@ -54,9 +54,11 @@ public class LoginController extends MasterFormBasedController {
 		if (banUser.getIsAdmin())
 			return false;
 		JDBCConnector.banUser(paramManager.getIndividualParam("username"));
-		message = "User " + paramManager.getIndividualParam("username") + " banned<br>";
+		this.message = paramManager.getIndividualParam("username") + " has been banned";
 		return true;
+
 	}
+		
 	
 	public void verify() {
 		if (!paramManager.hasParameter("hash") || !paramManager.hasParameter("username")) {

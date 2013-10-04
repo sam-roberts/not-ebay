@@ -18,24 +18,12 @@
 	</c:if>
 	<jsp:include page="/header.jsp" />
 
-	<!--  
-	<form action="controller?action=login" method="POST">
-		<ul>
-			<li>Username: <input autofocus type="text" name="username"
-				value="${formValue_username}"></li>
-			<li>Password: <input type="password" name="password"></li>
-			<li><input type="submit" value="submit"></li>
-		</ul>
-		<a href="registration.jsp">I don't have an account.</a>
-	</form>
--->
-
 	<div class="container">
 
 		<form class="form-signin" action="controller?action=login" method="POST">
 		 <h2 class="form-signin-heading">Login</h2>
-		 <h5 color=red>${message}</h5>
-		 
+
+		 <h5 class="text-warning">${message}</h5>
 			<input type="text" class="form-control" placeholder="Username" name="username" value="${formValue_username}" autofocus>
 			<input type="password" class="form-control" name="password" placeholder="Password">
 			

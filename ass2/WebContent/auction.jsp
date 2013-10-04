@@ -16,6 +16,7 @@
 	</c:if>
 	<jsp:include page="/header.jsp" />
 	${message}
+	<div class="container">
 	<form action="controller?action=addAuction" method="POST"
 		enctype="multipart/form-data" id="mainForm">
 		<input type="hidden" name="token" value="${rand}">
@@ -51,6 +52,7 @@
 
 		</ul>
 	</form>
+	</div>
 
 </body>
 </html>

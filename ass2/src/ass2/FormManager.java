@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.tomcat.util.codec.binary.StringUtils;
 
 public class FormManager {
 
