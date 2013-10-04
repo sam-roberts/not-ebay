@@ -6,12 +6,14 @@ import contollers.GetAuctionController;
 
 public class popAuction implements Runnable {
 	
-	int id;
-	boolean stop;
+	private int id;
+	private boolean stop;
+	private String url;
 	
-	public popAuction(int id) {
+	public popAuction(int id, String url) {
 		this.id = id;
 		stop = false;
+		this.url = url;
 	}
 	
 	public void run() {
@@ -19,7 +21,7 @@ public class popAuction implements Runnable {
 		
 		System.out.println("popping auction: " + id);
 		//GetAuctionController gac = new GetAuctionController(null);
-		GetAuctionController.popAuction(id, false);
+		GetAuctionController.popAuction(id, false, url);
 	}
 	
 	public void stop() {

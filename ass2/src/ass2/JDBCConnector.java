@@ -56,13 +56,12 @@ public class JDBCConnector {
 	}
 	
 	private static void close(Connection c) {
-		/* doesnt work with derby
 		try {
 			if (!c.isClosed())
 				c.close();
 		} catch (SQLException e) {
 			System.out.println("Cannot close connection.");
-		}*/
+		}
 	}
 	
 	public static void addUser(String username, String password, String email, String nickname, String firstName, String lastName, int yearOfBirth, String postalAddress, int CCNumber, boolean banned, int hash) {
@@ -500,7 +499,7 @@ public class JDBCConnector {
 	public static BidListBean getBiddings(int id, boolean topBid) {
 		Connection c = null;
 		String query = "SELECT * FROM Bidding WHERE auction=(SELECT id FROM Auction WHERE id=?) ORDER BY price DESC";
-		if (topBid) query += " LIMIT 1";
+		//if (topBid) query += " LIMIT 1";
 		try {
 			c = connect();
 			PreparedStatement ps = c.prepareStatement(query);

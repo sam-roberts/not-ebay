@@ -289,7 +289,7 @@ public class ControllerServlet extends HttpServlet {
 				while (i.hasNext()) {
 					popAuction pa = i.next();
 					for (int id : ids) {
-						popAuction tmp = new popAuction(id);
+						popAuction tmp = new popAuction(id, request.getRequestURL().toString());
 						if (pa.equals(tmp))
 							pa.stop();
 					}
@@ -320,7 +320,7 @@ public class ControllerServlet extends HttpServlet {
 		if (ub != null && ub.getIsAdmin()) {
 			gac.deleteAuction();
 			Iterator<popAuction> i = popAuctions.iterator();
-			popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
+			popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")), request.getRequestURL().toString());
 			while (i.hasNext()) {
 				popAuction pa = i.next();
 				if (pa.equals(tmp))
@@ -344,7 +344,7 @@ public class ControllerServlet extends HttpServlet {
 				while (i.hasNext()) {
 					popAuction pa = i.next();
 					for (int id : ids) {
-						popAuction tmp = new popAuction(id);
+						popAuction tmp = new popAuction(id, request.getRequestURL().toString());
 						if (pa.equals(tmp))
 							pa.stop();
 					}
@@ -371,7 +371,7 @@ public class ControllerServlet extends HttpServlet {
 		if (ub != null && ub.getIsAdmin()) {
 			gac.haltAuction(request.getRequestURL().toString());
 			Iterator<popAuction> i = popAuctions.iterator();
-			popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
+			popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")), request.getRequestURL().toString());
 			while (i.hasNext()) {
 				popAuction pa = i.next();
 				if (pa.equals(tmp))
@@ -412,7 +412,7 @@ public class ControllerServlet extends HttpServlet {
 				int id = ac.addAuction(request.getPart("picture"), getServletContext().getRealPath("/"), "auction_images/", ub.getUsername());
 				if (id > 0) {
 					forward=JSP_REDIRECT;
-					popAuction pa = new popAuction(id);
+					popAuction pa = new popAuction(id, request.getRequestURL().toString());
 					scheduler.schedule(pa, Integer.parseInt(request.getParameter("auctionEnd")), TimeUnit.MINUTES);
 					popAuctions.add(pa);
 					request.setAttribute("message", "Added new auction");
@@ -439,6 +439,7 @@ public class ControllerServlet extends HttpServlet {
 					!alb.isEmpty() && !alb.getAuctions().get(0).getFinished() &&
 					!alb.getAuctions().get(0).getAuthor().equals(ub.getUsername())) {
 				if (bd.addBid(ub.getUsername(), ub.getEmail(), request.getRequestURL().toString()) == false) {
+					/*
 					Iterator<popAuction> i = popAuctions.iterator();
 					popAuction tmp = new popAuction(Integer.parseInt(request.getParameter("id")));
 					while (i.hasNext()) {
@@ -448,6 +449,7 @@ public class ControllerServlet extends HttpServlet {
 					}
 
 					GetAuctionController.popAuction(Integer.parseInt(request.getParameter("id")), true);
+					*/
 				}
 			}
 			request.setAttribute("message", bd.message);

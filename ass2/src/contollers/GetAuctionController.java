@@ -38,21 +38,33 @@ public class GetAuctionController extends MasterFormBasedController {
 		return JDBCConnector.getWinningAuctions(author);
 	}
 	
-	public static void popAuction(int id, boolean reserve) {
+	public static void popAuction(int id, boolean reserve, String url) {
 		BidListBean biddings = JDBCConnector.getBiddings(id, true);
 		//TODO make transaction i suppose?
 		JDBCConnector.finishAuction(id);
 		AuctionListBean alb = JDBCConnector.getAuction(id, null, null, false);
 		if (!biddings.getBids().isEmpty()) {
-			if (!reserve) {
+			if (biddings.getBids().get(0).getPrice() < alb.getAuctions().get(0).getReservePrice()) {
 				JDBCConnector.addWinningAuction(id, biddings.getBids().get(0).getID());
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, PAY_RESERVE);
 				String title = "You have won (reserve).";
 				String msg = "You have completed an auction but must pay the reserve price to win the auction. Login to the site to review the action";
 				Emailer e = new Emailer(JDBCConnector.getUserBean(biddings.getBids().get(0).getAuthor(), false).getEmail(), title, msg);
 				e.email();
-			} else
+			} else {
+				String auctionEmail = JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail();
+				String bidEmail = JDBCConnector.getUserBean(biddings.getBids().get(0).getAuthor(), false).getEmail();
+				String tmp = bidEmail;
+				String title = "You have won.";
+				String msg = "You have completed an auction. Your partner in this auction can be contacted on the email: " + tmp + ". You can view the auction here: " + url + "?action=auction&id=" + alb.getAuctions().get(0).getId();
+				Emailer e = new Emailer(auctionEmail, title, msg);
+				e.email();
+				tmp = auctionEmail;
+				e = new Emailer(bidEmail, title, msg);
+				e.email();
+
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, BEAT_RESERVE);
+			}
 		} else {
 			if (!alb.isEmpty())
 				JDBCConnector.addAlert(alb.getAuctions().get(0).getAuthor(), id, NO_BIDS);

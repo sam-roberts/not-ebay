@@ -31,6 +31,7 @@ public class BidController extends MasterFormBasedController {
 		float bid = Float.parseFloat(paramManager.getIndividualParam("bid"));
 		if (alb.getAuctions().isEmpty()) return true;
 		
+		/*
 		if (bid >= alb.getAuctions().get(0).getReservePrice()) {
 			//TODO automatic winner of auction
 			String auctionEmail = JDBCConnector.getUserBean(alb.getAuctions().get(0).getAuthor(), false).getEmail();
@@ -47,6 +48,7 @@ public class BidController extends MasterFormBasedController {
 			message = "you have won the bid<br>";
 			return false;
 		} else {
+		*/
 			if (bid < alb.getAuctions().get(0).getStartPrice()) {
 				message = "bid must be greater than start price<br>";
 				return true;
@@ -69,7 +71,7 @@ public class BidController extends MasterFormBasedController {
 			Emailer e = new Emailer(email, title, msg);
 			e.email();
 			
-		}
+		//}
 		return true;
 	}
 	
